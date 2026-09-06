@@ -26,6 +26,9 @@ conflict, findability wins.
 - **Polish only.** No internationalization scaffolding.
 - **Szczecin and surrounding area** (Police, Stargard, Goleniów, Świnoujście)
   is the service region.
+- **The business is unregistered** — działalność nierejestrowana. There is no
+  NIP, REGON or company entity. This shapes the footer, the structured data and
+  the privacy policy; see "Legal identity" below.
 
 ## Brand
 
@@ -187,7 +190,17 @@ not fill anything in.
 
 Required, not optional. The contact form collects personal data from EU
 residents, and RODO obliges the site to state what is collected, why, on what
-basis, how long it is kept, and how to request deletion. Ships with launch.
+basis, how long it is kept, and how to request deletion.
+
+Built with **placeholder text at implementation time**, filled in before launch.
+The page structure, routing, footer link and styling are real; the legal copy is
+marked `[DO UZUPEŁNIENIA]` until the client supplies their details.
+
+Not being a registered company does not exempt the business here. Under RODO the
+data controller is whoever decides how personal data is used — for an
+unregistered business that is the individual, named personally, with a contact
+address for data requests. The policy needs a real name and a real contact
+channel, not a company.
 
 ## Hero video
 
@@ -230,11 +243,51 @@ while appearing to work.
 
 **Environment:** `RESEND_API_KEY`, `CONTACT_TO_EMAIL`.
 
+## Legal identity
+
+The business operates as **działalność nierejestrowana** — unregistered activity
+under Polish law. Consequences for the site:
+
+- **No NIP or REGON in the footer**, because none exist. The footer carries the
+  person's name, the service region, phone, email and Instagram.
+- **`LocalBusiness` structured data uses `areaServed`, not a street address.**
+  Szczecin and the surrounding towns are declared as the service area. No
+  `address` block is emitted, since publishing a home address is both unnecessary
+  and unwise.
+- **The privacy policy names an individual as data controller**, not a company.
+- **No invoice or VAT language anywhere on the site.** An unregistered business
+  issues a *rachunek*, not a *faktura VAT*, and the FAQ must not imply otherwise.
+
+One thing worth flagging to the client, outside the site's scope: działalność
+nierejestrowana carries a monthly revenue ceiling. If this site does its job,
+they will cross it and need to register. That is their decision to plan for, but
+it should not come as a surprise triggered by the site working.
+
+## Analytics
+
+**In scope for v0**, at the client's request.
+
+**Vercel Web Analytics** is the recommendation: cookieless, no personal data, no
+cross-site tracking, one component to add. It gives page views, referrers, top
+pages and country — which is what the client will actually look at.
+
+Because it sets no cookies and stores no personal data, **it does not require a
+consent banner**. That is the substantive reason to prefer it. A cookie banner
+on a nine-page portfolio costs conversions on every single visit, and the site's
+only job is conversions.
+
+If the client specifically wants **Google Analytics 4** — usually because
+someone told them to, or they want it alongside Google Ads — then a RODO consent
+banner becomes mandatory, GA4 must not load before consent, and the privacy
+policy grows a section on Google as a processor. That is a real cost. Confirm
+what the client actually needs before reaching for GA4, and default to Vercel
+Web Analytics otherwise.
+
 ## Search visibility
 
 - Per-page metadata through the Next metadata API
-- `LocalBusiness` structured data: name, Szczecin address, service area, phone,
-  opening hours, Instagram profile
+- `LocalBusiness` structured data: name, service area (Szczecin and surrounding
+  towns), phone, Instagram profile. No street address — see "Legal identity"
 - `FAQPage` structured data on `/faq`
 - Generated `sitemap.ts` and `robots.ts`
 - Descriptive Polish alt text on every photograph, written per realization
@@ -252,15 +305,19 @@ while appearing to work.
 
 ## Out of scope
 
-No CMS. No internationalization. No blog. No analytics beyond Vercel's built-in.
-No cookie banner — and therefore no trackers that would require one. No
-animation library until a CSS transition has been shown to be insufficient. No
-newsletter, no booking calendar, no pricing calculator.
+No CMS. No internationalization. No blog. No Google Analytics or any other
+cookie-setting tracker, and therefore no consent banner. No animation library
+until a CSS transition has been shown to be insufficient. No newsletter, no
+booking calendar, no pricing calculator.
 
 ## Open items
 
-- Client's phone number, email address and Instagram handle
-- Whether the business has a public street address or serves the region only —
-  this changes the `LocalBusiness` markup
+None of these block starting implementation. All of them block launching.
+
+- Client's name as it should appear publicly, phone number, email address and
+  Instagram handle
 - Real copy for `/o-nas` and the FAQ answers
-- Hero video, supplied later
+- Privacy policy details — ships with `[DO UZUPEŁNIENIA]` placeholders
+- Hero video, supplied later; launches with a still
+- Confirmation that Vercel Web Analytics satisfies what the client means by
+  "analytics", rather than GA4
