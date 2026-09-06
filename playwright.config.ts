@@ -12,7 +12,11 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: isCI,
   retries: isCI ? 2 : 0,
-  reporter: isCI ? "github" : "list",
+  // On CI, annotate the failing lines *and* leave an HTML report behind for
+  // the workflow to upload — the annotations alone lose the trace.
+  reporter: isCI
+    ? [["github"] as const, ["html", { open: "never" }] as const]
+    : "list",
   use: {
     baseURL,
     trace: "on-first-retry",
