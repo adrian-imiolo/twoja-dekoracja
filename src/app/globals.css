@@ -3,10 +3,18 @@
 /*
  * Brand tokens from docs/superpowers/specs/2026-09-06-twoja-dekoracja-design.md.
  * The ground is the logo's own plum ink at page scale, so photographs stay the
- * brightest thing on screen. No pure black and no cold grey belongs in here —
- * the failure mode of this palette is drifting from "elegant" to "cocktail bar".
+ * brightest thing on screen.
+ *
+ * `--color-*: initial` clears Tailwind's default palette rather than adding to
+ * it. The design spec's guard rail — "no pure black or cold grey anywhere" —
+ * is then enforced by the build instead of by memory: `bg-black` and
+ * `text-gray-500` stop resolving to a colour at all.
  */
 @theme {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
   --color-plum-950: #2b1d31;
   --color-plum-900: #3a2842;
   --color-plum-800: #4a3350;
@@ -18,6 +26,17 @@
 
   --font-display: var(--font-marcellus), ui-serif, Georgia, serif;
   --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* The site's measure and gutters, shared by every full-width band. */
+@utility page-shell {
+  margin-inline: auto;
+  max-width: var(--container-6xl);
+  padding-inline: --spacing(6);
+
+  @variant sm {
+    padding-inline: --spacing(8);
+  }
 }
 
 @layer base {
