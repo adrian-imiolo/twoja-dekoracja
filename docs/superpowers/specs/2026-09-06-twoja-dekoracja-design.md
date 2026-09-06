@@ -1,0 +1,266 @@
+# Twoja Dekoracja — portfolio site design
+
+**Date:** 2026-09-06
+**Status:** Approved, ready for implementation planning
+
+## Purpose
+
+A portfolio site for a real decoration business in Szczecin serving weddings,
+birthdays and other private events. The site exists to generate inquiries.
+Success six months after launch is measured in contacts received — form
+submissions, calls, Instagram messages — from people who found the site through
+Google or were sent to it directly.
+
+Every design decision below serves that goal. Where atmosphere and findability
+conflict, findability wins.
+
+## Constraints
+
+- **Content lives in the repo.** The developer adds new realizations by pushing
+  commits. No CMS, no admin panel, no client-facing upload flow.
+- **Nine realizations at launch**: three weddings, five or six other events. The
+  design must look deliberate at that volume, not sparse.
+- **Photo archive is good** — 50+ real photos, decent quality.
+- **No hero video yet.** The client will supply footage later. The site ships
+  with a static hero and gains the video without a redesign.
+- **Polish only.** No internationalization scaffolding.
+- **Szczecin and surrounding area** (Police, Stargard, Goleniów, Świnoujście)
+  is the service region.
+
+## Brand
+
+Derived from the client's existing logo: a blush pink circular badge with a
+hand-drawn single-line balloon-and-flower illustration in plum ink, the words
+"Twoja dekoracja" set in wide-tracked lowercase, and the year 2024.
+
+### Palette
+
+| Token | Value | Role |
+|---|---|---|
+| `plum-950` | `#2B1D31` | Page ground |
+| `plum-900` | `#3A2842` | Raised surfaces, cards |
+| `plum-800` | `#4A3350` | Borders, dividers |
+| `plum-600` | `#5C3D62` | Logo ink; buttons on light surfaces |
+| `blush-300` | `#E0AEC8` | Primary accent — rules, borders, links |
+| `blush-200` | `#F0CFDF` | Secondary accent, brand text |
+| `blush-100` | `#F5DBE7` | Logo circle; light surface blocks |
+| `cream-50` | `#F7EEF3` | Body text on dark |
+
+The dark aubergine ground is the logo's own ink used at page scale, so the site
+stays on-brand while making photographs the brightest thing on screen. The light
+pink logo badge reads as a wax seal against it.
+
+**Tone guard rail:** the dark palette must stay warm. Generous spacing, warm
+copy, and no pure black or cold grey anywhere. The failure mode of this
+direction is drifting from "elegant" to "cocktail bar."
+
+### Typography
+
+- **Display:** Marcellus — headlines, realization titles, the wordmark.
+- **Body/UI:** Jost — paragraphs, navigation, labels, form fields.
+
+Both loaded through `next/font/google` with `display: swap`, subset to
+`latin-ext` so Polish diacritics render correctly.
+
+## Architecture
+
+### Stack
+
+- **Next.js 16, App Router**, TypeScript in strict mode
+- **Tailwind CSS 4**, brand tokens defined as CSS custom properties in the theme
+- **`next/image`** for every photograph
+- **Resend** for contact-form email delivery
+- **Vercel** for hosting
+
+Every page is statically generated. The only server code in the project is one
+route handler for the contact form. There is no database, no authentication,
+and no third-party service beyond Resend.
+
+### Why not the shop repo's stack
+
+`shop_sznyt_design` is a Vite SPA with an Express/Prisma/Stripe/Clerk backend.
+Two reasons it is the wrong base here:
+
+1. **Search visibility.** A client-rendered SPA gives Google an empty shell. For
+   a local service business whose entire acquisition channel is search, per-page
+   server-rendered HTML is not a nice-to-have.
+2. **Images.** This site is almost entirely photographs. `next/image` handles
+   format negotiation, responsive sizing and lazy loading as a matter of course;
+   on Vite that work is manual and usually ends up skipped.
+
+Patterns worth carrying across — the `Seo` component's shape, the
+submit/loading/error state machine in `usePublicForm`, and the CI workflow — are
+adapted, not copied. The components themselves depend on React Router and a
+different design system, so they are rewritten.
+
+## Content model
+
+```
+content/realizacje/<slug>/
+  index.ts        metadata + ordered photo imports
+  01.jpg … NN.jpg
+```
+
+Each `index.ts` exports a typed `Realizacja`:
+
+```ts
+type Kategoria = 'wesela' | 'imprezy';
+
+interface Realizacja {
+  slug: string;
+  title: string;         // "Wesele Anny i Piotra"
+  category: Kategoria;
+  place: string;         // "Pałac Mała Wieś"
+  date: string;          // "Czerwiec 2025"
+  style: string;         // "Pastelowe róże, biel, zieleń"
+  intro: string;         // two sentences, maximum
+  cover: StaticImageData;
+  photos: StaticImageData[];
+}
+```
+
+Photos are **statically imported**, not referenced by path. Next then knows each
+image's intrinsic dimensions at build time, which yields automatic blur-up
+placeholders and eliminates layout shift without any hand-written dimensions.
+
+A single registry module imports every realization and exports them in display
+order. Display order is explicit, not alphabetical or date-derived, so the best
+work can lead.
+
+Adding an event is: create the folder, drop the photos, write roughly fifteen
+lines, add one line to the registry, push.
+
+If this becomes tedious past about twenty events, replace `index.ts` authoring
+with a build-time script that scans folders using `sharp`. That machinery is not
+justified for nine.
+
+## Pages
+
+### `/` — Home
+
+Video hero (poster-only at launch) → a short statement of who the business is →
+a two-way split into Wesela and Imprezy → four selected realizations → an FAQ
+teaser of three questions → contact call to action.
+
+The Wesela/Imprezy split on the homepage carries the search intent that the
+combined `/realizacje` page cannot, since "dekoracje weselne Szczecin" and
+"dekoracje urodzinowe Szczecin" are different queries.
+
+### `/realizacje`
+
+One page, two sections — **Wesela** and **Imprezy** — with navigation anchors to
+each. Cards are large and generously spaced, in a grid that reflows without
+leaving an orphan in the final row at nine items.
+
+Deliberately not split into two category pages: with three weddings and six
+events, two thin pages would rank worse than one substantial one. Revisit when
+the archive roughly doubles.
+
+### `/realizacje/[slug]`
+
+Statically generated per realization. A detail header — place, date, style, two
+sentences — then the gallery. Text is minimal; the photographs carry the page.
+
+A real route, not a modal: it can be linked, shared and indexed. The client will
+want to send someone a direct link to one wedding.
+
+**Gallery must degrade gracefully.** Some realizations will have five photos and
+some twenty-five. The layout is designed for the sparse case first.
+
+### `/o-nas`
+
+The story behind the business, a photograph of the person running it, and why
+they do this work. For a service bought on trust, this page does real work.
+
+### `/faq`
+
+Eight to ten questions covering pricing, booking lead time, service area,
+setup/teardown, and what a first conversation looks like. Emits `FAQPage`
+structured data.
+
+### `/kontakt`
+
+The form, plus visible phone, email and Instagram for people who would rather
+not fill anything in.
+
+### `/polityka-prywatnosci`
+
+Required, not optional. The contact form collects personal data from EU
+residents, and RODO obliges the site to state what is collected, why, on what
+basis, how long it is kept, and how to request deletion. Ships with launch.
+
+## Hero video
+
+Built poster-first. A static image is the actual hero; video is an enhancement
+layered over it when the client supplies footage.
+
+- `muted`, `playsinline`, `loop`, `preload="none"`
+- Poster image always present, and sized as the LCP element
+- Video requested only after the poster has painted
+- `prefers-reduced-motion: reduce` receives the poster and no video
+- Budget: **≤ 3 MB** for a 10–15 second clip
+
+Above that budget the site is trading search ranking for atmosphere on the one
+page where ranking matters most.
+
+At launch this is a still photograph. Dropping in the video later is a content
+change, not a redesign.
+
+## Contact form
+
+`POST /api/kontakt` — the only server code in the project.
+
+**Payload:** name, contact (email or phone), event type, approximate date,
+message.
+
+**Validation:** Zod schema shared between client and route handler, so the
+browser and the server enforce the same rules.
+
+**Delivery:** Resend, to `CONTACT_TO_EMAIL`.
+
+**Abuse control:** a honeypot field plus a minimum time-to-submit check, and
+per-IP rate limiting held in memory. Sufficient for a site at this volume;
+nothing that requires a data store.
+
+**Error handling is a first-class requirement.** The form always tells the user
+what happened — success, a specific validation error, or a failure message that
+surfaces the phone number as a fallback. A silently failing lead form is the
+worst defect this site can ship, because it destroys the site's only purpose
+while appearing to work.
+
+**Environment:** `RESEND_API_KEY`, `CONTACT_TO_EMAIL`.
+
+## Search visibility
+
+- Per-page metadata through the Next metadata API
+- `LocalBusiness` structured data: name, Szczecin address, service area, phone,
+  opening hours, Instagram profile
+- `FAQPage` structured data on `/faq`
+- Generated `sitemap.ts` and `robots.ts`
+- Descriptive Polish alt text on every photograph, written per realization
+  rather than templated
+
+## Testing
+
+- **Playwright:** the contact flow end to end — fill, submit, assert the success
+  state, with Resend mocked. This is the revenue path and the only flow whose
+  breakage is invisible in production.
+- **Vitest:** contact form validation rules; registry integrity — every slug
+  resolves, every category is valid, no duplicate slugs, every realization has
+  at least one photo.
+- **Nothing** for layout components, the FAQ page, or other framework wiring.
+
+## Out of scope
+
+No CMS. No internationalization. No blog. No analytics beyond Vercel's built-in.
+No cookie banner — and therefore no trackers that would require one. No
+animation library until a CSS transition has been shown to be insufficient. No
+newsletter, no booking calendar, no pricing calculator.
+
+## Open items
+
+- Client's phone number, email address and Instagram handle
+- Whether the business has a public street address or serves the region only —
+  this changes the `LocalBusiness` markup
+- Real copy for `/o-nas` and the FAQ answers
+- Hero video, supplied later
