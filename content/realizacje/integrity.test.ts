@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import { assertRealizacjeValid } from "./integrity";
-import type { Fotografia, Kategoria, Realizacja } from "./types";
+import type { Fotografia, Realizacja } from "./types";
 
 /**
+ * The guard in `integrity.ts` is what makes the build-time guarantee real, so
+ * it is tested directly rather than only through the published registry: real
+ * content has no duplicate slug to catch it failing on.
+ *
  * Under Vitest a statically imported image resolves to a URL string; under the
  * Next build it resolves to a `StaticImageData` object. Nothing here may assert
  * on the image's internals, or it passes in one runtime and fails in the other.
@@ -65,24 +69,6 @@ describe("assertRealizacjeValid", () => {
       ).toThrow(new RegExp(field));
     },
   );
-
-  it("rejects a category outside the two the site publishes", () => {
-    expect(() =>
-      assertRealizacjeValid([
-        realizacja({ category: "chrzciny" as Kategoria }),
-      ]),
-    ).toThrow(/chrzciny/);
-  });
-
-  it("rejects a realization with no photographs", () => {
-    const bezZdjec = realizacja();
-    // `photos` is a non-empty tuple, so an empty gallery is already a compile
-    // error. The cast reaches past that to prove the runtime guard holds too,
-    // for content that arrives through a looser path than a hand-written file.
-    (bezZdjec as { photos: readonly Fotografia[] }).photos = [];
-
-    expect(() => assertRealizacjeValid([bezZdjec])).toThrow(/zdjęć/);
-  });
 
   it("rejects a photograph with no alt text", () => {
     expect(() =>

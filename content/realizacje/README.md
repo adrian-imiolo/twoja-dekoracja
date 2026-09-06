@@ -24,6 +24,9 @@ content/realizacje/
 4. Import it in `content/realizacje/index.ts` and add it to `realizacje` at the
    position you want it shown.
 
+Display order is authored, not sorted — neither alphabetical nor date-derived,
+so the strongest work can lead regardless of when it happened.
+
 ## Two things that are not negotiable
 
 **Photographs are statically imported**, never referenced by path string:
@@ -42,23 +45,22 @@ derived from the title — a sentence describing what is in the frame. It is wha
 a screen reader user gets instead of the photograph, and it is what search
 reads.
 
-## Display order
-
-`realizacje` in `index.ts` is authored, not sorted. It is neither alphabetical
-nor date-derived, so the strongest work can lead regardless of when it happened.
-
 ## When something is wrong
 
-A malformed realization fails `npm run typecheck`, `npm test` and `npm run
-build` — never the live site.
+| What | Caught by |
+| --- | --- |
+| Missing field, unknown category, empty gallery | compile error — `tsc`, and so also `next build` |
+| Duplicate slug, bad slug shape, blank prose, missing alt text | `assertRealizacjeValid`, thrown when the registry loads |
+| A folder you forgot to add to the registry | `registry.test.ts` |
 
-- Missing field, unknown category, empty gallery → a **compile error**.
-- Duplicate slug, bad slug shape, blank prose, missing alt text → thrown by
-  `assertRealizacjeValid`, which runs when the registry module loads.
-- A folder you forgot to add to the registry → caught by `registry.test.ts`.
+The thrown rules are enforced by `npm test`, which CI runs on every push. They
+will *also* fail `next build` once a page under `src/` imports the registry —
+until then nothing evaluates the module during a build. Do not rely on the
+build alone to catch them yet.
 
 ## Outstanding
 
 `wesele-anny-i-piotra` is **placeholder content**. Its eight JPEGs are generated
 plum cards marked *zdjęcie zastępcze* and its copy is invented. Replace both
-with a real event before launch.
+with a real event before launch — nothing in the build or the test run will
+stop a deployment that still contains it.

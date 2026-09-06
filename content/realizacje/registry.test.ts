@@ -15,6 +15,13 @@ import { findRealizacja, realizacje } from "./index";
  * and to a plain URL string under Vitest, so any such assertion would be true
  * in one runtime and false in the other.
  */
+
+/**
+ * Spelled out rather than imported from `types.ts`. Deriving the expected
+ * values from the code under test would make the assertion agree with itself
+ * by construction; this literal is the spec restated, and disagrees when the
+ * union changes.
+ */
 const KATEGORIE = ["wesela", "imprezy"];
 
 describe("realization registry", () => {

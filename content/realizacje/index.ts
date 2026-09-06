@@ -14,10 +14,13 @@ export type { Fotografia, Kategoria, Realizacja } from "./types";
 export const realizacje: readonly Realizacja[] = [weseleAnnyIPiotra];
 
 /*
- * Checked at module load, not on demand. Every page that lists or resolves a
- * realization imports this module, so a violation throws during `next build`
- * and the deployment never happens — the malformed realization fails the
- * build rather than the live site.
+ * Checked at module load, not on demand, so the check cannot be forgotten at a
+ * call site.
+ *
+ * Today the test run is what enforces it: nothing under `src/` imports this
+ * module yet, so `next build` never evaluates it. Once a page lists or
+ * resolves a realization, this same throw fails the build too. Until then,
+ * `npm test` in CI is the gate — see `README.md`.
  */
 assertRealizacjeValid(realizacje);
 

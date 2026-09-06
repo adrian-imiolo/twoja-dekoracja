@@ -27,9 +27,8 @@ export type Kategoria = "wesela" | "imprezy";
  */
 export interface Fotografia {
   /**
-   * Statically imported, never a path string: the import is what gives the
-   * build intrinsic dimensions, and those are what remove layout shift and
-   * enable blur-up placeholders without hand-maintained numbers.
+   * Statically imported, never a path string — the import is what gives the
+   * build intrinsic dimensions. See `README.md` for why that matters.
    */
   image: StaticImageData;
   /** Descriptive Polish, written for this photograph. */
@@ -50,7 +49,14 @@ export interface Realizacja {
   style: string;
   /** Two sentences at most. The photographs carry the page. */
   intro: string;
-  /** The one photograph that represents the event in listings and previews. */
+  /**
+   * The one photograph that represents the event in listings and previews.
+   *
+   * Normally also a member of `photos` rather than a separate file, so the
+   * folder stays the single source of the event's images. A detail page that
+   * renders the cover as a hero therefore decides for itself whether to repeat
+   * it in the gallery below.
+   */
   cover: Fotografia;
   /**
    * The gallery, in authored order. Typed as a non-empty tuple so a
