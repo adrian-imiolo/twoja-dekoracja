@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/*
+ * Brand tokens from docs/superpowers/specs/2026-09-06-twoja-dekoracja-design.md.
+ * The ground is the logo's own plum ink at page scale, so photographs stay the
+ * brightest thing on screen. No pure black and no cold grey belongs in here —
+ * the failure mode of this palette is drifting from "elegant" to "cocktail bar".
+ */
+@theme {
+  --color-plum-950: #2b1d31;
+  --color-plum-900: #3a2842;
+  --color-plum-800: #4a3350;
+  --color-plum-600: #5c3d62;
+  --color-blush-300: #e0aec8;
+  --color-blush-200: #f0cfdf;
+  --color-blush-100: #f5dbe7;
+  --color-cream-50: #f7eef3;
+
+  --font-display: var(--font-marcellus), ui-serif, Georgia, serif;
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-plum-950);
+    color: var(--color-cream-50);
+  }
+
+  ::selection {
+    background-color: var(--color-blush-300);
+    color: var(--color-plum-950);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
