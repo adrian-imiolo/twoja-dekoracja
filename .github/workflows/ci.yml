@@ -1,9 +1,8 @@
 name: CI
 
-on:
-  push:
-    branches: [main]
-  pull_request:
+# Every push, on every branch — a feature branch without an open PR still gets
+# the same four checks the default branch does.
+on: push
 
 concurrency:
   group: ci-${{ github.ref }}

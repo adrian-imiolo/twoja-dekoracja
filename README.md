@@ -13,7 +13,7 @@ generating inquiries.
 | `npm run start` | Serve the production build |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint |
-| `npm test` | Vitest — validation rules and registry integrity |
+|  `npm test` | Vitest — content and validation rules that need no browser |
 | `npm run test:e2e` | Playwright — real browser against a real production build |
 
 `npm run test:e2e` builds the site itself; run `npx playwright install chromium`
