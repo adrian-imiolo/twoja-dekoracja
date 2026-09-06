@@ -2,16 +2,6 @@
 
 Issues and PRDs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
 
-## Prerequisite: this repo has no git remote yet
-
-Every command in this file infers the repo from `git remote -v`, which `gh` does
-automatically inside a clone. **This repository is local-only** — it was created
-with `git init` and has no remote.
-
-Until a GitHub repository exists and is added as a remote, all issue operations
-described below will fail. Create the repo first (`gh repo create`), then these
-skills work with no further configuration and this section can be deleted.
-
 ## Conventions
 
 - **Create an issue**: `gh issue create --title "..." --body "..."`. Use a heredoc for multi-line bodies.
