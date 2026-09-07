@@ -23,6 +23,9 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
+  // Every relative URL in a page's metadata — canonicals and preview images
+  // most of all — is resolved against this.
+  metadataBase: new URL(site.url),
   title: {
     default: `${site.name} — dekoracje weselne i okolicznościowe w ${site.cityLocative}`,
     template: `%s — ${site.name}`,

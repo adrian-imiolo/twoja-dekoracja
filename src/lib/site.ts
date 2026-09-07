@@ -9,8 +9,28 @@
  */
 const PENDING = "[DO UZUPEŁNIENIA]";
 
+/**
+ * The origin the site is served from, needed in absolute form because a
+ * shared link's preview image is fetched by a messaging app rather than by the
+ * browser that has the page — a relative URL never resolves there.
+ *
+ * The domain is outstanding client input, so this falls back through what the
+ * environment knows: an explicit setting first, then the production domain
+ * Vercel injects at build time, then localhost for `next dev` and the
+ * end-to-end suite.
+ */
+function resolveSiteUrl(): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+
+  const vercelDomain = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (vercelDomain) return `https://${vercelDomain}`;
+
+  return "http://localhost:3000";
+}
+
 export const site = {
   name: "Twoja Dekoracja",
+  url: resolveSiteUrl(),
   wordmark: "twoja dekoracja",
   tagline: "Dekoracje weselne i okolicznościowe",
   description:
