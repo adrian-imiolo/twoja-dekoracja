@@ -60,14 +60,25 @@ test("shows every photograph of the event, each with its own description", async
   // does not.
   expect(new Set(alts).size).toBe(alts.length);
 
-  const loaded = await photographs.evaluateAll((images) =>
-    images.every(
-      (image) =>
-        (image as HTMLImageElement).complete &&
-        (image as HTMLImageElement).naturalWidth > 0,
-    ),
-  );
-  expect(loaded).toBe(true);
+  /*
+   * Polled rather than sampled the moment the scroll returns. Scrolling only
+   * *starts* the lazy requests, and the trace of a CI failure showed the page
+   * rendered correctly with five photographs served in under 50 ms and three
+   * still in flight — the assertion was early, not the page wrong. What is
+   * worth asserting is that every photograph loads, not that it has already
+   * loaded on a runner sharing two cores with the rest of the suite.
+   */
+  await expect
+    .poll(() =>
+      photographs.evaluateAll((images) =>
+        images.every(
+          (image) =>
+            (image as HTMLImageElement).complete &&
+            (image as HTMLImageElement).naturalWidth > 0,
+        ),
+      ),
+    )
+    .toBe(true);
 });
 
 test("holds its layout still while the photographs load", async ({ page }) => {
