@@ -10,6 +10,22 @@
 const PENDING = "[DO UZUPEŁNIENIA]";
 
 /**
+ * Whether a fact is still a placeholder rather than something the site knows.
+ *
+ * A page asks this to decide what it can build out of a value. A phone number
+ * the site knows becomes a `tel:` link the visitor taps; the placeholder can
+ * only be shown as text, because a link to `tel:[DO UZUPEŁNIENIA]` dials
+ * nothing and looks like a fault rather than an unfinished detail.
+ *
+ * Exported as a question rather than exporting `PENDING` itself so the
+ * sentinel stays one string in one file — the moment its shape is compared at
+ * a call site, changing it means finding every comparison.
+ */
+export function isPending(value: string): boolean {
+  return value === PENDING;
+}
+
+/**
  * The origin the site is served from, needed in absolute form because a shared
  * link's preview image is fetched by a messaging app rather than by the browser
  * that has the page — a relative URL never resolves there.
