@@ -44,8 +44,10 @@ test("shows where and when the event was, its style, and an introduction", async
 test("shows every photograph of the event, each with its own description", async ({
   page,
 }) => {
+  // Eight photographs, each brought into view and waited for in turn.
+  test.slow();
+
   await page.goto(url);
-  await scrollToBottom(page);
 
   const photographs = page.getByRole("main").getByRole("img");
   await expect(photographs).toHaveCount(PHOTO_COUNT);
@@ -61,24 +63,34 @@ test("shows every photograph of the event, each with its own description", async
   expect(new Set(alts).size).toBe(alts.length);
 
   /*
-   * Polled rather than sampled the moment the scroll returns. Scrolling only
-   * *starts* the lazy requests, and the trace of a CI failure showed the page
-   * rendered correctly with five photographs served in under 50 ms and three
-   * still in flight — the assertion was early, not the page wrong. What is
-   * worth asserting is that every photograph loads, not that it has already
-   * loaded on a runner sharing two cores with the rest of the suite.
+   * Each photograph is waited for where a visitor meets it — in view — rather
+   * than by scrolling past the whole gallery and then asking whether
+   * everything arrived.
+   *
+   * The difference is not pedantry. A browser gives an image that has scrolled
+   * out of sight the lowest priority it has, and will leave the request
+   * unfinished indefinitely rather than spend a connection on something nobody
+   * is looking at. Traces of three CI runs show exactly that: the first, sixth,
+   * seventh and eighth photographs served in under 60 ms, and the three left
+   * far above the fold by the scroll never delivered at all. A fast machine
+   * hides it by finishing them before the scroll ends.
    */
-  await expect
-    .poll(() =>
-      photographs.evaluateAll((images) =>
-        images.every(
-          (image) =>
-            (image as HTMLImageElement).complete &&
-            (image as HTMLImageElement).naturalWidth > 0,
-        ),
-      ),
-    )
-    .toBe(true);
+  for (let index = 0; index < PHOTO_COUNT; index += 1) {
+    const photograph = photographs.nth(index);
+    await photograph.scrollIntoViewIfNeeded();
+
+    await expect
+      .poll(
+        () =>
+          photograph.evaluate(
+            (image) =>
+              (image as HTMLImageElement).complete &&
+              (image as HTMLImageElement).naturalWidth > 0,
+          ),
+        { message: `zdjęcie ${index + 1} powinno się wczytać` },
+      )
+      .toBe(true);
+  }
 });
 
 test("holds its layout still while the photographs load", async ({ page }) => {
