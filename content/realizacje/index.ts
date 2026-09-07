@@ -17,10 +17,9 @@ export const realizacje: readonly Realizacja[] = [weseleAnnyIPiotra];
  * Checked at module load, not on demand, so the check cannot be forgotten at a
  * call site.
  *
- * Today the test run is what enforces it: nothing under `src/` imports this
- * module yet, so `next build` never evaluates it. Once a page lists or
- * resolves a realization, this same throw fails the build too. Until then,
- * `npm test` in CI is the gate — see `README.md`.
+ * `/realizacje/[slug]` imports this module to generate its static params, so
+ * the throw fails `next build` and a malformed realization never reaches the
+ * live site. `npm test` catches the same faults earlier.
  */
 assertRealizacjeValid(realizacje);
 

@@ -334,6 +334,8 @@ Through the browser seam:
 
 - A visitor can reach a realization detail page from the homepage and see its
   photographs
+- A realization's link carries a title, a description and an image that
+  resolves absolutely, so it previews when pasted into a messaging app
 - The realizations index shows both category sections, each containing its
   realizations
 - Submitting a valid inquiry produces a visible success state
@@ -363,6 +365,13 @@ Layout components, the FAQ page, the privacy policy page, the about page,
 metadata generation, and sitemap output. These are either static content or
 framework wiring, where a test would restate the implementation rather than
 constrain behaviour.
+
+One exception, added when `/realizacje/[slug]` was built: the shared-link
+preview above. The reasoning for the exclusion does not reach it. Whether a
+title renders is framework wiring, but whether the preview image resolves to an
+absolute URL is a behaviour with a silent failure mode — the page looks
+perfect, and only the link previews as nothing, which is precisely the outcome
+story 22 exists to prevent.
 
 ### Prior art
 

@@ -9,8 +9,41 @@
  */
 const PENDING = "[DO UZUPEŁNIENIA]";
 
+/**
+ * The origin the site is served from, needed in absolute form because a shared
+ * link's preview image is fetched by a messaging app rather than by the browser
+ * that has the page — a relative URL never resolves there.
+ *
+ * The custom domain is outstanding client input, so this reads what the
+ * environment knows: an explicit setting first, then the production domain
+ * Vercel injects into every one of its builds.
+ *
+ * Falling back to localhost is correct for `next dev` and for the end-to-end
+ * suite, which builds and serves locally — and catastrophic in a deployment,
+ * where it would publish canonicals and preview images pointing at the
+ * visitor's own machine. Since that fault is invisible in the rendered page
+ * and only shows up as links that quietly stop previewing, a deployed build
+ * that cannot name itself fails here instead of shipping.
+ */
+function resolveSiteUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL;
+  if (configured) return configured;
+
+  const vercelDomain = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (vercelDomain) return `https://${vercelDomain}`;
+
+  if (process.env.VERCEL) {
+    throw new Error(
+      "Build na Vercelu nie zna własnej domeny — ustaw NEXT_PUBLIC_SITE_URL.",
+    );
+  }
+
+  return "http://localhost:3000";
+}
+
 export const site = {
   name: "Twoja Dekoracja",
+  url: resolveSiteUrl(),
   wordmark: "twoja dekoracja",
   tagline: "Dekoracje weselne i okolicznościowe",
   description:

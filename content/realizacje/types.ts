@@ -47,7 +47,13 @@ export interface Realizacja {
   date: string;
   /** "Pudrowy róż, biel i eukaliptus" */
   style: string;
-  /** Two sentences at most. The photographs carry the page. */
+  /**
+   * Two sentences at most. The photographs carry the page.
+   *
+   * This doubles as the page's meta description, so it is also the snippet
+   * Google shows under the result — keep it under about 160 characters or the
+   * search listing ends mid-thought.
+   */
   intro: string;
   /**
    * The one photograph that represents the event in listings and previews.

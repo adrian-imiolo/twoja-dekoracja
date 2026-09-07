@@ -40,6 +40,10 @@ The import is what gives the build intrinsic dimensions, and those are what
 remove layout shift and produce blur-up placeholders without a single
 hand-maintained number.
 
+The `intro` is also the page's meta description, so it is the snippet Google
+shows under the search result. Two sentences, under about 160 characters —
+past that the listing ends mid-thought.
+
 **Every photograph carries its own Polish alt text.** Not templated, not
 derived from the title — a sentence describing what is in the frame. It is what
 a screen reader user gets instead of the photograph, and it is what search
@@ -53,10 +57,10 @@ reads.
 | Duplicate slug, bad slug shape, blank prose, missing alt text | `assertRealizacjeValid`, thrown when the registry loads |
 | A folder you forgot to add to the registry | `registry.test.ts` |
 
-The thrown rules are enforced by `npm test`, which CI runs on every push. They
-will *also* fail `next build` once a page under `src/` imports the registry —
-until then nothing evaluates the module during a build. Do not rely on the
-build alone to catch them yet.
+The thrown rules fail `next build`: `/realizacje/[slug]` imports the registry
+to generate its static params, so a malformed realization stops a deployment
+rather than reaching the live site. `npm test` catches the same faults earlier
+and names them more clearly.
 
 ## Outstanding
 
