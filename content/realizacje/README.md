@@ -64,7 +64,9 @@ and names them more clearly.
 
 ## Outstanding
 
-`wesele-anny-i-piotra` is **placeholder content**. Its eight JPEGs are generated
-plum cards marked *zdjęcie zastępcze* and its copy is invented. Replace both
-with a real event before launch — nothing in the build or the test run will
-stop a deployment that still contains it.
+`wesele-anny-i-piotra` and `czterdzieste-urodziny-marty` are **placeholder
+content**. Their JPEGs are generated plum cards marked *zdjęcie zastępcze* and
+their copy is invented. One of each category exists so that both sections of
+`/realizacje` can be seen and tested; replace both with real events before
+launch — nothing in the build or the test run will stop a deployment that still
+contains them.

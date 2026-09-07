@@ -1,5 +1,6 @@
+import { czterdziesteUrodzinyMarty } from "./czterdzieste-urodziny-marty";
 import { assertRealizacjeValid } from "./integrity";
-import type { Realizacja } from "./types";
+import type { Kategoria, Realizacja } from "./types";
 import { weseleAnnyIPiotra } from "./wesele-anny-i-piotra";
 
 export type { Fotografia, Kategoria, Realizacja } from "./types";
@@ -11,7 +12,10 @@ export type { Fotografia, Kategoria, Realizacja } from "./types";
  * the strongest work leads regardless of when it happened or what the couple
  * were called. Adding an event is one import and one line here.
  */
-export const realizacje: readonly Realizacja[] = [weseleAnnyIPiotra];
+export const realizacje: readonly Realizacja[] = [
+  weseleAnnyIPiotra,
+  czterdziesteUrodzinyMarty,
+];
 
 /*
  * Checked at module load, not on demand, so the check cannot be forgotten at a
@@ -25,4 +29,17 @@ assertRealizacjeValid(realizacje);
 
 export function findRealizacja(slug: string): Realizacja | undefined {
   return realizacje.find((realizacja) => realizacja.slug === slug);
+}
+
+/**
+ * One category's work, still in the registry's authored order.
+ *
+ * Filtering rather than holding two separate lists: display order is a single
+ * editorial decision about the whole archive, and splitting it into per-category
+ * arrays would let the two drift into disagreeing about which event leads.
+ */
+export function realizacjeInCategory(
+  kategoria: Kategoria,
+): readonly Realizacja[] {
+  return realizacje.filter((realizacja) => realizacja.category === kategoria);
 }
