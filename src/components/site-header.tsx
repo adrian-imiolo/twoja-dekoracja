@@ -12,6 +12,20 @@ export function SiteHeader() {
         >
           {site.wordmark}
         </Link>
+
+        {/*
+         * One link, not a navigation bar. The site has a single page worth
+         * linking to so far, and `/realizacje` would otherwise be reachable
+         * only by typing its address — an orphan page is invisible to a
+         * visitor and nearly so to a crawler. The rest of the navigation
+         * arrives with the pages it would point at.
+         */}
+        <Link
+          href="/realizacje"
+          className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
+        >
+          Realizacje
+        </Link>
       </div>
     </header>
   );
