@@ -5,6 +5,16 @@ import { useEffect, useState } from "react";
 import type { HeroVideoSource } from "@content/hero";
 
 /**
+ * How the video finds the poster it is waiting for.
+ *
+ * A DOM id rather than a ref, because the poster is rendered on the server and
+ * this is not — there is no ref to hand across that boundary, and making the
+ * poster a client component to get one would put JavaScript in front of the
+ * page's largest contentful paint to save the video some coupling.
+ */
+export const HERO_POSTER_ID = "hero-poster";
+
+/**
  * The hero's footage, layered over the poster that is already on screen.
  *
  * Mounted only when a video exists, which at launch it does not — so the home
@@ -16,10 +26,10 @@ import type { HeroVideoSource } from "@content/hero";
  * **The video must never become the largest contentful paint.** The site's
  * whole acquisition channel is search, and the metric search grades this page
  * on is how fast its first screen appears. So nothing here is rendered — and
- * therefore nothing is requested — until the browser has painted a frame with
- * the poster in it. A video that starts downloading during the initial page
- * load would compete with the poster for the connection and make the number
- * worse than it is with no video at all.
+ * therefore nothing is requested — until the poster has painted. A video that
+ * started downloading during the initial page load would compete with the
+ * poster for the connection and make the number worse than it is with no video
+ * at all.
  *
  * **A visitor who asked for less motion gets the poster and nothing else.**
  * Not a paused video, not a video that loads and sits still: no request at
@@ -27,7 +37,8 @@ import type { HeroVideoSource } from "@content/hero";
  * and there is no reason to spend their data on it either.
  */
 export function HeroVideo({ video }: { video: HeroVideoSource }) {
-  const [armed, setArmed] = useState(false);
+  const [readyToLoad, setReadyToLoad] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     // Read once, at mount. Someone flipping their system preference
@@ -36,31 +47,53 @@ export function HeroVideo({ video }: { video: HeroVideoSource }) {
     // looking at.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    /*
+     * The poster itself is the signal, rather than the window's `load` event.
+     * `load` looks like the simpler gate and is wrong on the second visit: the
+     * site's own header links back to `/`, and after that client-side
+     * navigation `readyState` is already "complete" — left over from the
+     * document the visitor arrived on — so a `load`-based gate would open
+     * immediately and let the video race the poster it is supposed to be
+     * waiting for. Asking the poster holds on both paths.
+     */
+    const poster = document.getElementById(HERO_POSTER_ID);
+    if (!(poster instanceof HTMLImageElement)) return;
+
     let frame = 0;
 
     /*
-     * `load` has fired, so the poster — preloaded ahead of everything else as
-     * the priority image — is fetched and decoded. One more frame after that
-     * and it has actually been painted, which is the moment the video is free
-     * to ask for bandwidth.
+     * Two frames, not one. A callback scheduled for the next frame runs
+     * *before* that frame is painted, so arming there would put the video's
+     * request in the same frame as the poster's first paint rather than after
+     * it. The second frame is the one that means the poster is on screen.
      */
-    function armAfterNextPaint() {
-      frame = requestAnimationFrame(() => setArmed(true));
+    function armAfterPosterIsPainted() {
+      frame = requestAnimationFrame(() => {
+        frame = requestAnimationFrame(() => setReadyToLoad(true));
+      });
     }
 
-    if (document.readyState === "complete") {
-      armAfterNextPaint();
+    /*
+     * `complete` covers both outcomes — the poster arrived, or it failed and
+     * the browser has stopped spending a connection on it. Either way the
+     * video is no longer competing with anything, and in the second case it is
+     * the only thing left to show.
+     */
+    if (poster.complete) {
+      armAfterPosterIsPainted();
     } else {
-      window.addEventListener("load", armAfterNextPaint, { once: true });
+      poster.addEventListener("load", armAfterPosterIsPainted, { once: true });
+      poster.addEventListener("error", armAfterPosterIsPainted, { once: true });
     }
 
     return () => {
-      window.removeEventListener("load", armAfterNextPaint);
+      poster.removeEventListener("load", armAfterPosterIsPainted);
+      poster.removeEventListener("error", armAfterPosterIsPainted);
       cancelAnimationFrame(frame);
     };
   }, []);
 
-  if (!armed) return null;
+  if (!readyToLoad) return null;
 
   return (
     <video
@@ -79,13 +112,26 @@ export function HeroVideo({ video }: { video: HeroVideoSource }) {
       loop
       playsInline
       /*
+       * Held transparent until there is actually a frame to show. A video
+       * element with nothing decoded and no `poster` attribute of its own
+       * paints as a solid block in some browsers, which would flash over the
+       * photograph in the seconds between mounting and playing. Fading in from
+       * nothing also means a video that never arrives is indistinguishable
+       * from the still it is sitting on.
+       */
+      onPlaying={function revealOncePlaying() {
+        setPlaying(true);
+      }}
+      className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+        playing ? "opacity-100" : "opacity-0"
+      }`}
+      /*
        * Decoration over a poster that already carries the description. A
        * screen reader announcing an unlabelled media player here would be
        * offering a control that does nothing for its user.
        */
       aria-hidden
       tabIndex={-1}
-      className="absolute inset-0 h-full w-full object-cover"
     >
       <source src={video.src} type={video.type} />
     </video>

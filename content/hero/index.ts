@@ -61,15 +61,17 @@ export const hero: Hero = {
   },
 
   /*
-   * The video slot, deliberately empty.
+   * The video slot, deliberately empty — written out rather than left off, so
+   * the hole is visible in the shape of the content rather than only in the
+   * type.
    *
-   * Dropping the file into `public/hero/` and uncommenting this is the entire
-   * change — the hero is already built to layer a video over the poster
-   * without moving anything, so nothing else on the page or in the layout is
-   * touched.
+   * Filling it is the entire change: drop the file into `public/hero/` and put
+   * `{ src: "/hero/hero.mp4", type: "video/mp4" }` here. The hero is already
+   * built to layer a video over the poster without moving anything, so nothing
+   * else on the page or in the layout is touched.
    *
    * Budget is 3 MB for a 10–15 second clip. Above that the site is trading
    * search ranking for atmosphere on the one page where ranking matters most.
    */
-  // video: { src: "/hero/hero.mp4", type: "video/mp4" },
+  video: undefined,
 };

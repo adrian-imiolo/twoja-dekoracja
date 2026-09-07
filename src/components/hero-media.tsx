@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { HeroVideo } from "@/components/hero-video";
+import { HERO_POSTER_ID, HeroVideo } from "@/components/hero-video";
 import { hero } from "@content/hero";
 
 /**
@@ -14,11 +14,11 @@ import { hero } from "@content/hero";
  * the video arrives into a hole that is exactly its own shape and the layout
  * does not move.
  *
- * The layer is transparent until it has frames to show, and the poster stays
- * in the DOM underneath rather than being handed to the video as its `poster`
- * attribute — that would fetch the same photograph a second time, unoptimised.
- * A video that fails to load therefore degrades to the still, silently and
- * correctly.
+ * The layer is held transparent until it has frames to show, and the poster
+ * stays in the DOM underneath rather than being handed to the video as its
+ * `poster` attribute — that would fetch the same photograph a second time,
+ * unoptimised and at full size. A video that fails to load therefore degrades
+ * to the still, silently and correctly.
  *
  * Absolutely positioned to fill whatever band it is placed in, so the hero's
  * height is decided by the copy over it rather than by the image's proportions.
@@ -27,6 +27,9 @@ export function HeroMedia() {
   return (
     <div className="absolute inset-0 overflow-hidden bg-plum-900">
       <Image
+        // Named so the video layer can wait for this exact element to paint
+        // before asking for any bandwidth of its own.
+        id={HERO_POSTER_ID}
         src={hero.poster.image}
         alt={hero.poster.alt}
         placeholder="blur"
