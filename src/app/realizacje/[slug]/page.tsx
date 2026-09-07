@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { RealizationGallery } from "@/components/realization-gallery";
+import { coverAsOgImage } from "@/lib/metadata";
 import { site } from "@/lib/site";
 import { findRealizacja, realizacje } from "@content/realizacje";
 
@@ -63,14 +64,7 @@ export async function generateMetadata({
       url: path,
       title: `${title} — ${site.name}`,
       description: realizacja.intro,
-      images: [
-        {
-          url: realizacja.cover.image.src,
-          width: realizacja.cover.image.width,
-          height: realizacja.cover.image.height,
-          alt: realizacja.cover.alt,
-        },
-      ],
+      images: [coverAsOgImage(realizacja)],
     },
     twitter: { card: "summary_large_image" },
   };
