@@ -56,11 +56,30 @@ const DROGI: readonly {
  * How many realizations the home page shows before sending the visitor on.
  *
  * Enough to prove the archive is real, few enough that the page still ends
- * somewhere. Shown two across, which is the only arrangement that holds at
- * both counts this can actually take: four once the launch archive lands, and
- * the two placeholder events until it does.
+ * somewhere. How they are laid out is `SIATKA`'s business, not this number's.
  */
 const WYBRANE = 4;
+
+/**
+ * The two-across grid both card sections use, and how wide a card in it
+ * actually gets.
+ *
+ * The class list and the `sizes` string are one decision and are kept in one
+ * place for the reason `/realizacje` gives for the same pairing: `next/image`
+ * says nothing when the two disagree, it just serves a soft picture. Stating
+ * them separately at each section would be the third and fourth place this
+ * width is written down.
+ *
+ * Two columns rather than four, because two is the only arrangement that holds
+ * at both counts these sections can take — four selected realizations once the
+ * launch archive lands, and the two placeholder events until it does. Four
+ * across would also make a card small enough that the decoration in it stops
+ * being legible, which is the one thing a visitor came to look at.
+ */
+const SIATKA = {
+  className: "mt-12 grid grid-cols-1 gap-12 sm:mt-16 lg:grid-cols-2 lg:gap-16",
+  sizes: "(min-width: 64rem) 34rem, 100vw",
+} as const;
 
 /**
  * The three questions, answered here rather than teased.
@@ -94,6 +113,50 @@ const PYTANIA: readonly { pytanie: string; odpowiedz: string }[] = [
     pytanie: "Czy zajmujecie się montażem i demontażem dekoracji?",
     odpowiedz:
       "Tak. Przywozimy dekorację, składamy ją przed przyjęciem i zabieramy po nim, bez angażowania gości ani obsługi sali.",
+  },
+];
+
+/**
+ * One way of getting in touch.
+ *
+ * The address is a function of the value rather than a value beside it,
+ * because the two must not be built independently: a `tel:` composed from the
+ * placeholder dials nothing, and a tapped link that does nothing reads as a
+ * broken site rather than an unfinished one. Keeping it a function means the
+ * address is only ever composed for a value the site actually knows.
+ */
+interface Kanal {
+  etykieta: string;
+  wartosc: string;
+  adres: (wartosc: string) => string;
+}
+
+/**
+ * The channels, in the order someone deciding how to make contact meets them.
+ *
+ * Phone first: the design spec's whole reason for showing these rather than
+ * only a form is the visitor who would rather call than write. All three are
+ * outstanding client input and show as placeholders until they arrive, at
+ * which point they become tappable with no change here.
+ */
+const KANALY: readonly Kanal[] = [
+  {
+    etykieta: "Telefon",
+    wartosc: site.phone,
+    // Spaces are how a Polish number is written and not something a dialler
+    // accepts.
+    adres: (numer) => `tel:${numer.replace(/\s/g, "")}`,
+  },
+  {
+    etykieta: "E-mail",
+    wartosc: site.email,
+    adres: (adres) => `mailto:${adres}`,
+  },
+  {
+    etykieta: "Instagram",
+    wartosc: site.instagram,
+    // Shown to a human with its leading "@", which the profile URL cannot have.
+    adres: (uchwyt) => `https://instagram.com/${uchwyt.replace(/^@/, "")}`,
   },
 ];
 
@@ -212,7 +275,7 @@ export default function HomePage() {
           Co dekorujemy
         </h2>
 
-        <ul className="mt-12 grid grid-cols-1 gap-12 sm:mt-16 lg:grid-cols-2 lg:gap-16">
+        <ul className={SIATKA.className}>
           {drogi.map((droga) => (
             <li key={droga.kategoria}>
               <Link
@@ -231,7 +294,7 @@ export default function HomePage() {
                     alt=""
                     placeholder="blur"
                     fill
-                    sizes="(min-width: 64rem) 34rem, 100vw"
+                    sizes={SIATKA.sizes}
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                   />
                 </div>
@@ -259,13 +322,10 @@ export default function HomePage() {
           Wybrane realizacje
         </h2>
 
-        <ul className="mt-12 grid grid-cols-1 gap-12 sm:mt-16 lg:grid-cols-2 lg:gap-16">
+        <ul className={SIATKA.className}>
           {wybrane.map((realizacja) => (
             <li key={realizacja.slug}>
-              <RealizationCard
-                realizacja={realizacja}
-                sizes="(min-width: 64rem) 34rem, 100vw"
-              />
+              <RealizationCard realizacja={realizacja} sizes={SIATKA.sizes} />
             </li>
           ))}
         </ul>
@@ -321,27 +381,11 @@ export default function HomePage() {
           </p>
 
           <ul className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-10">
-            <li>
-              <KanalKontaktu
-                etykieta="Telefon"
-                wartosc={site.phone}
-                href={`tel:${site.phone.replace(/\s/g, "")}`}
-              />
-            </li>
-            <li>
-              <KanalKontaktu
-                etykieta="E-mail"
-                wartosc={site.email}
-                href={`mailto:${site.email}`}
-              />
-            </li>
-            <li>
-              <KanalKontaktu
-                etykieta="Instagram"
-                wartosc={site.instagram}
-                href={`https://instagram.com/${site.instagram.replace(/^@/, "")}`}
-              />
-            </li>
+            {KANALY.map((kanal) => (
+              <li key={kanal.etykieta}>
+                <KanalKontaktu kanal={kanal} />
+              </li>
+            ))}
           </ul>
         </div>
       </section>
@@ -349,38 +393,20 @@ export default function HomePage() {
   );
 }
 
-/**
- * One way of getting in touch, shown as a link only once the site knows what
- * it is pointing at.
- *
- * The owner's phone, address and handle are outstanding client input, and a
- * `tel:` link built out of the placeholder dials nothing — worse than plain
- * text, because a tapped link that does nothing reads as a broken site rather
- * than an unfinished one. The moment the real values land in `site`, these
- * become tappable with no change here.
- */
-function KanalKontaktu({
-  etykieta,
-  wartosc,
-  href,
-}: {
-  etykieta: string;
-  wartosc: string;
-  href: string;
-}) {
+function KanalKontaktu({ kanal }: { kanal: Kanal }) {
   return (
     <span className="block">
       <span className="block text-xs tracking-[0.25em] text-blush-300 uppercase">
-        {etykieta}
+        {kanal.etykieta}
       </span>
-      {isPending(wartosc) ? (
-        <span className="mt-2 block text-cream-50/60">{wartosc}</span>
+      {isPending(kanal.wartosc) ? (
+        <span className="mt-2 block text-cream-50/60">{kanal.wartosc}</span>
       ) : (
         <a
-          href={href}
+          href={kanal.adres(kanal.wartosc)}
           className="mt-2 block text-lg text-cream-50 transition-colors hover:text-blush-200"
         >
-          {wartosc}
+          {kanal.wartosc}
         </a>
       )}
     </span>

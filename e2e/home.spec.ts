@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator } from "@playwright/test";
 
 /**
  * The home page, seen the way a stranger arriving from Google sees it.
@@ -21,6 +21,24 @@ const IMPREZY = {
   anchor: "imprezy",
 };
 
+/**
+ * Wait for a photograph to have actually arrived and decoded, rather than for
+ * an `img` element to exist. A page that renders every frame and fills none of
+ * them passes the second check and shows the visitor nothing.
+ */
+async function expectLoaded(zdjecie: Locator) {
+  await expect(zdjecie).toBeVisible();
+  await expect
+    .poll(() =>
+      zdjecie.evaluate(
+        (image) =>
+          (image as HTMLImageElement).complete &&
+          (image as HTMLImageElement).naturalWidth > 0,
+      ),
+    )
+    .toBe(true);
+}
+
 test("leads from the home page into a realization and its photographs", async ({
   page,
 }) => {
@@ -35,20 +53,8 @@ test("leads from the home page into a realization and its photographs", async ({
   await expect(page).toHaveURL(/\/realizacje\/[a-z0-9-]+$/);
   await expect(page.getByRole("heading", { level: 1 })).toContainText(tytul);
 
-  // The point of arriving is seeing the event, so the assertion is that a
-  // photograph is actually on screen and decoded — not merely that an `img`
-  // element exists.
-  const zdjecie = page.getByRole("main").getByRole("img").first();
-  await expect(zdjecie).toBeVisible();
-  await expect
-    .poll(() =>
-      zdjecie.evaluate(
-        (image) =>
-          (image as HTMLImageElement).complete &&
-          (image as HTMLImageElement).naturalWidth > 0,
-      ),
-    )
-    .toBe(true);
+  // The point of arriving is seeing the event, not reaching an address.
+  await expectLoaded(page.getByRole("main").getByRole("img").first());
 });
 
 test("opens on a photograph that loads eagerly, and asks for no video", async ({
@@ -73,20 +79,15 @@ test("opens on a photograph that loads eagerly, and asks for no video", async ({
   await page.goto("/");
 
   const poster = page.getByRole("main").getByRole("img").first();
-  await expect(poster).toBeVisible();
+  await expectLoaded(poster);
 
-  // Above the fold and eager. A poster the browser defers cannot be the thing
-  // a visitor sees first.
+  /*
+   * Eager. Next omits the attribute entirely on a `priority` image and writes
+   * `loading="lazy"` on every other one, so this is the assertion that goes
+   * red the day someone drops `priority` from the poster — and a poster the
+   * browser defers cannot be the thing a visitor sees first.
+   */
   expect(await poster.getAttribute("loading")).not.toBe("lazy");
-  await expect
-    .poll(() =>
-      poster.evaluate(
-        (image) =>
-          (image as HTMLImageElement).complete &&
-          (image as HTMLImageElement).naturalWidth > 0,
-      ),
-    )
-    .toBe(true);
 
   await expect(page.locator("video")).toHaveCount(0);
   expect(mediaRequests).toEqual([]);
