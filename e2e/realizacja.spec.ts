@@ -100,6 +100,67 @@ test("holds its layout still while the photographs load", async ({ page }) => {
   expect(shift).toBeLessThan(0.1);
 });
 
+/**
+ * Where each photograph sits on the page, in document coordinates rather than
+ * viewport ones, so the measurements survive the scrolling above.
+ */
+async function photographBoxes(page: import("@playwright/test").Page) {
+  return page
+    .getByRole("main")
+    .getByRole("img")
+    .evaluateAll((images) =>
+      images.map((image) => {
+        const rect = image.getBoundingClientRect();
+        return {
+          top: rect.top + window.scrollY,
+          bottom: rect.bottom + window.scrollY,
+          width: rect.width,
+        };
+      }),
+    );
+}
+
+test("sets its photographs one after another rather than in a grid", async ({
+  page,
+}) => {
+  await page.goto(url);
+  await scrollToBottom(page);
+
+  const boxes = await photographBoxes(page);
+  expect(boxes.length).toBeGreaterThan(1);
+
+  // No two photographs share a row. This is what lets the page hold up at
+  // five: a grid's final row would be left with orphans, a sequence has no
+  // final row to strand them in.
+  for (let i = 1; i < boxes.length; i += 1) {
+    expect(boxes[i].top).toBeGreaterThanOrEqual(boxes[i - 1].bottom - 1);
+  }
+});
+
+test("scrolls vertically on a phone, with nothing pushed off the side", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(url);
+  await scrollToBottom(page);
+
+  const { scrollWidth, innerWidth, scrollHeight, innerHeight } =
+    await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      innerWidth: window.innerWidth,
+      scrollHeight: document.documentElement.scrollHeight,
+      innerHeight: window.innerHeight,
+    }));
+
+  expect(scrollWidth).toBeLessThanOrEqual(innerWidth);
+  expect(scrollHeight).toBeGreaterThan(innerHeight);
+
+  // Large photographs, not thumbnails: each one fills the column it is given.
+  for (const box of await photographBoxes(page)) {
+    expect(box.width).toBeGreaterThan(innerWidth * 0.8);
+  }
+});
+
 test("previews with its own title, description and image when the link is shared", async ({
   page,
   request,
@@ -108,14 +169,14 @@ test("previews with its own title, description and image when the link is shared
 
   await expect(page).toHaveTitle(new RegExp(TITLE));
 
-  const content = async (selector: string) =>
+  const metaContent = async (selector: string) =>
     page.locator(selector).first().getAttribute("content");
 
-  expect(await content('meta[name="description"]')).toBeTruthy();
-  expect(await content('meta[property="og:title"]')).toContain(TITLE);
-  expect(await content('meta[property="og:description"]')).toBeTruthy();
+  expect(await metaContent('meta[name="description"]')).toBeTruthy();
+  expect(await metaContent('meta[property="og:title"]')).toContain(TITLE);
+  expect(await metaContent('meta[property="og:description"]')).toBeTruthy();
 
-  const image = await content('meta[property="og:image"]');
+  const image = await metaContent('meta[property="og:image"]');
   expect(image).toBeTruthy();
   // Messaging apps fetch the image from outside the page, so a relative URL
   // never resolves.

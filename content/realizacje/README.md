@@ -40,6 +40,10 @@ The import is what gives the build intrinsic dimensions, and those are what
 remove layout shift and produce blur-up placeholders without a single
 hand-maintained number.
 
+The `intro` is also the page's meta description, so it is the snippet Google
+shows under the search result. Two sentences, under about 160 characters —
+past that the listing ends mid-thought.
+
 **Every photograph carries its own Polish alt text.** Not templated, not
 derived from the title — a sentence describing what is in the frame. It is what
 a screen reader user gets instead of the photograph, and it is what search

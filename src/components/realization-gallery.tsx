@@ -25,17 +25,17 @@ export function RealizationGallery({
 }) {
   return (
     <div className="mt-16 flex flex-col gap-16 sm:mt-24 sm:gap-24">
-      {photos.map((zdjecie, index) => {
-        const isLandscape = zdjecie.image.width >= zdjecie.image.height;
+      {photos.map((photo, index) => {
+        const isLandscape = photo.image.width >= photo.image.height;
 
         return (
           <figure
-            key={zdjecie.image.src}
+            key={photo.image.src}
             className={`mx-auto w-full ${isLandscape ? "max-w-5xl" : "max-w-2xl"}`}
           >
             <Image
-              src={zdjecie.image}
-              alt={zdjecie.alt}
+              src={photo.image}
+              alt={photo.alt}
               placeholder="blur"
               // The first photograph is the page's largest contentful paint;
               // the rest are below the fold and load as the visitor reaches

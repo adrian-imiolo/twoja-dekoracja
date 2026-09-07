@@ -44,7 +44,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const realizacja = findRealizacja(slug);
 
-  if (!realizacja) return {};
+  // Unreachable while `dynamicParams` is false — but silently returning empty
+  // metadata would turn a registry fault into a page that previews as nothing,
+  // which is exactly the failure this route exists to avoid.
+  if (!realizacja) notFound();
 
   const path = `/realizacje/${realizacja.slug}`;
   const title = `${realizacja.title} — ${realizacja.place}`;
