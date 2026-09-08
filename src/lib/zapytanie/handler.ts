@@ -5,6 +5,7 @@ import {
   type BledyPol,
   zapytanieSchema,
 } from "@/lib/zapytanie/schema";
+import type { LimitZapytan } from "@/lib/zapytanie/limit";
 import type { InquiryMailer } from "@/lib/zapytanie/mailer";
 
 /**
@@ -111,6 +112,22 @@ function wyslaneMaszynowo(payload: Record<string, unknown>): boolean {
   return Date.now() - sygnaly.data.otwarto < MINIMALNY_CZAS_MS;
 }
 
+/**
+ * Who sent this, as far as the platform is willing to say.
+ *
+ * `x-real-ip` first: Vercel sets it to the connecting address itself, where
+ * `x-forwarded-for` is a chain whose left-hand entries the client wrote. Null
+ * rather than a stand-in when neither is there, because every unnamed visitor
+ * would otherwise share one allowance and the sixth of them would go unheard.
+ */
+function nadawca(request: Request): string | null {
+  const realny = request.headers.get("x-real-ip")?.trim();
+  if (realny) return realny;
+
+  const przekazany = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  return przekazany || null;
+}
+
 async function odczytajPayload(
   request: Request,
 ): Promise<Record<string, unknown> | null> {
@@ -128,6 +145,7 @@ async function odczytajPayload(
 export async function handleZapytanie(
   request: Request,
   mailer: InquiryMailer,
+  limit: LimitZapytan,
 ): Promise<Response> {
   const payload = await odczytajPayload(request);
   // Not something the form can produce, so there is no field to blame and
@@ -152,6 +170,23 @@ export async function handleZapytanie(
       status: "niepoprawne",
       bledy: bledyPol(wynik.error),
     });
+  }
+
+  /*
+   * Counted here rather than at the door, and the difference matters: what is
+   * being rationed is inquiries in the owner's inbox, not requests at the
+   * endpoint. A visitor who mistypes their number five times is trying to
+   * reach someone, and a limiter that counted those attempts would go on to
+   * swallow the corrected sixth — the one submission of the six that was
+   * worth having.
+   */
+  const kto = nadawca(request);
+  if (kto !== null && !limit.przyjmij(kto)) {
+    // Answered like a delivered inquiry, for the same reason the honeypot is,
+    // and logged for the same reason too: this is the second path that says
+    // "wysłane" with nothing sent.
+    console.info("[zapytanie] Zgłoszenie odrzucone: limit nadawcy.");
+    return odpowiedz(200, { status: "wyslane" });
   }
 
   const doreczenie = await mailer.send(wynik.data);
