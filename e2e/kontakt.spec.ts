@@ -1,5 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
 
+import { MINIMALNY_CZAS_MS } from "../src/lib/zapytanie/handler";
+
 /**
  * The flow the site exists to produce, driven the way a visitor drives it.
  *
@@ -33,7 +35,7 @@ async function wypelnij(page: Page) {
    * the confirmation appear over a submission that was thrown away — passing
    * while the form was broken, which is the one thing it is here to catch.
    */
-  await page.waitForTimeout(3_500);
+  await page.waitForTimeout(MINIMALNY_CZAS_MS + 500);
 }
 
 test("confirms an inquiry that went through, and stops asking for another", async ({

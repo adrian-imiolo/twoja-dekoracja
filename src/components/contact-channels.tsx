@@ -1,4 +1,4 @@
-import { isPending, site } from "@/lib/site";
+import { isPending, site, telHref } from "@/lib/site";
 
 /**
  * The ways of reaching this business that are not the form.
@@ -36,9 +36,7 @@ const KANALY: readonly Kanal[] = [
   {
     etykieta: "Telefon",
     wartosc: site.phone,
-    // Spaces are how a Polish number is written and not something a dialler
-    // accepts.
-    adres: (numer) => `tel:${numer.replace(/\s/g, "")}`,
+    adres: telHref,
   },
   {
     etykieta: "E-mail",

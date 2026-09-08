@@ -22,7 +22,7 @@ function recordingMailer() {
   return { mailer, wyslane };
 }
 
-const WAZNE = {
+const POPRAWNE = {
   imie: "Anna Kowalska",
   kontakt: "anna@example.com",
   typWydarzenia: "wesele",
@@ -44,7 +44,7 @@ describe("handleZapytanie", () => {
   it("turns a valid submission into one inquiry the owner can reply to", async () => {
     const { mailer, wyslane } = recordingMailer();
 
-    const response = await handleZapytanie(submission(WAZNE), mailer);
+    const response = await handleZapytanie(submission(POPRAWNE), mailer);
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ status: "wyslane" });
@@ -53,12 +53,12 @@ describe("handleZapytanie", () => {
     const [email] = wyslane;
     expect(email.to).toBe(ODBIORCA);
     // Hitting reply reaches the person who wrote, not the site's own mailbox.
-    expect(email.replyTo).toBe(WAZNE.kontakt);
+    expect(email.replyTo).toBe(POPRAWNE.kontakt);
     // Triage happens in the inbox list, so the subject alone has to answer
     // "what kind of event, and when".
     expect(email.subject).toContain("Wesele");
-    expect(email.subject).toContain(WAZNE.termin);
-    for (const wartosc of Object.values(WAZNE)) {
+    expect(email.subject).toContain(POPRAWNE.termin);
+    for (const wartosc of Object.values(POPRAWNE)) {
       expect(email.text).toContain(wartosc);
     }
   });
@@ -67,7 +67,7 @@ describe("handleZapytanie", () => {
     const { mailer, wyslane } = recordingMailer();
 
     const response = await handleZapytanie(
-      submission({ ...WAZNE, kontakt: "+48 601 234 567" }),
+      submission({ ...POPRAWNE, kontakt: "+48 601 234 567" }),
       mailer,
     );
 
@@ -82,7 +82,7 @@ describe("handleZapytanie", () => {
     const { mailer, wyslane } = recordingMailer();
 
     const response = await handleZapytanie(
-      submission({ ...WAZNE, imie: "", kontakt: "gdzie-tam", wiadomosc: "cze" }),
+      submission({ ...POPRAWNE, imie: "", kontakt: "gdzie-tam", wiadomosc: "cze" }),
       mailer,
     );
 
@@ -105,7 +105,7 @@ describe("handleZapytanie", () => {
     const { mailer, wyslane } = recordingMailer();
 
     const response = await handleZapytanie(
-      submission({ ...WAZNE, witryna: "https://kasyno.example" }),
+      submission({ ...POPRAWNE, witryna: "https://kasyno.example" }),
       mailer,
     );
 
@@ -120,7 +120,7 @@ describe("handleZapytanie", () => {
     const { mailer, wyslane } = recordingMailer();
 
     const response = await handleZapytanie(
-      submission({ ...WAZNE, otwarto: Date.now() }),
+      submission({ ...POPRAWNE, otwarto: Date.now() }),
       mailer,
     );
 
@@ -133,11 +133,43 @@ describe("handleZapytanie", () => {
       throw new Error("Resend nie odpowiada");
     });
 
-    const response = await handleZapytanie(submission(WAZNE), mailer);
+    const response = await handleZapytanie(submission(POPRAWNE), mailer);
 
     expect(response.status).toBe(502);
     await expect(response.json()).resolves.toEqual({
       status: "niedostarczone",
     });
+  });
+
+  it("still sends when the page carried no trap at all", async () => {
+    const { mailer, wyslane } = recordingMailer();
+    const bezPrzynety = new Request("http://localhost/api/kontakt", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ ...POPRAWNE, otwarto: Date.now() - 30_000 }),
+    });
+
+    const response = await handleZapytanie(bezPrzynety, mailer);
+
+    // The trap catches what is in it. Treating its absence as proof of a bot
+    // would mean a form that one day stopped rendering it swallowed every
+    // genuine inquiry, silently.
+    expect(response.status).toBe(200);
+    expect(wyslane).toHaveLength(1);
+  });
+
+  it("drops a submission that never said when it was opened", async () => {
+    const { mailer, wyslane } = recordingMailer();
+    const bezZnacznika = new Request("http://localhost/api/kontakt", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(POPRAWNE),
+    });
+
+    // Unlike the trap, this one has to be required: a threshold that can be
+    // skipped by leaving the field out is not a threshold.
+    await handleZapytanie(bezZnacznika, mailer);
+
+    expect(wyslane).toEqual([]);
   });
 });

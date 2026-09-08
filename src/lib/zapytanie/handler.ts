@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 import {
   bledyPol,
   type BledyPol,
@@ -36,11 +38,58 @@ export type OdpowiedzNaZapytanie =
  * defence — the timestamp comes from the browser and could be forged by anyone
  * who looked — and it is priced accordingly: no state, no service, no cost to
  * the visitor who is actually typing.
+ *
+ * Exported because the end-to-end suite has to wait it out: Playwright fills
+ * the form faster than any person, and a test that did not know this number
+ * would watch the confirmation appear over a discarded submission.
  */
-const MINIMALNY_CZAS_MS = 3_000;
+export const MINIMALNY_CZAS_MS = 3_000;
+
+/**
+ * The two things a submission carries that the visitor never typed.
+ *
+ * Kept beside the inquiry rather than inside `zapytanieSchema`, because they
+ * are not part of what the visitor tells us — the payload is the five fields
+ * and nothing more. Typed and exported all the same, so the names the form
+ * sends and the names this file reads are one decision: the schema's own
+ * promise, that a rule here cannot go missing from the form, would otherwise
+ * not cover the two fields most easily broken by a rename.
+ */
+export const sygnalyAntybotSchema = z.object({
+  /**
+   * When the browser says the form became fillable, in epoch milliseconds.
+   *
+   * Required: a submission without it cannot be measured against the time
+   * threshold, and letting it through unmeasured is how the threshold is
+   * bypassed by simply not sending the field.
+   */
+  otwarto: z.number().finite(),
+  /**
+   * The field no visitor can see. Anything in it was typed by a script.
+   *
+   * Optional, unlike `otwarto`, because absence is not evidence: the trap
+   * catches what is *in* it. Demanding it would mean that a form which one day
+   * stops rendering the trap silently swallows every genuine inquiry — the
+   * failure this site can least afford, traded for nothing.
+   */
+  witryna: z.string().default(""),
+});
+
+export type SygnalyAntybot = z.infer<typeof sygnalyAntybotSchema>;
 
 function odpowiedz(status: number, tresc: OdpowiedzNaZapytanie): Response {
   return Response.json(tresc, { status });
+}
+
+/**
+ * The answer given when an inquiry could not be delivered.
+ *
+ * Exported so that `route.ts`, which fails this way when it cannot even build
+ * a mailer, answers in the same words rather than in a second literal that no
+ * type checks against `OdpowiedzNaZapytanie`.
+ */
+export function odpowiedzNiedostarczone(): Response {
+  return odpowiedz(502, { status: "niedostarczone" });
 }
 
 /**
@@ -52,15 +101,14 @@ function odpowiedz(status: number, tresc: OdpowiedzNaZapytanie): Response {
  * field gives them away.
  */
 function wyslaneMaszynowo(payload: Record<string, unknown>): boolean {
-  // A field no visitor can see, so anything in it was typed by something
-  // filling in every input it found.
-  const przyneta = payload.witryna;
-  if (typeof przyneta === "string" && przyneta.trim() !== "") return true;
+  const sygnaly = sygnalyAntybotSchema.safeParse(payload);
+  // Absent or malformed signals mean the submission did not come from this
+  // form, which is the same answer as tripping either of them.
+  if (!sygnaly.success) return true;
 
-  const otwarto = payload.otwarto;
-  if (typeof otwarto !== "number" || !Number.isFinite(otwarto)) return true;
+  if (sygnaly.data.witryna.trim() !== "") return true;
 
-  return Date.now() - otwarto < MINIMALNY_CZAS_MS;
+  return Date.now() - sygnaly.data.otwarto < MINIMALNY_CZAS_MS;
 }
 
 async function odczytajPayload(
@@ -86,7 +134,17 @@ export async function handleZapytanie(
   // nothing useful to say about it.
   if (!payload) return odpowiedz(400, { status: "niepoprawne", bledy: {} });
 
-  if (wyslaneMaszynowo(payload)) return odpowiedz(200, { status: "wyslane" });
+  if (wyslaneMaszynowo(payload)) {
+    /*
+     * Logged, because this is the one path that answers "wysłane" without
+     * anything being sent. A person who happened to trip it — an autofilled
+     * hidden field, a clock that disagrees — gets a confirmation for an
+     * inquiry nobody will ever read, and the owner's only way of finding out
+     * is this line.
+     */
+    console.info("[zapytanie] Zgłoszenie odrzucone jako maszynowe.");
+    return odpowiedz(200, { status: "wyslane" });
+  }
 
   const wynik = zapytanieSchema.safeParse(payload);
   if (!wynik.success) {
@@ -101,8 +159,8 @@ export async function handleZapytanie(
     // Logged rather than returned: the visitor can do nothing with a provider's
     // error string, and the owner needs it in the deployment's logs to find out
     // why their inbox went quiet.
-    console.error("Nie udało się wysłać zapytania:", doreczenie.powod);
-    return odpowiedz(502, { status: "niedostarczone" });
+    console.error("Nie udało się wysłać zapytania:", doreczenie.reason);
+    return odpowiedzNiedostarczone();
   }
 
   return odpowiedz(200, { status: "wyslane" });

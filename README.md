@@ -34,9 +34,17 @@ sends the inquiry form's contents to the owner through Resend.
 Without `RESEND_API_KEY` and `CONTACT_TO_EMAIL`, the contact form works
 locally and in CI but writes the inquiry to the server log instead of sending
 it — which is what lets the end-to-end suite drive the real route handler with
-no key and no network. A **deployment** missing either variable fails the
-submission outright and shows the visitor the phone number, rather than
-confirming a send that never happened.
+no key and no network.
+
+A form that confirms a send nobody received is the worst thing this site can
+ship, so a missing key is caught twice:
+
+- **A production build refuses to start** without both variables
+  (`next.config.ts`). This is the one that matters — it costs nothing to fix at
+  deploy time.
+- **Any Vercel deployment** that reaches a submission it cannot deliver fails
+  it and shows the visitor the phone number. Previews are deliberately left
+  buildable without a live sending key, so this is what they get.
 
 ## Deployment
 

@@ -16,26 +16,42 @@ import { z } from "zod";
 
 /**
  * The kinds of event this business decorates, in the order someone scanning a
- * dropdown meets them, with the label shown beside the value stored.
+ * dropdown meets them.
  *
- * The pair travels together because the select's options and the enum the
- * schema accepts are the same list: split apart, an event type added to one is
- * an event type missing from the other, and the failure surfaces as a form
- * whose own dropdown is rejected by the server.
+ * The values the schema accepts and the options the select offers are built
+ * from this one list: stated separately, an event type added to one would be
+ * an event type missing from the other, and the failure would surface as a
+ * form whose own dropdown is rejected by the server.
  */
-export const TYPY_WYDARZENIA = [
-  { wartosc: "wesele", etykieta: "Wesele" },
-  { wartosc: "urodziny", etykieta: "Urodziny" },
-  { wartosc: "chrzciny", etykieta: "Chrzciny lub komunia" },
-  { wartosc: "jubileusz", etykieta: "Jubileusz lub rocznica" },
-  { wartosc: "inne", etykieta: "Inna uroczystość" },
+const WARTOSCI_TYPOW = [
+  "wesele",
+  "urodziny",
+  "chrzciny",
+  "jubileusz",
+  "inne",
 ] as const;
 
-export type TypWydarzenia = (typeof TYPY_WYDARZENIA)[number]["wartosc"];
+export type TypWydarzenia = (typeof WARTOSCI_TYPOW)[number];
 
-const WARTOSCI_TYPOW = TYPY_WYDARZENIA.map(
-  (typ) => typ.wartosc,
-) as unknown as [TypWydarzenia, ...TypWydarzenia[]];
+/*
+ * A total `Record` rather than a lookup through the list, so that the two are
+ * kept in step by the type checker instead of at run time: an event type added
+ * above without a label here does not compile, where a `find` would have
+ * returned nothing and the subject line would have said "undefined".
+ */
+const ETYKIETY_TYPOW: Record<TypWydarzenia, string> = {
+  wesele: "Wesele",
+  urodziny: "Urodziny",
+  chrzciny: "Chrzciny lub komunia",
+  jubileusz: "Jubileusz lub rocznica",
+  inne: "Inna uroczystość",
+};
+
+/** The dropdown's options: every accepted value, in the order it is offered. */
+export const TYPY_WYDARZENIA = WARTOSCI_TYPOW.map((wartosc) => ({
+  wartosc,
+  etykieta: ETYKIETY_TYPOW[wartosc],
+}));
 
 /**
  * The human-readable name of an event type.
@@ -45,7 +61,7 @@ const WARTOSCI_TYPOW = TYPY_WYDARZENIA.map(
  * row rather than as a sentence.
  */
 export function etykietaTypu(typ: TypWydarzenia): string {
-  return TYPY_WYDARZENIA.find((wpis) => wpis.wartosc === typ)!.etykieta;
+  return ETYKIETY_TYPOW[typ];
 }
 
 /*

@@ -2,8 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { isPending, site } from "@/lib/site";
-import type { OdpowiedzNaZapytanie } from "@/lib/zapytanie/handler";
+import { isPending, site, telHref } from "@/lib/site";
+import type {
+  OdpowiedzNaZapytanie,
+  SygnalyAntybot,
+} from "@/lib/zapytanie/handler";
 import {
   type BledyPol,
   bledyPol,
@@ -100,15 +103,16 @@ export function InquiryForm() {
     setStan("wysylanie");
     setBledy({});
 
+    const sygnaly: SygnalyAntybot = {
+      otwarto: otwarto.current,
+      witryna: witryna.current?.value ?? "",
+    };
+
     try {
       const odpowiedz = await fetch("/api/kontakt", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          ...wynik.data,
-          otwarto: otwarto.current,
-          witryna: witryna.current?.value ?? "",
-        }),
+        body: JSON.stringify({ ...wynik.data, ...sygnaly }),
       });
 
       const tresc = (await odpowiedz.json()) as OdpowiedzNaZapytanie;
@@ -275,7 +279,7 @@ function Niepowodzenie() {
         <>
           Prosimy o telefon:{" "}
           <a
-            href={`tel:${telefon.replace(/\s/g, "")}`}
+            href={telHref(telefon)}
             className="text-blush-200 underline underline-offset-4"
           >
             {telefon}

@@ -26,6 +26,21 @@ export function isPending(value: string): boolean {
 }
 
 /**
+ * A phone number as something a phone can dial.
+ *
+ * Spaces are how a Polish number is written and not something a dialler
+ * accepts. It lives beside the number rather than at each place one is shown,
+ * because the two pages that offer a number and the form that offers it after
+ * a failed send must not each strip it their own way.
+ *
+ * Only ever called for a number the site knows — `tel:[DO UZUPEŁNIENIA]` dials
+ * nothing and reads as a broken site rather than an unfinished one.
+ */
+export function telHref(numer: string): string {
+  return `tel:${numer.replace(/\s/g, "")}`;
+}
+
+/**
  * The origin the site is served from, needed in absolute form because a shared
  * link's preview image is fetched by a messaging app rather than by the browser
  * that has the page — a relative URL never resolves there.

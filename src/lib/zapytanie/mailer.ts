@@ -30,10 +30,10 @@ export interface InquiryEmail {
  * application has something to say about — the form has to offer the phone
  * number instead — and not an exception in the sense of something unforeseen.
  */
-export type Doreczenie = { ok: true } | { ok: false; powod: string };
+export type Delivery = { ok: true } | { ok: false; reason: string };
 
 /** What the port needs from a transport: take this email, or say why not. */
-export type Wysylka = (email: InquiryEmail) => Promise<void>;
+export type Transport = (email: InquiryEmail) => Promise<void>;
 
 /**
  * The port: hand it a validated inquiry, learn whether it got out.
@@ -43,7 +43,7 @@ export type Wysylka = (email: InquiryEmail) => Promise<void>;
  * `inquiryMailer` — instead of at each call site.
  */
 export interface InquiryMailer {
-  send(zapytanie: Zapytanie): Promise<Doreczenie>;
+  send(zapytanie: Zapytanie): Promise<Delivery>;
 }
 
 /**
@@ -52,7 +52,7 @@ export interface InquiryMailer {
  * Plain text on purpose. This is mail from one person to one person; HTML buys
  * nothing here and costs deliverability, and the owner reads it on a phone.
  */
-export function komponujEmail(zapytanie: Zapytanie, to: string): InquiryEmail {
+export function composeInquiryEmail(zapytanie: Zapytanie, to: string): InquiryEmail {
   const typ = etykietaTypu(zapytanie.typWydarzenia);
 
   return {
@@ -90,16 +90,16 @@ export function komponujEmail(zapytanie: Zapytanie, to: string): InquiryEmail {
  * the Resend implementation would have sent, instead of against its own idea
  * of one.
  */
-export function inquiryMailer(to: string, wyslij: Wysylka): InquiryMailer {
+export function inquiryMailer(to: string, transport: Transport): InquiryMailer {
   return {
     async send(zapytanie) {
       try {
-        await wyslij(komponujEmail(zapytanie, to));
+        await transport(composeInquiryEmail(zapytanie, to));
         return { ok: true };
       } catch (blad) {
         return {
           ok: false,
-          powod: blad instanceof Error ? blad.message : String(blad),
+          reason: blad instanceof Error ? blad.message : String(blad),
         };
       }
     },

@@ -1,4 +1,7 @@
-import { handleZapytanie } from "@/lib/zapytanie/handler";
+import {
+  handleZapytanie,
+  odpowiedzNiedostarczone,
+} from "@/lib/zapytanie/handler";
 import { resolveInquiryMailer } from "@/lib/zapytanie/resend-mailer";
 
 /**
@@ -16,6 +19,6 @@ export async function POST(request: Request): Promise<Response> {
     // The visitor gets the delivery failure, which offers the phone number —
     // an unhandled 500 would show them a blank error with no way forward.
     console.error("Nie udało się przyjąć zapytania:", blad);
-    return Response.json({ status: "niedostarczone" }, { status: 502 });
+    return odpowiedzNiedostarczone();
   }
 }

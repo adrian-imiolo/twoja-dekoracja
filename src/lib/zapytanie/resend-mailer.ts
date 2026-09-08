@@ -4,7 +4,7 @@ import {
   type InquiryEmail,
   type InquiryMailer,
   inquiryMailer,
-  type Wysylka,
+  type Transport,
 } from "@/lib/zapytanie/mailer";
 
 /**
@@ -47,7 +47,7 @@ const ODBIORCA_ZASTEPCZY = "kontakt@localhost";
  * It is emphatically not correct in production, which is why reaching for it
  * is a build error there rather than a quiet fallback — see below.
  */
-const wysylkaDoKonsoli: Wysylka = async (email: InquiryEmail) => {
+const transportDoKonsoli: Transport = async (email: InquiryEmail) => {
   console.info(
     [
       "[zapytanie] RESEND_API_KEY nie jest ustawiony — nic nie zostało wysłane.",
@@ -59,7 +59,7 @@ const wysylkaDoKonsoli: Wysylka = async (email: InquiryEmail) => {
   );
 }
 
-function wysylkaPrzezResend(apiKey: string): Wysylka {
+function transportPrzezResend(apiKey: string): Transport {
   const resend = new Resend(apiKey);
 
   return async (email: InquiryEmail) => {
@@ -88,12 +88,20 @@ function wysylkaPrzezResend(apiKey: string): Wysylka {
  * fault reported by the submission that needed it, not a page that fails to
  * render.
  *
- * The shape of the check follows `resolveSiteUrl` in `src/lib/site.ts`, and
- * for the same reason: a misconfiguration that is harmless locally is
- * catastrophic in a deployment, and it is invisible from the outside — the
- * form would keep saying "wysłane" to every visitor while no inquiry ever
- * arrived. So on Vercel it throws, and the visitor is shown the delivery
- * failure with the phone number, which is a bad day rather than a silent one.
+ * A misconfiguration that is harmless locally is catastrophic in a deployment,
+ * and it is invisible from the outside — the form would keep saying "wysłane"
+ * to every visitor while no inquiry ever arrived. So in a deployment it throws
+ * and the visitor is shown the delivery failure with the phone number, which
+ * is a bad day rather than a silent one.
+ *
+ * This is the second line of defence. The first is in `next.config.ts`, which
+ * refuses to build production without the configuration at all — by the time
+ * this throws, somebody has already tried to get in touch and failed.
+ *
+ * "In a deployment" means `process.env.VERCEL`, which is where the README says
+ * this site is hosted. On any other production host the check would not fire
+ * and inquiries would be written to a log while the form reported success —
+ * worth knowing before this moves.
  */
 export function resolveInquiryMailer(): InquiryMailer {
   const apiKey = process.env.RESEND_API_KEY;
@@ -105,8 +113,8 @@ export function resolveInquiryMailer(): InquiryMailer {
         "Wysyłka zapytań nie jest skonfigurowana — ustaw RESEND_API_KEY i CONTACT_TO_EMAIL.",
       );
     }
-    return inquiryMailer(odbiorca ?? ODBIORCA_ZASTEPCZY, wysylkaDoKonsoli);
+    return inquiryMailer(odbiorca ?? ODBIORCA_ZASTEPCZY, transportDoKonsoli);
   }
 
-  return inquiryMailer(odbiorca, wysylkaPrzezResend(apiKey));
+  return inquiryMailer(odbiorca, transportPrzezResend(apiKey));
 }
