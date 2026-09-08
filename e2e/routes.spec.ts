@@ -108,28 +108,28 @@ test("every navigable route responds successfully", async ({
  *
  * The spec excludes sitemap output from testing as framework wiring, and for
  * the file's shape that is right. Its *coverage* is not wiring: half the list
- * is generated from the registry and half is written by hand, and the hand-written
- * half goes stale exactly when it matters — a route is added, every page still
- * renders, and the one page nobody links to yet is the one that never gets
- * crawled. Nothing but this says so.
+ * is generated from the registry and half is written by hand, and the
+ * hand-written half goes stale exactly when it matters — a route is added,
+ * every page still renders, and the one page nobody links to yet is the one
+ * that never gets crawled.
  *
- * Cheap on purpose. The realization pages come from `/realizacje` rather than
- * from a second crawl, and the static routes from the list above, so the two
- * tests in this file cannot disagree about what the site publishes.
+ * So the expectation is the crawl, not a second hand-written list. A list
+ * here would go stale in step with the one it is checking, which is no check
+ * at all. It costs a second walk of a dozen static pages and buys the only
+ * assertion that can catch the divergence.
+ *
+ * Equality in both directions. A route missing from the sitemap is invisible
+ * to a search engine; a route in the sitemap that the site no longer serves is
+ * a crawler sent to a 404, and both are silent.
  */
-test("the sitemap names every page the site publishes", async ({
+test("the sitemap names every page the site publishes, and only those", async ({
   page,
   request,
   baseURL,
 }) => {
-  await page.goto("/realizacje");
-  const trasyRealizacji = await page
-    .locator('a[href^="/realizacje/"]')
-    .evaluateAll((kotwice) =>
-      kotwice.map((kotwica) => kotwica.getAttribute("href") ?? ""),
-    );
+  test.setTimeout(120_000);
 
-  expect(trasyRealizacji.length).toBeGreaterThan(0);
+  const odwiedzone = await przejdzCalyServis(page, baseURL!);
 
   const odpowiedz = await request.get("/sitemap.xml");
   expect(odpowiedz.status()).toBe(200);
@@ -145,7 +145,10 @@ test("the sitemap names every page the site publishes", async ({
     expect(adres.origin).toBe(new URL(baseURL!).origin);
   }
 
-  expect(adresy.map((adres) => adres.pathname)).toEqual(
-    expect.arrayContaining([...TRASY_STALE, ...new Set(trasyRealizacji)]),
+  const uporzadkowane = (sciezki: Iterable<string>) =>
+    [...new Set(sciezki)].sort();
+
+  expect(uporzadkowane(adresy.map((adres) => adres.pathname))).toEqual(
+    uporzadkowane(odwiedzone.keys()),
   );
 });

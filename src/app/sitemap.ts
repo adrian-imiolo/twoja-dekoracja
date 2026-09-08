@@ -12,10 +12,10 @@ import { realizacje } from "@content/realizacje";
  * one new page nobody links to yet is the one that never gets crawled.
  *
  * The static half cannot be generated: those routes are files, and the
- * framework offers no enumeration of them. It is a written list, and
- * `e2e/routes.spec.ts` is what keeps it honest — the crawl already walks
- * everything a visitor can reach, and asserts that everything it reached is
- * named here.
+ * framework offers no enumeration of them. It is a written list, and what
+ * keeps it honest is `e2e/routes.spec.ts`, which crawls the site from the home
+ * page and asserts that what it reached and what is named here are the same
+ * set. A second written list would have gone stale in step with this one.
  *
  * No `lastModified`, `changeFrequency` or `priority`. Google ignores the last
  * two outright, and the first would have to be invented: nothing in the
