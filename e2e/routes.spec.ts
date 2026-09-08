@@ -102,3 +102,50 @@ test("every navigable route responds successfully", async ({
     ).length,
   ).toBeGreaterThan(0);
 });
+
+/**
+ * The sitemap, checked against what the site actually offers.
+ *
+ * The spec excludes sitemap output from testing as framework wiring, and for
+ * the file's shape that is right. Its *coverage* is not wiring: half the list
+ * is generated from the registry and half is written by hand, and the hand-written
+ * half goes stale exactly when it matters — a route is added, every page still
+ * renders, and the one page nobody links to yet is the one that never gets
+ * crawled. Nothing but this says so.
+ *
+ * Cheap on purpose. The realization pages come from `/realizacje` rather than
+ * from a second crawl, and the static routes from the list above, so the two
+ * tests in this file cannot disagree about what the site publishes.
+ */
+test("the sitemap names every page the site publishes", async ({
+  page,
+  request,
+  baseURL,
+}) => {
+  await page.goto("/realizacje");
+  const trasyRealizacji = await page
+    .locator('a[href^="/realizacje/"]')
+    .evaluateAll((kotwice) =>
+      kotwice.map((kotwica) => kotwica.getAttribute("href") ?? ""),
+    );
+
+  expect(trasyRealizacji.length).toBeGreaterThan(0);
+
+  const odpowiedz = await request.get("/sitemap.xml");
+  expect(odpowiedz.status()).toBe(200);
+
+  const adresy = [...(await odpowiedz.text()).matchAll(/<loc>([^<]+)<\/loc>/g)]
+    .map((dopasowanie) => dopasowanie[1])
+    .map((adres) => new URL(adres));
+
+  // Absolute and this site's own. A sitemap is fetched on its own, without the
+  // page it describes, so a relative entry names nothing — and one pointing at
+  // another origin is ignored outright.
+  for (const adres of adresy) {
+    expect(adres.origin).toBe(new URL(baseURL!).origin);
+  }
+
+  expect(adresy.map((adres) => adres.pathname)).toEqual(
+    expect.arrayContaining([...TRASY_STALE, ...new Set(trasyRealizacji)]),
+  );
+});
