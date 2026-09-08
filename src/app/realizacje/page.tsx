@@ -2,13 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { RealizationCard } from "@/components/realization-card";
-import { coverAsOgImage } from "@/lib/metadata";
+import { sharePreview } from "@/lib/metadata";
 import { site } from "@/lib/site";
-import {
-  type Kategoria,
-  realizacje,
-  realizacjeInCategory,
-} from "@content/realizacje";
+import { type Kategoria, realizacjeInCategory } from "@content/realizacje";
 
 /**
  * All the work, on one page, under two headings.
@@ -47,18 +43,11 @@ export const metadata: Metadata = {
   title: "Realizacje",
   description: `Wesela i przyjęcia okolicznościowe, które dekorowaliśmy w ${site.cityLocative} i okolicach. Zdjęcia z każdej realizacji.`,
   alternates: { canonical: "/realizacje" },
-  openGraph: {
-    type: "website",
-    locale: "pl_PL",
-    siteName: site.name,
-    url: "/realizacje",
+  ...sharePreview({
+    path: "/realizacje",
     title: `Realizacje — ${site.name}`,
     description: `Wesela i przyjęcia okolicznościowe, które dekorowaliśmy w ${site.cityLocative} i okolicach.`,
-    // The registry's order is authored with the strongest work first, so its
-    // head is the right thing to put in front of whoever the link was sent to.
-    images: realizacje.slice(0, 1).map(coverAsOgImage),
-  },
-  twitter: { card: "summary_large_image" },
+  }),
 };
 
 /**

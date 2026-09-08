@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ContactChannels } from "@/components/contact-channels";
 import { HeroMedia } from "@/components/hero-media";
 import { RealizationCard } from "@/components/realization-card";
-import { coverAsOgImage } from "@/lib/metadata";
+import { sharePreview } from "@/lib/metadata";
 import { site } from "@/lib/site";
 import { wybranePytania } from "@content/faq";
 import {
@@ -106,18 +106,11 @@ const PYTANIA = wybranePytania("obszar", "termin", "montaz");
 export const metadata: Metadata = {
   description: site.description,
   alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    locale: "pl_PL",
-    siteName: site.name,
-    url: "/",
+  ...sharePreview({
+    path: "/",
     title: `${site.name} — ${site.tagline.toLowerCase()} w ${site.cityLocative}`,
     description: site.description,
-    // The strongest work rather than a logo: whoever the link was sent to is
-    // being asked to judge decorations, and a wordmark shows them none.
-    images: realizacje.slice(0, 1).map(coverAsOgImage),
-  },
-  twitter: { card: "summary_large_image" },
+  }),
 };
 
 export default function HomePage() {

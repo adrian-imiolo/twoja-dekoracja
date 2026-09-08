@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { RealizationGallery } from "@/components/realization-gallery";
-import { coverAsOgImage } from "@/lib/metadata";
+import { asOgImage, sharePreview } from "@/lib/metadata";
 import { site } from "@/lib/site";
 import { findRealizacja, realizacje } from "@content/realizacje";
 
@@ -57,16 +57,13 @@ export async function generateMetadata({
     title,
     description: realizacja.intro,
     alternates: { canonical: path },
-    openGraph: {
+    ...sharePreview({
       type: "article",
-      locale: "pl_PL",
-      siteName: site.name,
-      url: path,
+      path,
       title: `${title} — ${site.name}`,
       description: realizacja.intro,
-      images: [coverAsOgImage(realizacja)],
-    },
-    twitter: { card: "summary_large_image" },
+      images: [asOgImage(realizacja.cover)],
+    }),
   };
 }
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import { asOgImage, sharePreview } from "@/lib/metadata";
 import { DO_UZUPELNIENIA, site } from "@/lib/site";
 import { portret } from "@content/o-nas";
 
@@ -31,14 +32,14 @@ export const metadata: Metadata = {
   title: "O nas",
   description: OPIS,
   alternates: { canonical: "/o-nas" },
-  openGraph: {
-    type: "website",
-    locale: "pl_PL",
-    siteName: site.name,
-    url: "/o-nas",
+  ...sharePreview({
+    path: "/o-nas",
     title: `O nas — ${site.name}`,
     description: OPIS,
-  },
+    // The one page whose subject is the person rather than the work, so it
+    // previews with the portrait the page itself leads on.
+    images: [asOgImage(portret)],
+  }),
 };
 
 export default function ONasPage() {
