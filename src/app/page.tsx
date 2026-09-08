@@ -4,7 +4,9 @@ import Link from "next/link";
 
 import { ContactChannels } from "@/components/contact-channels";
 import { HeroMedia } from "@/components/hero-media";
+import { JsonLd } from "@/components/json-ld";
 import { RealizationCard } from "@/components/realization-card";
+import { localBusinessSchema } from "@/lib/local-business";
 import { sharePreview } from "@/lib/metadata";
 import { site } from "@/lib/site";
 import { wybranePytania } from "@content/faq";
@@ -113,6 +115,22 @@ export const metadata: Metadata = {
   }),
 };
 
+/**
+ * The business itself, described for a search engine.
+ *
+ * On the home page and only here: it describes the entity rather than the
+ * document, so repeating it under every route would offer the same business
+ * several times over and invite a crawler to decide which copy is canonical.
+ *
+ * The archive's leading photograph goes with it. A `LocalBusiness` is shown
+ * with its picture wherever one is shown at all, and the strongest work is a
+ * truer picture of this business than a wordmark would be.
+ */
+const pracowniaSchema = localBusinessSchema(
+  site,
+  realizacje.slice(0, 1).map((realizacja) => realizacja.cover.image.src),
+);
+
 export default function HomePage() {
   /*
    * The category's own work supplies the picture, so the fork shows what it
@@ -130,6 +148,8 @@ export default function HomePage() {
 
   return (
     <>
+      <JsonLd data={pracowniaSchema} />
+
       {/*
        * The band is sized by the copy standing in it, not by the photograph
        * behind it — which is what lets the eventual video drop in without
