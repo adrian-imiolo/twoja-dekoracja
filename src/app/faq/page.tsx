@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { JsonLd } from "@/components/json-ld";
+import { sharePreview } from "@/lib/metadata";
 import { site } from "@/lib/site";
 import { pytania } from "@content/faq";
 
@@ -19,21 +20,16 @@ import { pytania } from "@content/faq";
  * three of them and the two pages must not disagree.
  */
 
-const OPIS =
-  "Cena, terminy, obszar działania, montaż i demontaż — odpowiedzi na pytania, które padają najczęściej, zanim ktokolwiek do nas napisze.";
+const OPIS = `Cena, terminy, obszar działania, montaż i demontaż — odpowiedzi na najczęstsze pytania o dekoracje wesel i przyjęć w ${site.cityLocative}.`;
 
 export const metadata: Metadata = {
   title: "Częste pytania",
   description: OPIS,
-  alternates: { canonical: "/faq" },
-  openGraph: {
-    type: "website",
-    locale: "pl_PL",
-    siteName: site.name,
-    url: "/faq",
+  ...sharePreview({
+    path: "/faq",
     title: `Częste pytania — ${site.name}`,
     description: OPIS,
-  },
+  }),
 };
 
 /**

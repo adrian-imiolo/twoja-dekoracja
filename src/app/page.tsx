@@ -4,8 +4,10 @@ import Link from "next/link";
 
 import { ContactChannels } from "@/components/contact-channels";
 import { HeroMedia } from "@/components/hero-media";
+import { JsonLd } from "@/components/json-ld";
 import { RealizationCard } from "@/components/realization-card";
-import { coverAsOgImage } from "@/lib/metadata";
+import { localBusinessSchema } from "@/lib/local-business";
+import { sharePreview } from "@/lib/metadata";
 import { site } from "@/lib/site";
 import { wybranePytania } from "@content/faq";
 import {
@@ -105,20 +107,22 @@ const PYTANIA = wybranePytania("obszar", "termin", "montaz");
 
 export const metadata: Metadata = {
   description: site.description,
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    locale: "pl_PL",
-    siteName: site.name,
-    url: "/",
+  ...sharePreview({
+    path: "/",
     title: `${site.name} — ${site.tagline.toLowerCase()} w ${site.cityLocative}`,
     description: site.description,
-    // The strongest work rather than a logo: whoever the link was sent to is
-    // being asked to judge decorations, and a wordmark shows them none.
-    images: realizacje.slice(0, 1).map(coverAsOgImage),
-  },
-  twitter: { card: "summary_large_image" },
+  }),
 };
+
+/**
+ * The business itself, described for a search engine.
+ *
+ * On the home page and only here: it describes the entity rather than the
+ * document, so repeating it under every route would offer the same business
+ * several times over and invite a crawler to decide which copy is canonical.
+ *
+ */
+const pracowniaSchema = localBusinessSchema();
 
 export default function HomePage() {
   /*
@@ -137,6 +141,8 @@ export default function HomePage() {
 
   return (
     <>
+      <JsonLd data={pracowniaSchema} />
+
       {/*
        * The band is sized by the copy standing in it, not by the photograph
        * behind it — which is what lets the eventual video drop in without

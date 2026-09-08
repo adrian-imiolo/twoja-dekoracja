@@ -55,6 +55,22 @@ export function telHref(numer: string): string {
 }
 
 /**
+ * An Instagram handle as the address of the profile it names.
+ *
+ * The leading `@` is how a handle is written for a person and is not part of
+ * the URL. It lives beside the handle for the same reason `telHref` lives
+ * beside the number: the contact list offers the profile to a visitor and the
+ * home page's structured data offers it to a search engine, and the two must
+ * not each strip the `@` their own way — a `sameAs` carrying `@` is a link to
+ * a profile that does not exist.
+ *
+ * Only ever called for a handle the site knows.
+ */
+export function instagramHref(uchwyt: string): string {
+  return `https://instagram.com/${uchwyt.replace(/^@/, "")}`;
+}
+
+/**
  * The origin the site is served from, needed in absolute form because a shared
  * link's preview image is fetched by a messaging app rather than by the browser
  * that has the page — a relative URL never resolves there.

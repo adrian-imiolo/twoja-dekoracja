@@ -1,4 +1,4 @@
-import { isPending, site, telHref } from "@/lib/site";
+import { instagramHref, isPending, site, telHref } from "@/lib/site";
 
 /**
  * The ways of reaching this business that are not the form.
@@ -47,7 +47,7 @@ const KANALY: readonly Kanal[] = [
     etykieta: "Instagram",
     wartosc: site.instagram,
     // Shown to a human with its leading "@", which the profile URL cannot have.
-    adres: (uchwyt) => `https://instagram.com/${uchwyt.replace(/^@/, "")}`,
+    adres: instagramHref,
   },
 ];
 

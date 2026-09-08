@@ -102,3 +102,53 @@ test("every navigable route responds successfully", async ({
     ).length,
   ).toBeGreaterThan(0);
 });
+
+/**
+ * The sitemap, checked against what the site actually offers.
+ *
+ * The spec excludes sitemap output from testing as framework wiring, and for
+ * the file's shape that is right. Its *coverage* is not wiring: half the list
+ * is generated from the registry and half is written by hand, and the
+ * hand-written half goes stale exactly when it matters — a route is added,
+ * every page still renders, and the one page nobody links to yet is the one
+ * that never gets crawled.
+ *
+ * So the expectation is the crawl, not a second hand-written list. A list
+ * here would go stale in step with the one it is checking, which is no check
+ * at all. It costs a second walk of a dozen static pages and buys the only
+ * assertion that can catch the divergence.
+ *
+ * Equality in both directions. A route missing from the sitemap is invisible
+ * to a search engine; a route in the sitemap that the site no longer serves is
+ * a crawler sent to a 404, and both are silent.
+ */
+test("the sitemap names every page the site publishes, and only those", async ({
+  page,
+  request,
+  baseURL,
+}) => {
+  test.setTimeout(120_000);
+
+  const odwiedzone = await przejdzCalyServis(page, baseURL!);
+
+  const odpowiedz = await request.get("/sitemap.xml");
+  expect(odpowiedz.status()).toBe(200);
+
+  const adresy = [...(await odpowiedz.text()).matchAll(/<loc>([^<]+)<\/loc>/g)]
+    .map((dopasowanie) => dopasowanie[1])
+    .map((adres) => new URL(adres));
+
+  // Absolute and this site's own. A sitemap is fetched on its own, without the
+  // page it describes, so a relative entry names nothing — and one pointing at
+  // another origin is ignored outright.
+  for (const adres of adresy) {
+    expect(adres.origin).toBe(new URL(baseURL!).origin);
+  }
+
+  const uporzadkowane = (sciezki: Iterable<string>) =>
+    [...new Set(sciezki)].sort();
+
+  expect(uporzadkowane(adresy.map((adres) => adres.pathname))).toEqual(
+    uporzadkowane(odwiedzone.keys()),
+  );
+});

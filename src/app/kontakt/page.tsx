@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { ContactChannels } from "@/components/contact-channels";
 import { InquiryForm } from "@/components/inquiry-form";
+import { sharePreview } from "@/lib/metadata";
 import { site } from "@/lib/site";
 
 /**
@@ -17,18 +18,21 @@ import { site } from "@/lib/site";
 const OPIS =
   "Napisz do nas — powiedz, co planujecie i kiedy, a odpiszemy, czy termin jest wolny.";
 
+/**
+ * What a search result shows, which the page's own lead deliberately does not
+ * repeat: someone reading the page is already here and knows what the business
+ * does, and someone reading the result does not.
+ */
+const META_OPIS = `Zapytaj o dekoracje weselne i okolicznościowe w ${site.cityLocative}. ${OPIS}`;
+
 export const metadata: Metadata = {
   title: "Kontakt",
-  description: `Zapytaj o dekoracje weselne i okolicznościowe w ${site.cityLocative}. ${OPIS}`,
-  alternates: { canonical: "/kontakt" },
-  openGraph: {
-    type: "website",
-    locale: "pl_PL",
-    siteName: site.name,
-    url: "/kontakt",
+  description: META_OPIS,
+  ...sharePreview({
+    path: "/kontakt",
     title: `Kontakt — ${site.name}`,
-    description: OPIS,
-  },
+    description: META_OPIS,
+  }),
 };
 
 export default function KontaktPage() {

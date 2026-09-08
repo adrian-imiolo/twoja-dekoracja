@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { sharePreview } from "@/lib/metadata";
 import { DO_UZUPELNIENIA, site } from "@/lib/site";
 
 /**
@@ -38,7 +39,11 @@ const OPIS = `Jakie dane zbiera formularz kontaktowy ${site.name}, po co, na jak
 export const metadata: Metadata = {
   title: "Polityka prywatności",
   description: OPIS,
-  alternates: { canonical: "/polityka-prywatnosci" },
+  ...sharePreview({
+    path: "/polityka-prywatnosci",
+    title: `Polityka prywatności — ${site.name}`,
+    description: OPIS,
+  }),
 };
 
 /**
