@@ -27,12 +27,17 @@ export const MAKSIMUM_NA_OKNO = 5;
 export const OKNO_MS = 60 * 60 * 1000;
 
 /**
- * How many senders are remembered at once before the whole count is dropped.
+ * How many senders are remembered at once.
  *
  * A flood from many addresses would otherwise grow this map for as long as the
- * instance lives. Forgetting costs a few inquiries their limit; not forgetting
- * costs the endpoint its memory, and a contact form that has run out of memory
- * is exactly the silent failure this site cannot ship.
+ * instance lives, and a contact form that has run out of memory is exactly the
+ * silent failure this site cannot ship. Past this many, the sender heard from
+ * least recently is forgotten.
+ *
+ * Least-recently-heard rather than a wipe, and the difference is the whole
+ * point: emptying the map under pressure would let anyone with ten thousand
+ * addresses clear their own count by spending them, which is a limiter that
+ * rewards the one thing it exists to stop.
  */
 export const MAKSIMUM_NADAWCOW = 10_000;
 
@@ -54,6 +59,12 @@ export interface LimitZapytan {
  * cross an hour without waiting one.
  */
 export function limitZapytan(czas: () => number = Date.now): LimitZapytan {
+  /*
+   * A `Map` iterates in insertion order, and every accepted attempt deletes
+   * its sender before re-adding them. That makes the map its own queue: the
+   * first key is always the sender heard from longest ago, so eviction is one
+   * lookup rather than a scan of ten thousand entries on every request.
+   */
   const wedlugNadawcy = new Map<string, number[]>();
 
   function wOknie(nadawca: string, teraz: number): number[] {
@@ -61,16 +72,12 @@ export function limitZapytan(czas: () => number = Date.now): LimitZapytan {
     return zapisane.filter((kiedy) => teraz - kiedy < OKNO_MS);
   }
 
-  function zrobMiejsce(teraz: number): void {
-    if (wedlugNadawcy.size < MAKSIMUM_NADAWCOW) return;
-
-    for (const nadawca of [...wedlugNadawcy.keys()]) {
-      if (wOknie(nadawca, teraz).length === 0) wedlugNadawcy.delete(nadawca);
+  function zrobMiejsce(): void {
+    while (wedlugNadawcy.size >= MAKSIMUM_NADAWCOW) {
+      const najdawniejSlyszany = wedlugNadawcy.keys().next();
+      if (najdawniejSlyszany.done) return;
+      wedlugNadawcy.delete(najdawniejSlyszany.value);
     }
-
-    // Every sender is still inside their window, so there is nothing stale to
-    // drop and the only way to bound this is to start over.
-    if (wedlugNadawcy.size >= MAKSIMUM_NADAWCOW) wedlugNadawcy.clear();
   }
 
   return {
@@ -80,7 +87,10 @@ export function limitZapytan(czas: () => number = Date.now): LimitZapytan {
 
       if (proby.length >= MAKSIMUM_NA_OKNO) return false;
 
-      zrobMiejsce(teraz);
+      // Removed before being re-added, so this sender goes to the back of the
+      // queue and is not the one evicted to make room for themselves.
+      wedlugNadawcy.delete(nadawca);
+      zrobMiejsce();
       wedlugNadawcy.set(nadawca, [...proby, teraz]);
       return true;
     },

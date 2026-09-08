@@ -83,6 +83,25 @@ function odpowiedz(status: number, tresc: OdpowiedzNaZapytanie): Response {
 }
 
 /**
+ * Discards the submission and tells the sender it went through.
+ *
+ * The two abuse controls that drop a submission answer in the same words a
+ * delivered inquiry gets, so that a script cannot learn from the reply which
+ * one caught it. That makes these the only paths that say "wysłane" with
+ * nothing sent, and the log line is the owner's sole way of finding out — so
+ * discarding and logging are one function rather than two statements a third
+ * control could one day half-copy.
+ *
+ * The reason is passed as the whole sentence, not a fragment: these lines are
+ * grepped for in `vercel logs`, and composing them from a template would have
+ * quietly reworded the one already in use.
+ */
+function odrzucCicho(powod: string): Response {
+  console.info(`[zapytanie] ${powod}`);
+  return odpowiedz(200, { status: "wyslane" });
+}
+
+/**
  * The answer given when an inquiry could not be delivered.
  *
  * Exported so that `route.ts`, which fails this way when it cannot even build
@@ -115,17 +134,19 @@ function wyslaneMaszynowo(payload: Record<string, unknown>): boolean {
 /**
  * Who sent this, as far as the platform is willing to say.
  *
- * `x-real-ip` first: Vercel sets it to the connecting address itself, where
- * `x-forwarded-for` is a chain whose left-hand entries the client wrote. Null
- * rather than a stand-in when neither is there, because every unnamed visitor
- * would otherwise share one allowance and the sixth of them would go unheard.
+ * `x-real-ip` and nothing else. Vercel sets it to the address that actually
+ * connected; `x-forwarded-for` is a chain whose left-hand entries the client
+ * writes, so falling back to it would meter exactly the senders who can
+ * rotate it at will — protection that reads as protection and is not.
+ *
+ * Null rather than a stand-in when the header is absent, matching the
+ * honeypot's rule that absence is not evidence: one shared allowance for every
+ * unnamed visitor would silence the site the moment a proxy stopped setting
+ * the header. The cost is stated plainly — a deployment that does not set it
+ * has no rate limit at all.
  */
 function nadawca(request: Request): string | null {
-  const realny = request.headers.get("x-real-ip")?.trim();
-  if (realny) return realny;
-
-  const przekazany = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  return przekazany || null;
+  return request.headers.get("x-real-ip")?.trim() || null;
 }
 
 async function odczytajPayload(
@@ -152,16 +173,12 @@ export async function handleZapytanie(
   // nothing useful to say about it.
   if (!payload) return odpowiedz(400, { status: "niepoprawne", bledy: {} });
 
+  /*
+   * A person who happened to trip this — an autofilled hidden field, a clock
+   * that disagrees — gets a confirmation for an inquiry nobody will ever read.
+   */
   if (wyslaneMaszynowo(payload)) {
-    /*
-     * Logged, because this is the one path that answers "wysłane" without
-     * anything being sent. A person who happened to trip it — an autofilled
-     * hidden field, a clock that disagrees — gets a confirmation for an
-     * inquiry nobody will ever read, and the owner's only way of finding out
-     * is this line.
-     */
-    console.info("[zapytanie] Zgłoszenie odrzucone jako maszynowe.");
-    return odpowiedz(200, { status: "wyslane" });
+    return odrzucCicho("Zgłoszenie odrzucone jako maszynowe.");
   }
 
   const wynik = zapytanieSchema.safeParse(payload);
@@ -182,11 +199,7 @@ export async function handleZapytanie(
    */
   const kto = nadawca(request);
   if (kto !== null && !limit.przyjmij(kto)) {
-    // Answered like a delivered inquiry, for the same reason the honeypot is,
-    // and logged for the same reason too: this is the second path that says
-    // "wysłane" with nothing sent.
-    console.info("[zapytanie] Zgłoszenie odrzucone: limit nadawcy.");
-    return odpowiedz(200, { status: "wyslane" });
+    return odrzucCicho("Zgłoszenie odrzucone: limit nadawcy.");
   }
 
   const doreczenie = await mailer.send(wynik.data);

@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 
 import { handleZapytanie } from "./handler";
 import { limitZapytan, type LimitZapytan, MAKSIMUM_NA_OKNO } from "./limit";
-import { type InquiryEmail, inquiryMailer } from "./mailer";
+import {
+  type InquiryEmail,
+  type InquiryMailer,
+  inquiryMailer,
+} from "./mailer";
 
 const ODBIORCA = "kontakt@twojadekoracja.pl";
 
@@ -55,7 +59,7 @@ function submission(
  */
 function przyjmij(
   request: Request,
-  mailer: Parameters<typeof handleZapytanie>[1],
+  mailer: InquiryMailer,
   limit: LimitZapytan = limitZapytan(),
 ) {
   return handleZapytanie(request, mailer, limit);
