@@ -317,6 +317,8 @@ None of these block starting implementation. All of them block launching.
 - Client's name as it should appear publicly, phone number, email address and
   Instagram handle
 - Real copy for `/o-nas` and the FAQ answers
+- A portrait of the person running the business, for `/o-nas` — ships as a
+  placeholder card, and the page does not do its job until it is a real face
 - Privacy policy details — ships with `[DO UZUPEŁNIENIA]` placeholders
 - Hero video, supplied later; launches with a still
 - Confirmation that Vercel Web Analytics satisfies what the client means by
