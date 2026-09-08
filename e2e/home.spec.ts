@@ -119,6 +119,8 @@ test("puts a way of making contact within one click of the first screen", async 
 
   await page.getByRole("link", { name: "Napisz do nas" }).click();
 
+  // The hero's call to action now leads to a page rather than to an anchor
+  // further down this one, so the heading it lands on is that page's.
   await expect(
     page.getByRole("heading", { name: /Porozmawiajmy/ }),
   ).toBeInViewport();

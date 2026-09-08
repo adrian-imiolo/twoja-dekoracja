@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import { ContactChannels } from "@/components/contact-channels";
 import { HeroMedia } from "@/components/hero-media";
 import { RealizationCard } from "@/components/realization-card";
 import { coverAsOgImage } from "@/lib/metadata";
-import { isPending, site } from "@/lib/site";
+import { site } from "@/lib/site";
 import {
   type Kategoria,
   realizacje,
@@ -116,50 +117,6 @@ const PYTANIA: readonly { pytanie: string; odpowiedz: string }[] = [
   },
 ];
 
-/**
- * One way of getting in touch.
- *
- * The address is a function of the value rather than a value beside it,
- * because the two must not be built independently: a `tel:` composed from the
- * placeholder dials nothing, and a tapped link that does nothing reads as a
- * broken site rather than an unfinished one. Keeping it a function means the
- * address is only ever composed for a value the site actually knows.
- */
-interface Kanal {
-  etykieta: string;
-  wartosc: string;
-  adres: (wartosc: string) => string;
-}
-
-/**
- * The channels, in the order someone deciding how to make contact meets them.
- *
- * Phone first: the design spec's whole reason for showing these rather than
- * only a form is the visitor who would rather call than write. All three are
- * outstanding client input and show as placeholders until they arrive, at
- * which point they become tappable with no change here.
- */
-const KANALY: readonly Kanal[] = [
-  {
-    etykieta: "Telefon",
-    wartosc: site.phone,
-    // Spaces are how a Polish number is written and not something a dialler
-    // accepts.
-    adres: (numer) => `tel:${numer.replace(/\s/g, "")}`,
-  },
-  {
-    etykieta: "E-mail",
-    wartosc: site.email,
-    adres: (adres) => `mailto:${adres}`,
-  },
-  {
-    etykieta: "Instagram",
-    wartosc: site.instagram,
-    // Shown to a human with its leading "@", which the profile URL cannot have.
-    adres: (uchwyt) => `https://instagram.com/${uchwyt.replace(/^@/, "")}`,
-  },
-];
-
 export const metadata: Metadata = {
   description: site.description,
   alternates: { canonical: "/" },
@@ -222,14 +179,8 @@ export default function HomePage() {
             >
               Zobacz realizacje
             </Link>
-            {/*
-             * An address on this page rather than `/kontakt`, which does not
-             * exist yet. It becomes that route's address when it does, and in
-             * the meantime the site's one call to action leads somewhere real
-             * instead of to a 404.
-             */}
             <Link
-              href="#kontakt"
+              href="/kontakt"
               className="border border-plum-800 px-8 py-4 text-sm tracking-[0.2em] text-cream-50/85 uppercase transition-colors hover:border-blush-300 hover:text-blush-200"
             >
               Napisz do nas
@@ -366,49 +317,33 @@ export default function HomePage() {
       </section>
 
       {/*
-       * The one thing the site exists to produce. The form itself is a later
-       * issue; until it lands this section is the contact — which is also why
-       * it carries the channels rather than only pointing at them.
+       * The one thing the site exists to produce, closing the page it opened.
+       * It carries the channels rather than only pointing at `/kontakt`,
+       * because the visitor who has read this far and would rather call should
+       * not have to load another page to find the number.
        */}
       <section id="kontakt" className="page-shell scroll-mt-12 pb-24 sm:pb-32">
         <div className="border border-plum-800 bg-plum-900 px-8 py-16 text-center sm:px-16">
           <h2 className="font-display text-3xl leading-tight text-cream-50 sm:text-4xl">
-            Porozmawiajmy o Waszym przyjęciu
+            Zostaw nam wiadomość
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-cream-50/80">
             Napiszcie, co planujecie i kiedy — odpiszemy, czy termin jest wolny
             i co da się z niego zrobić.
           </p>
 
-          <ul className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-10">
-            {KANALY.map((kanal) => (
-              <li key={kanal.etykieta}>
-                <KanalKontaktu kanal={kanal} />
-              </li>
-            ))}
-          </ul>
+          <p className="mt-10">
+            <Link
+              href="/kontakt"
+              className="inline-block border border-blush-300 px-8 py-4 text-sm tracking-[0.2em] text-blush-200 uppercase transition-colors hover:bg-blush-300 hover:text-plum-950"
+            >
+              Wypełnij formularz
+            </Link>
+          </p>
+
+          <ContactChannels className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-10" />
         </div>
       </section>
     </>
-  );
-}
-
-function KanalKontaktu({ kanal }: { kanal: Kanal }) {
-  return (
-    <span className="block">
-      <span className="block text-xs tracking-[0.25em] text-blush-300 uppercase">
-        {kanal.etykieta}
-      </span>
-      {isPending(kanal.wartosc) ? (
-        <span className="mt-2 block text-cream-50/60">{kanal.wartosc}</span>
-      ) : (
-        <a
-          href={kanal.adres(kanal.wartosc)}
-          className="mt-2 block text-lg text-cream-50 transition-colors hover:text-blush-200"
-        >
-          {kanal.wartosc}
-        </a>
-      )}
-    </span>
   );
 }
