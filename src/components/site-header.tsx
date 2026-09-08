@@ -19,18 +19,39 @@ export function SiteHeader() {
         </Link>
 
         {/*
-         * Two links, still not a navigation bar. These are the only pages that
-         * exist beyond the home page, and each would otherwise be reachable
-         * only from within the page body — which puts `/kontakt` behind a
-         * scroll on every visit, on the one route the site is built to reach.
-         * The rest of the navigation arrives with the pages it would point at.
+         * Every page the site has beyond the home page, in the order a visitor
+         * uses them: the work first, then the person behind it, then the
+         * questions that stand between them and writing, then writing.
+         *
+         * Four links is the whole site and also the point at which the row
+         * stops fitting a narrow phone beside a wordmark whose letter-spacing
+         * is not negotiable, so the nav wraps within itself rather than
+         * pushing the header wider. The privacy policy is deliberately not
+         * here — it lives in the footer, where someone looking for it already
+         * looks, and where it does not take a quarter of the navigation from
+         * the pages that sell the work.
          */}
-        <nav aria-label="Główna" className="flex items-center gap-6 sm:gap-10">
+        <nav
+          aria-label="Główna"
+          className="flex flex-wrap items-center gap-x-6 gap-y-3 sm:gap-x-8"
+        >
           <Link
             href="/realizacje"
             className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
           >
             Realizacje
+          </Link>
+          <Link
+            href="/o-nas"
+            className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
+          >
+            O nas
+          </Link>
+          <Link
+            href="/faq"
+            className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
+          >
+            FAQ
           </Link>
           <Link
             href="/kontakt"

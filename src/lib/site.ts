@@ -7,7 +7,20 @@
  * is held in both the nominative it is listed under and the locative that
  * prose needs — "w Szczecin" is a grammatical error a visitor will notice.
  */
-const PENDING = "[DO UZUPEŁNIENIA]";
+/**
+ * What the site shows where it is waiting on the client.
+ *
+ * Exported because two kinds of hole need the same marker and a visitor must
+ * not be able to tell them apart. `site` uses it for a business fact nobody
+ * has supplied yet; `/polityka-prywatnosci` and `/o-nas` use it inside prose,
+ * for a sentence only the client can write. Both are the same promise to
+ * whoever is reading a preview — this is unfinished, and here is where.
+ *
+ * Rendering it is what this is for. Asking whether a value *is* it stays
+ * `isPending`'s job: the sentinel's shape is then compared in exactly one
+ * place, which is the point the doc below makes.
+ */
+export const DO_UZUPELNIENIA = "[DO UZUPEŁNIENIA]";
 
 /**
  * Whether a fact is still a placeholder rather than something the site knows.
@@ -17,12 +30,13 @@ const PENDING = "[DO UZUPEŁNIENIA]";
  * only be shown as text, because a link to `tel:[DO UZUPEŁNIENIA]` dials
  * nothing and looks like a fault rather than an unfinished detail.
  *
- * Exported as a question rather than exporting `PENDING` itself so the
- * sentinel stays one string in one file — the moment its shape is compared at
- * a call site, changing it means finding every comparison.
+ * A question rather than a comparison every caller writes for itself. The
+ * marker is exported for rendering, but its *shape* is only ever tested here —
+ * the moment a call site writes `=== DO_UZUPELNIENIA`, changing the marker
+ * means finding every comparison rather than editing one line.
  */
 export function isPending(value: string): boolean {
-  return value === PENDING;
+  return value === DO_UZUPELNIENIA;
 }
 
 /**
@@ -82,8 +96,8 @@ export const site = {
   city: "Szczecin",
   cityLocative: "Szczecinie",
   serviceArea: ["Szczecin", "Police", "Stargard", "Goleniów", "Świnoujście"],
-  owner: PENDING,
-  phone: PENDING,
-  email: PENDING,
-  instagram: PENDING,
+  owner: DO_UZUPELNIENIA,
+  phone: DO_UZUPELNIENIA,
+  email: DO_UZUPELNIENIA,
+  instagram: DO_UZUPELNIENIA,
 } as const;

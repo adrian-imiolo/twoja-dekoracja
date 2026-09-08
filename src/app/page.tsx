@@ -7,6 +7,7 @@ import { HeroMedia } from "@/components/hero-media";
 import { RealizationCard } from "@/components/realization-card";
 import { coverAsOgImage } from "@/lib/metadata";
 import { site } from "@/lib/site";
+import { wybranePytania } from "@content/faq";
 import {
   type Kategoria,
   realizacje,
@@ -86,36 +87,21 @@ const SIATKA = {
  * The three questions, answered here rather than teased.
  *
  * A teaser that withholds its answers sends a hesitant visitor away to look
- * for them, and `/faq` does not exist yet — so these three are the whole
- * answer, short enough not to bury the page. When the FAQ page lands, this
- * section gains a link to it and keeps the answers: a question with its answer
- * visible is also what Google reads, and a list of bare questions is not.
+ * for them, so these three are answered in full on the page and `/faq` is
+ * offered underneath for the rest. A question with its answer visible is also
+ * what Google reads, and a list of bare questions is not.
  *
- * PLACEHOLDER COPY, except the service area, which comes from `site`. The
- * answers below are plausible rather than confirmed and are deliberately
- * non-committal about lead times. The client confirms or rewrites all of them
- * before launch.
+ * Which three, and why these: they are the ones a visitor is most likely to
+ * leave over rather than ask about. Where the business works decides whether
+ * the rest of the page is even relevant, the lead time decides whether they
+ * are already too late, and setup and takedown is the thing people assume they
+ * will be left holding.
+ *
+ * Named rather than sliced off the front of the FAQ, so `/faq` stays free to
+ * order itself for someone reading the whole page — it leads with price, which
+ * is the wrong thing to end the home page on.
  */
-const PYTANIA: readonly { pytanie: string; odpowiedz: string }[] = [
-  {
-    pytanie: "Gdzie pracujecie?",
-    odpowiedz: `${site.city} i okolice — ${site.serviceArea
-      .filter((miasto) => miasto !== site.city)
-      .join(
-        ", ",
-      )}. Przy większych realizacjach dojeżdżamy również dalej, więc dalszy adres nie przekreśla rozmowy.`,
-  },
-  {
-    pytanie: "Z jakim wyprzedzeniem rezerwować termin?",
-    odpowiedz:
-      "Terminy weselne w sezonie rozchodzą się z dużym wyprzedzeniem, przy mniejszych przyjęciach bywa, że wystarczy kilka tygodni. Najprościej napisać z datą — odpowiemy, czy jest jeszcze wolna.",
-  },
-  {
-    pytanie: "Czy zajmujecie się montażem i demontażem dekoracji?",
-    odpowiedz:
-      "Tak. Przywozimy dekorację, składamy ją przed przyjęciem i zabieramy po nim, bez angażowania gości ani obsługi sali.",
-  },
-];
+const PYTANIA = wybranePytania("obszar", "termin", "montaz");
 
 export const metadata: Metadata = {
   description: site.description,
@@ -198,7 +184,8 @@ export default function HomePage() {
            * PLACEHOLDER COPY — describes the service in the terms the design
            * spec assumes, and says nothing about the person behind it, because
            * the site does not know their name yet. Rewritten with the client
-           * before launch, alongside `/o-nas`.
+           * before launch, alongside `/o-nas`, which this section now hands
+           * off to rather than trying to be.
            */}
           <h2 className="mt-6 font-display text-3xl leading-tight text-cream-50 sm:text-4xl">
             Pracownia dekoracji okolicznościowych
@@ -211,6 +198,14 @@ export default function HomePage() {
           </p>
           <p className="mt-8 text-sm tracking-[0.2em] text-blush-300 uppercase">
             {site.serviceArea.join(" · ")}
+          </p>
+          <p className="mt-8">
+            <Link
+              href="/o-nas"
+              className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
+            >
+              Poznaj nas
+            </Link>
           </p>
         </div>
       </section>
@@ -304,7 +299,7 @@ export default function HomePage() {
 
         <dl className="mt-12 grid gap-10 sm:mt-16 lg:grid-cols-3 lg:gap-12">
           {PYTANIA.map((pozycja) => (
-            <div key={pozycja.pytanie}>
+            <div key={pozycja.id}>
               <dt className="font-display text-xl text-cream-50">
                 {pozycja.pytanie}
               </dt>
@@ -314,6 +309,15 @@ export default function HomePage() {
             </div>
           ))}
         </dl>
+
+        <p className="mt-12">
+          <Link
+            href="/faq"
+            className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
+          >
+            Wszystkie pytania
+          </Link>
+        </p>
       </section>
 
       {/*
