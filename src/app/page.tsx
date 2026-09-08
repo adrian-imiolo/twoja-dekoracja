@@ -107,7 +107,6 @@ const PYTANIA = wybranePytania("obszar", "termin", "montaz");
 
 export const metadata: Metadata = {
   description: site.description,
-  alternates: { canonical: "/" },
   ...sharePreview({
     path: "/",
     title: `${site.name} — ${site.tagline.toLowerCase()} w ${site.cityLocative}`,

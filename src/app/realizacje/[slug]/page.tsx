@@ -56,7 +56,6 @@ export async function generateMetadata({
   return {
     title,
     description: realizacja.intro,
-    alternates: { canonical: path },
     ...sharePreview({
       type: "article",
       path,

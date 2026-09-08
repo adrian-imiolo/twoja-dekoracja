@@ -25,7 +25,6 @@ const OPIS = `Cena, terminy, obszar działania, montaż i demontaż — odpowied
 export const metadata: Metadata = {
   title: "Częste pytania",
   description: OPIS,
-  alternates: { canonical: "/faq" },
   ...sharePreview({
     path: "/faq",
     title: `Częste pytania — ${site.name}`,

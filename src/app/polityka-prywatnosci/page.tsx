@@ -39,7 +39,6 @@ const OPIS = `Jakie dane zbiera formularz kontaktowy ${site.name}, po co, na jak
 export const metadata: Metadata = {
   title: "Polityka prywatności",
   description: OPIS,
-  alternates: { canonical: "/polityka-prywatnosci" },
   ...sharePreview({
     path: "/polityka-prywatnosci",
     title: `Polityka prywatności — ${site.name}`,

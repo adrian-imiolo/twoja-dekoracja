@@ -42,7 +42,6 @@ const SEKCJE: readonly { kategoria: Kategoria; heading: string; lead: string }[]
 export const metadata: Metadata = {
   title: "Realizacje",
   description: `Wesela i przyjęcia okolicznościowe, które dekorowaliśmy w ${site.cityLocative} i okolicach. Zdjęcia z każdej realizacji.`,
-  alternates: { canonical: "/realizacje" },
   ...sharePreview({
     path: "/realizacje",
     title: `Realizacje — ${site.name}`,

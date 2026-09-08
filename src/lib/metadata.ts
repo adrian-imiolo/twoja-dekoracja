@@ -65,6 +65,10 @@ function domyslnyPodglad(): OgImage[] {
  *
  * `url` and the image paths stay relative and are resolved against
  * `metadataBase` in the root layout, so the origin is decided in one place.
+ *
+ * The canonical comes back with them because it is the same path, and a page
+ * that writes its own address twice is a page that can disagree with itself
+ * about where it lives — in metadata, where nothing rendered would show it.
  */
 export function sharePreview(strona: {
   /** The page's own path, e.g. `/kontakt`. */
@@ -76,8 +80,9 @@ export function sharePreview(strona: {
   images?: readonly OgImage[];
   /** `article` for a single realization; everything else is a `website`. */
   type?: "website" | "article";
-}): Pick<Metadata, "openGraph" | "twitter"> {
+}): Pick<Metadata, "alternates" | "openGraph" | "twitter"> {
   return {
+    alternates: { canonical: strona.path },
     openGraph: {
       type: strona.type ?? "website",
       locale: "pl_PL",

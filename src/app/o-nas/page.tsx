@@ -31,7 +31,6 @@ const OPIS = `Kto stoi za pracownią ${site.name} i dlaczego zajmujemy się deko
 export const metadata: Metadata = {
   title: "O nas",
   description: OPIS,
-  alternates: { canonical: "/o-nas" },
   ...sharePreview({
     path: "/o-nas",
     title: `O nas — ${site.name}`,

@@ -28,7 +28,6 @@ const META_OPIS = `Zapytaj o dekoracje weselne i okolicznościowe w ${site.cityL
 export const metadata: Metadata = {
   title: "Kontakt",
   description: META_OPIS,
-  alternates: { canonical: "/kontakt" },
   ...sharePreview({
     path: "/kontakt",
     title: `Kontakt — ${site.name}`,
