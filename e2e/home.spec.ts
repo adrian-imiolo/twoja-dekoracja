@@ -125,3 +125,45 @@ test("puts a way of making contact within one click of the first screen", async 
     page.getByRole("heading", { name: /Porozmawiajmy/ }),
   ).toBeInViewport();
 });
+
+/**
+ * The structured data, read off the rendered page.
+ *
+ * Asserted here rather than in `src/lib/local-business.test.ts` because the
+ * two facts worth checking only exist after a build: the photograph's URL,
+ * which Vitest cannot see, and the whole block as a search engine receives it.
+ *
+ * The failure this guards is silent in a way nothing else on the site is. A
+ * block naming a residential address, or offering `[DO UZUPEŁNIENIA]` as a
+ * phone number, renders as nothing at all — the page looks perfect and only a
+ * search engine is misled.
+ */
+test("describes the business to a search engine without giving away an address", async ({
+  page,
+  baseURL,
+}) => {
+  await page.goto("/");
+
+  const surowy = await page
+    .locator('script[type="application/ld+json"]')
+    .first()
+    .textContent();
+  const firma = JSON.parse(surowy ?? "{}");
+
+  expect(firma["@type"]).toBe("LocalBusiness");
+  expect(firma).not.toHaveProperty("address");
+
+  // The service area is the whole point: it is what answers "dekoracje
+  // weselne Szczecin" in the absence of a street the business could name.
+  expect(firma.areaServed.map((miasto: { name: string }) => miasto.name)).toContain(
+    "Szczecin",
+  );
+
+  // A crawler fetches these without the page they were found on, so a
+  // build-relative path resolves nowhere.
+  for (const adres of firma.image ?? []) {
+    expect(new URL(adres).origin).toBe(new URL(baseURL!).origin);
+  }
+
+  expect(surowy).not.toContain("DO UZUPE");
+});

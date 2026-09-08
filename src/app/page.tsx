@@ -122,14 +122,8 @@ export const metadata: Metadata = {
  * document, so repeating it under every route would offer the same business
  * several times over and invite a crawler to decide which copy is canonical.
  *
- * The archive's leading photograph goes with it. A `LocalBusiness` is shown
- * with its picture wherever one is shown at all, and the strongest work is a
- * truer picture of this business than a wordmark would be.
  */
-const pracowniaSchema = localBusinessSchema(
-  site,
-  realizacje.slice(0, 1).map((realizacja) => realizacja.cover.image.src),
-);
+const pracowniaSchema = localBusinessSchema();
 
 export default function HomePage() {
   /*
