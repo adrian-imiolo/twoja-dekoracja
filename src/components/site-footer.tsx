@@ -19,7 +19,7 @@ export function SiteFooter() {
           {site.wordmark}
         </p>
         <p>
-          {site.tagline} — {site.serviceArea.join(", ")}.
+          {site.tagline} — {site.city} i okolice.
         </p>
         <p>
           {site.owner} · tel. {site.phone} · {site.email} · Instagram{" "}

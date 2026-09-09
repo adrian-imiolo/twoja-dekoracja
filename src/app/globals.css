@@ -26,6 +26,7 @@
 
   --font-display: var(--font-marcellus), ui-serif, Georgia, serif;
   --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-wordmark: var(--font-glass-antiqua), ui-serif, Georgia, serif;
 }
 
 /* The site's measure and gutters, shared by every full-width band. */

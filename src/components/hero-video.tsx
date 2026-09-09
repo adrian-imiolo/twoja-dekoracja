@@ -122,7 +122,7 @@ export function HeroVideo({ video }: { video: HeroVideoSource }) {
       onPlaying={function revealOncePlaying() {
         setPlaying(true);
       }}
-      className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+      className={`absolute inset-0 h-full w-full object-cover object-[center_45%] transition-opacity duration-1000 ${
         playing ? "opacity-100" : "opacity-0"
       }`}
       /*

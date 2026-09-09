@@ -137,7 +137,7 @@ export default function ONasPage() {
               cokolwiek zostanie zarezerwowane.
             </p>
             <p className="mt-6 text-sm tracking-[0.2em] text-blush-300 uppercase">
-              {site.serviceArea.join(" · ")}
+              {site.city} i okolice
             </p>
             <p className="mt-8">
               <Link

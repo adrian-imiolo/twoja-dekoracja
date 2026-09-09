@@ -48,6 +48,11 @@ export function RealizationCard({
           placeholder="blur"
           fill
           sizes={sizes}
+          style={
+            realizacja.cover.position
+              ? { objectPosition: realizacja.cover.position }
+              : undefined
+          }
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
         />
       </div>

@@ -131,7 +131,7 @@ export const site = {
     "Dekoracje weselne, urodzinowe i okolicznościowe w Szczecinie i okolicach.",
   city: "Szczecin",
   cityLocative: "Szczecinie",
-  serviceArea: ["Szczecin", "Police", "Stargard", "Goleniów", "Świnoujście"],
+  serviceArea: ["Szczecin"],
   owner: DO_UZUPELNIENIA,
   phone: DO_UZUPELNIENIA,
   email: DO_UZUPELNIENIA,

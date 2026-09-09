@@ -74,11 +74,7 @@ export const pytania: readonly Pytanie[] = [
   {
     id: "obszar",
     pytanie: "Gdzie pracujecie?",
-    odpowiedz: `${site.city} i okolice — ${site.serviceArea
-      .filter((miasto) => miasto !== site.city)
-      .join(
-        ", ",
-      )}. Przy większych realizacjach dojeżdżamy również dalej, więc dalszy adres nie przekreśla rozmowy — napiszcie, gdzie jest sala, a odpowiemy wprost.`,
+    odpowiedz: `${site.city} i okolice. Przy większych realizacjach dojeżdżamy również dalej, więc dalszy adres nie przekreśla rozmowy — napiszcie, gdzie jest sala, a odpowiemy wprost.`,
   },
   {
     id: "pierwsza-rozmowa",

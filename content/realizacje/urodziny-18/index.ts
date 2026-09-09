@@ -18,6 +18,7 @@ const photos: readonly [Fotografia, ...Fotografia[]] = [
   {
     image: zdjecie01,
     alt: "Balonowa brama w bordowej czerwieni, czerni i kremie w kamiennym, sklepionym wnętrzu piwnicy, obok stołu bilardowego",
+    position: "center 15%",
   },
   {
     image: zdjecie02,

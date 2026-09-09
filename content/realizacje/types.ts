@@ -40,6 +40,14 @@ export interface Fotografia {
   image: StaticImageData;
   /** Descriptive Polish, written for this photograph. */
   alt: string;
+  /**
+   * A CSS `object-position` value, for the one place a photograph is cropped
+   * rather than shown whole: the card's `aspect-4/3` cover in a listing (see
+   * `RealizationCard`). Absent unless the default centre crop cuts into the
+   * subject — most photographs never need it. The full-shape gallery on a
+   * realization's own page ignores this; nothing there is ever cropped.
+   */
+  position?: string;
 }
 
 export interface Realizacja {
