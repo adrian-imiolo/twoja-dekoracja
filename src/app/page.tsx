@@ -103,7 +103,7 @@ export default function HomePage() {
 
         <div className="page-shell relative w-full py-20 sm:py-28">
           <p className="text-sm tracking-[0.25em] text-blush-300 uppercase">
-            {site.serviceArea.slice(0, 2).join(" · ")} i okolice
+            {site.city} i okolice
           </p>
           <h1 className="mt-6 max-w-3xl font-display text-4xl leading-tight text-cream-50 sm:text-6xl">
             {site.tagline} w {site.cityLocative}
@@ -152,7 +152,7 @@ export default function HomePage() {
             to, kogo posadzić przy którym stole.
           </p>
           <p className="mt-8 text-sm tracking-[0.2em] text-blush-300 uppercase">
-            {site.serviceArea.join(" · ")}
+            {site.city} i okolice
           </p>
           <p className="mt-8">
             <Link

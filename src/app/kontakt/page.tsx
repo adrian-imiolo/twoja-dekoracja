@@ -75,7 +75,7 @@ export default function KontaktPage() {
           </h2>
           <ContactChannels className="mt-8 grid gap-6" />
           <p className="mt-8 text-sm leading-relaxed text-cream-50/60">
-            {site.serviceArea.join(" · ")}
+            {site.city} i okolice
           </p>
         </section>
       </div>
