@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { RealizationGallery } from "@/components/realization-gallery";
 import { asOgImage, sharePreview } from "@/lib/metadata";
-import { site } from "@/lib/site";
+import { miejsceITermin, site } from "@/lib/site";
 import { findRealizacja, realizacje } from "@content/realizacje";
 
 /**
@@ -36,6 +36,10 @@ export function generateStaticParams() {
  * The preview image is the event's own cover photograph. A generated card
  * would put the brand in front of the work, and the work is what persuades
  * whoever the link was sent to.
+ *
+ * The place/date suffix is dropped entirely for a realization whose venue
+ * isn't known yet — `Tytuł — [DO UZUPEŁNIENIA]` in a browser tab or a search
+ * result would read as a broken build rather than as unfinished content.
  */
 export async function generateMetadata({
   params,
@@ -51,7 +55,10 @@ export async function generateMetadata({
   if (!realizacja) notFound();
 
   const path = `/realizacje/${realizacja.slug}`;
-  const title = `${realizacja.title} — ${realizacja.place}`;
+  const gdzieKiedy = miejsceITermin(realizacja);
+  const title = gdzieKiedy
+    ? `${realizacja.title} — ${gdzieKiedy}`
+    : realizacja.title;
 
   return {
     title,
@@ -82,9 +89,11 @@ export default async function RealizacjaPage({
         <h1 className="font-display text-4xl leading-tight text-cream-50 sm:text-5xl">
           {realizacja.title}
         </h1>
-        <p className="mt-5 text-sm tracking-[0.25em] text-blush-300 uppercase">
-          {realizacja.place} · {realizacja.date}
-        </p>
+        {miejsceITermin(realizacja) ? (
+          <p className="mt-5 text-sm tracking-[0.25em] text-blush-300 uppercase">
+            {miejsceITermin(realizacja)}
+          </p>
+        ) : null}
         <p className="mt-6 font-display text-xl text-blush-200">
           {realizacja.style}
         </p>

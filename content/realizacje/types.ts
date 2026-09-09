@@ -11,10 +11,17 @@ import type { StaticImageData } from "next/image";
 
 /**
  * The two kinds of work the business shows. The union is closed on purpose —
- * the realizations index has exactly two sections, and a third category would
- * be a design decision, not a content one.
+ * every realization is shown in one unified grid with this as a small badge
+ * rather than a hard section split (too few weddings so far to justify one),
+ * but a third category would still be a design decision, not a content one.
  */
 export type Kategoria = "wesela" | "imprezy";
+
+/** What a category reads as on a card — singular, since a badge names one event. */
+export const KATEGORIA_LABEL: Record<Kategoria, string> = {
+  wesela: "Wesele",
+  imprezy: "Impreza",
+};
 
 /**
  * One photograph and the sentence a screen reader hears in its place.

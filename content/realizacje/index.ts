@@ -1,8 +1,13 @@
-import { czterdziesteUrodzinyMarty } from "./czterdzieste-urodziny-marty";
+import { chrzestIRoczek } from "./chrzest-i-roczek";
+import { genderReveal } from "./gender-reveal";
 import { assertRealizacjeValid } from "./integrity";
-import type { Kategoria, Realizacja } from "./types";
-import { weseleAnnyIPiotra } from "./wesele-anny-i-piotra";
+import { otwarcieSalonuKosmetycznego } from "./otwarcie-salonu-kosmetycznego";
+import type { Realizacja } from "./types";
+import { urodziny18 } from "./urodziny-18";
+import { urodziny30 } from "./urodziny-30";
+import { wesele } from "./wesele";
 
+export { KATEGORIA_LABEL } from "./types";
 export type { Fotografia, Kategoria, Realizacja } from "./types";
 
 /**
@@ -13,8 +18,12 @@ export type { Fotografia, Kategoria, Realizacja } from "./types";
  * were called. Adding an event is one import and one line here.
  */
 export const realizacje: readonly Realizacja[] = [
-  weseleAnnyIPiotra,
-  czterdziesteUrodzinyMarty,
+  wesele,
+  urodziny30,
+  urodziny18,
+  chrzestIRoczek,
+  genderReveal,
+  otwarcieSalonuKosmetycznego,
 ];
 
 /*
@@ -29,17 +38,4 @@ assertRealizacjeValid(realizacje);
 
 export function findRealizacja(slug: string): Realizacja | undefined {
   return realizacje.find((realizacja) => realizacja.slug === slug);
-}
-
-/**
- * One category's work, still in the registry's authored order.
- *
- * Filtering rather than holding two separate lists: display order is a single
- * editorial decision about the whole archive, and splitting it into per-category
- * arrays would let the two drift into disagreeing about which event leads.
- */
-export function realizacjeInCategory(
-  kategoria: Kategoria,
-): readonly Realizacja[] {
-  return realizacje.filter((realizacja) => realizacja.category === kategoria);
 }

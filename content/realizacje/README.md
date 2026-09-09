@@ -64,9 +64,8 @@ and names them more clearly.
 
 ## Outstanding
 
-`wesele-anny-i-piotra` and `czterdzieste-urodziny-marty` are **placeholder
-content**. Their JPEGs are generated plum cards marked *zdjęcie zastępcze* and
-their copy is invented. One of each category exists so that both sections of
-`/realizacje` can be seen and tested; replace both with real events before
-launch — nothing in the build or the test run will stop a deployment that still
-contains them.
+The six realizations currently published are real events with real
+photographs. `place` and `date` are not yet known for any of them and ship as
+`DO_UZUPEŁNIENIA` — see `src/lib/site.ts` — which `RealizationCard` and
+`/realizacje/[slug]` render conditionally rather than as literal placeholder
+text. Fill in the real venue and date per realization before launch.

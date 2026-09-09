@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import type { Realizacja } from "@content/realizacje";
+import { miejsceITermin } from "@/lib/site";
+import { KATEGORIA_LABEL, type Realizacja } from "@content/realizacje";
 
 /**
  * One realization as it appears in a listing.
@@ -51,12 +52,17 @@ export function RealizationCard({
         />
       </div>
 
-      <h3 className="mt-6 font-display text-2xl text-blush-200 transition-colors group-hover:text-blush-100">
+      <p className="mt-6 text-xs tracking-[0.25em] text-blush-300/80 uppercase">
+        {KATEGORIA_LABEL[realizacja.category]}
+      </p>
+      <h3 className="mt-2 font-display text-2xl text-blush-200 transition-colors group-hover:text-blush-100">
         {realizacja.title}
       </h3>
-      <p className="mt-2 text-sm tracking-[0.2em] text-blush-300 uppercase">
-        {realizacja.place} · {realizacja.date}
-      </p>
+      {miejsceITermin(realizacja) ? (
+        <p className="mt-2 text-sm tracking-[0.2em] text-blush-300 uppercase">
+          {miejsceITermin(realizacja)}
+        </p>
+      ) : null}
       <p className="mt-3 text-cream-50/75">{realizacja.style}</p>
     </Link>
   );
