@@ -18,11 +18,18 @@ conflict, findability wins.
 
 - **Content lives in the repo.** The developer adds new realizations by pushing
   commits. No CMS, no admin panel, no client-facing upload flow.
-- **Nine realizations at launch**: three weddings, five or six other events. The
-  design must look deliberate at that volume, not sparse.
-- **Photo archive is good** — 50+ real photos, decent quality.
-- **No hero video yet.** The client will supply footage later. The site ships
-  with a static hero and gains the video without a redesign.
+- **Six realizations at launch**: one wedding, five other events — thinner than
+  the nine originally planned for. The design must look deliberate at that
+  volume, not sparse; see "Pages" below for how the Wesela/Imprezy split was
+  amended to fit it.
+- **Photo archive is real but modest** — 24 WhatsApp-compressed photographs
+  across the six launch realizations (2–7 each), not the 50+ originally
+  assumed. `next/image` handles format negotiation regardless of source
+  quality; no separate editing pipeline was built for this archive.
+- **Hero video has shipped.** The client's own footage — a vertical phone pan
+  across a "Młoda Para" neon sign — was transcoded to a 1.77 MB H.264 clip,
+  well inside budget. See "Hero video" below for why a portrait source works
+  fine in a hero band that is itself portrait-shaped on a phone.
 - **Polish only.** No internationalization scaffolding.
 - **Szczecin and surrounding area** (Police, Stargard, Goleniów, Świnoujście)
   is the service region.
@@ -141,23 +148,28 @@ justified for nine.
 
 ### `/` — Home
 
-Video hero (poster-only at launch) → a short statement of who the business is →
-a two-way split into Wesela and Imprezy → four selected realizations → an FAQ
-teaser of three questions → contact call to action.
+Video hero → a short statement of who the business is → four selected
+realizations → an FAQ teaser of three questions → contact call to action.
 
-The Wesela/Imprezy split on the homepage carries the search intent that the
-combined `/realizacje` page cannot, since "dekoracje weselne Szczecin" and
-"dekoracje urodzinowe Szczecin" are different queries.
+**Amended from the original two-way Wesela/Imprezy homepage split.** That split
+carried the search intent a combined `/realizacje` page can't ("dekoracje
+weselne Szczecin" and "dekoracje urodzinowe Szczecin" are different queries),
+but at six launch realizations — one wedding, five events — it meant a section
+holding a single card next to one holding five. Dropped in favour of one
+"Wybrane realizacje" grid; the category survives as a small badge on each card
+(`RealizationCard`) rather than a section boundary, so the split can return
+once there is enough wedding work to justify it.
 
 ### `/realizacje`
 
-One page, two sections — **Wesela** and **Imprezy** — with navigation anchors to
-each. Cards are large and generously spaced, in a grid that reflows without
-leaving an orphan in the final row at nine items.
+One unified grid rather than two sections — same reasoning as the home page
+above. Cards are large and generously spaced, in a grid that reflows without
+leaving an orphan in the final row at six items.
 
-Deliberately not split into two category pages: with three weddings and six
-events, two thin pages would rank worse than one substantial one. Revisit when
-the archive roughly doubles.
+Deliberately not split into two category pages either: with one wedding and
+five events, two thin pages would rank worse than one substantial one. Revisit
+when the archive has enough weddings for its own section, let alone its own
+page.
 
 ### `/realizacje/[slug]`
 
@@ -216,8 +228,14 @@ layered over it when the client supplies footage.
 Above that budget the site is trading search ranking for atmosphere on the one
 page where ranking matters most.
 
-At launch this is a still photograph. Dropping in the video later is a content
-change, not a redesign.
+**Shipped.** The client's footage is a vertical phone pan (a Reel, not a
+landscape take) across a "Młoda Para" neon sign against sheer curtains and
+greenery — re-encoded from a 12.7 MB original to 1.77 MB H.264, comfortably
+under budget. The portrait source turned out not to need a redesign either:
+the hero band is itself `min-h-[78svh]`, so it is already portrait-shaped on a
+phone and only becomes landscape on desktop, where `object-cover` crops the
+same source sensibly at both extremes. The poster is a frame pulled from this
+same clip, so the still-to-video handoff shows no visible cut.
 
 ## Contact form
 
@@ -320,6 +338,8 @@ None of these block starting implementation. All of them block launching.
 - A portrait of the person running the business, for `/o-nas` — ships as a
   placeholder card, and the page does not do its job until it is a real face
 - Privacy policy details — ships with `[DO UZUPEŁNIENIA]` placeholders
-- Hero video, supplied later; launches with a still
+- Venue and date for each of the six launch realizations — ship with
+  `[DO UZUPEŁNIENIA]`, rendered conditionally rather than shown as literal
+  placeholder text (see `src/lib/site.ts`'s `miejsceITermin`)
 - Confirmation that Vercel Web Analytics satisfies what the client means by
   "analytics", rather than GA4
