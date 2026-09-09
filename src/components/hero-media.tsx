@@ -43,7 +43,7 @@ export function HeroMedia() {
         // Full-bleed at every width, so the browser has no narrower candidate
         // to choose and no reason to guess.
         sizes="100vw"
-        className="object-cover"
+        className="object-cover object-[center_45%]"
       />
 
       {hero.video ? <HeroVideo video={hero.video} /> : null}
