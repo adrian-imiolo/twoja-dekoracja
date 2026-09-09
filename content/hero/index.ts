@@ -44,34 +44,26 @@ export interface Hero {
 }
 
 /*
- * PLACEHOLDER CONTENT — `poster.jpg` is a generated plum card marked "zdjęcie
- * zastępcze", the same stand-in the placeholder realizations use, so a preview
- * deployment can never be mistaken for the business's actual work. Replace it
- * with a real photograph before launch.
+ * The client's own footage: a phone pan across a "Młoda Para" neon sign against
+ * sheer curtains and greenery. Shot vertically (a Reel, not a landscape take),
+ * which turns out not to matter — the hero band is `object-cover`, and it
+ * crops this exactly the way it would any other source: full-bleed and
+ * centred on both a tall phone viewport and a wide desktop one.
  *
- * The replacement wants to be wide and to survive being cropped hard on a
- * phone: the frame is 16:9 on a laptop and much taller than it is wide in a
- * portrait viewport, and whatever sits in the middle of the image is the part
- * that always survives.
+ * The poster is a frame pulled from this same clip rather than a separate
+ * photograph, so the still-to-video handoff shows the same shot rather than a
+ * visible cut.
+ *
+ * Re-encoded from the client's 12.7 MB original to 1.77 MB H.264 (audio
+ * stripped, orientation baked into the pixels rather than left as rotation
+ * metadata) — comfortably inside the 3 MB / 10–15 s budget the design spec
+ * sets, with room to spare since this clip is only 6.7 s.
  */
 export const hero: Hero = {
   poster: {
     image: kadrTytulowy,
-    alt: "Sala weselna udekorowana świecami i kompozycjami z pudrowych róż",
+    alt: "Neonowy napis „Młoda Para” na tle zwiewnych zasłon i zieleni",
   },
 
-  /*
-   * The video slot, deliberately empty — written out rather than left off, so
-   * the hole is visible in the shape of the content rather than only in the
-   * type.
-   *
-   * Filling it is the entire change: drop the file into `public/hero/` and put
-   * `{ src: "/hero/hero.mp4", type: "video/mp4" }` here. The hero is already
-   * built to layer a video over the poster without moving anything, so nothing
-   * else on the page or in the layout is touched.
-   *
-   * Budget is 3 MB for a 10–15 second clip. Above that the site is trading
-   * search ranking for atmosphere on the one page where ranking matters most.
-   */
-  video: undefined,
+  video: { src: "/hero/hero.mp4", type: "video/mp4" },
 };
