@@ -98,7 +98,7 @@ export default function HomePage() {
        * moving anything. `svh` rather than `vh` so a phone's collapsing
        * address bar does not leave the first screen taller than the screen.
        */}
-      <section className="relative flex min-h-[78svh] items-end overflow-hidden">
+      <section className="relative flex min-h-[92svh] items-end overflow-hidden">
         <HeroMedia />
 
         <div className="page-shell relative w-full py-20 sm:py-28">
