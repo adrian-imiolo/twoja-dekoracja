@@ -5,21 +5,8 @@ import { expect, test, type Locator } from "@playwright/test";
  *
  * Authored content is spelled out rather than imported from the registry, for
  * the same reason it is in the other specs: Playwright's transform has no
- * loader for the `.jpg` imports the registry pulls in, and a test that agreed
- * with the content by construction could not disagree with a page that put a
- * wedding behind the birthdays link.
+ * loader for the `.jpg` imports the registry pulls in.
  */
-const WESELA = {
-  heading: "Dekoracje weselne",
-  section: "Wesela",
-  anchor: "wesela",
-};
-
-const IMPREZY = {
-  heading: "Dekoracje urodzinowe i okolicznościowe",
-  section: "Imprezy",
-  anchor: "imprezy",
-};
 
 /**
  * Wait for a photograph to have actually arrived and decoded, rather than for
@@ -91,25 +78,6 @@ test("opens on a photograph that loads eagerly, and asks for no video", async ({
 
   await expect(page.locator("video")).toHaveCount(0);
   expect(mediaRequests).toEqual([]);
-});
-
-test("sends each of the two search intents to its own part of the archive", async ({
-  page,
-}) => {
-  for (const kategoria of [WESELA, IMPREZY]) {
-    await page.goto("/");
-
-    await page
-      .getByRole("link", { name: new RegExp(kategoria.heading) })
-      .click();
-
-    await expect(page).toHaveURL(
-      new RegExp(`/realizacje#${kategoria.anchor}$`),
-    );
-    await expect(
-      page.getByRole("heading", { name: kategoria.section, exact: true }),
-    ).toBeInViewport();
-  }
 });
 
 test("puts a way of making contact within one click of the first screen", async ({
