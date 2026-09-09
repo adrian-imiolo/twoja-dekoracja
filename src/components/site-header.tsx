@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 
+import znak from "@/app/icon.png";
 import { site } from "@/lib/site";
 
 export function SiteHeader() {
@@ -13,9 +15,19 @@ export function SiteHeader() {
       <div className="page-shell flex flex-wrap items-center justify-between gap-x-6 gap-y-4 py-8">
         <Link
           href="/"
-          className="font-display text-xl tracking-[0.35em] text-blush-200 uppercase transition-colors hover:text-blush-100 sm:text-2xl"
+          className="flex items-center gap-3 transition-opacity hover:opacity-90"
         >
-          {site.wordmark}
+          {/*
+           * The same badge the browser tab shows, reused rather than
+           * re-derived — one asset, two conventions (`src/app/icon.png` is
+           * also the favicon file Next serves automatically). Decorative next
+           * to a wordmark that already names the site, so a screen reader
+           * does not announce the link twice.
+           */}
+          <Image src={znak} alt="" width={40} height={40} className="shrink-0" />
+          <span className="font-display text-xl tracking-[0.35em] text-blush-200 uppercase sm:text-2xl">
+            {site.wordmark}
+          </span>
         </Link>
 
         {/*

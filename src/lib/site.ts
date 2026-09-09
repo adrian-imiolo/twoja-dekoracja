@@ -40,6 +40,26 @@ export function isPending(value: string): boolean {
 }
 
 /**
+ * A realization's place and date as a visitor sees them: joined where both
+ * are known, reduced to whichever one is where only one is, and absent
+ * entirely where neither has arrived yet from the client.
+ *
+ * Literal `[DO UZUPEŁNIENIA]` text on a published realization card or page
+ * would read as a bug rather than as unfinished, so a pending value is
+ * dropped rather than shown — unlike the footer's contact channels, which are
+ * expected to look unfinished until the client's details arrive.
+ */
+export function miejsceITermin(realizacja: {
+  place: string;
+  date: string;
+}): string | null {
+  const znane = [realizacja.place, realizacja.date].filter(
+    (wartosc) => !isPending(wartosc),
+  );
+  return znane.length > 0 ? znane.join(" · ") : null;
+}
+
+/**
  * A phone number as something a phone can dial.
  *
  * Spaces are how a Polish number is written and not something a dialler

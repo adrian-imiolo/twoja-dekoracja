@@ -38,9 +38,9 @@ serving one purpose: turning a stranger into an inquiry.
 
 The site shows the work first. Real photographs of real events, presented on a
 dark plum ground drawn from the business's own logo so that the photography is
-the brightest thing on every screen. Nine realizations at launch, split into
-weddings and other celebrations, each with its own page that can be linked,
-shared and found on Google.
+the brightest thing on every screen. Six realizations at launch — thinner than
+the nine originally planned for, one wedding among five other events — each
+with its own page that can be linked, shared and found on Google.
 
 The site is built to be found. Every page is server-rendered and statically
 generated, carries structured data describing a local business serving Szczecin,
@@ -191,19 +191,25 @@ realizations.
 
 ### Routes
 
-- Home — hero, positioning statement, split into the two categories, four selected realizations, FAQ teaser, contact call to action
-- Realizations index — one page, two anchored sections for weddings and other events
+- Home — hero, positioning statement, four selected realizations, FAQ teaser, contact call to action
+- Realizations index — one page, one unified grid with a category badge per card
 - Realization detail — statically generated per event, one route per realization
 - About
 - FAQ
 - Contact
 - Privacy policy
 
-The realizations index is deliberately a single page with two sections rather
-than two category pages. Splitting three weddings and six events across two thin
-pages would rank worse than one substantial page. The distinct search intents
-behind stories 1 and 2 are served by the homepage's category split instead. This
-decision is revisited when the archive roughly doubles.
+**Amended from a two-way Wesela/Imprezy split**, both on the home page and on
+the realizations index. The split was meant to carry the distinct search
+intents behind stories 1 and 2, but at six launch realizations — one wedding,
+five events — it produced a section holding a single card. Category is now a
+small badge on each card (`RealizationCard`) instead of a section boundary, so
+the split can return once there is enough wedding work to justify it.
+
+The realizations index is a single page rather than two category pages either
+way: with one wedding and five events, two thin pages would rank worse than one
+substantial page. This decision is revisited once the archive has enough
+weddings for its own section, let alone its own page.
 
 Realization details are real routes rather than modal overlays. A modal cannot
 be linked, shared or indexed, which would defeat stories 4, 20, 21 and 22.
@@ -213,15 +219,22 @@ be linked, shared or indexed, which would defeat stories 4, 20, 21 and 22.
 The hero is built poster-first. A static image is the hero element and the LCP
 candidate; video is an enhancement layered over it when footage exists.
 
-At launch there is no video — the client will supply it later — so the hero
-ships as a still. When video arrives it is muted, looping, plays inline, is not
-preloaded, is requested only after the poster has painted, and is suppressed
-entirely under a reduced-motion preference. Budget is 3 MB for a 10–15 second
-clip.
+**Shipped at launch**, not deferred: the client's footage is a vertical phone
+pan (a Reel, not a landscape take) across a "Młoda Para" neon sign, re-encoded
+from a 12.7 MB original to 1.77 MB H.264 — comfortably under the 3 MB / 10–15 s
+budget, since this clip is only 6.7 s. It is muted, looping, plays inline, is
+not preloaded, is requested only after the poster has painted, and is
+suppressed entirely under a reduced-motion preference. The poster is a frame
+pulled from the same clip, so the still-to-video handoff shows no visible cut.
 
-This ordering is a deliberate architectural choice, not a temporary workaround:
-it makes the missing video a content gap rather than a launch blocker, and it
-means the eventual video can never regress the site's largest-contentful-paint.
+The portrait source turned out not to need the redesign the original spec
+worried about: the hero band is `min-h-[78svh]`, so it is already
+portrait-shaped on a phone and only becomes landscape on desktop, where
+`object-cover` crops the same source sensibly at both extremes.
+
+This ordering — poster always present, video layered over it — is a deliberate
+architectural choice, not a temporary workaround: it means the video can never
+regress the site's largest-contentful-paint, launch footage or not.
 
 ### Contact submission
 
@@ -421,20 +434,24 @@ None of these block implementation. All of them block launch.
   and Instagram handle
 - Real copy for the about page and answers for the FAQ
 - A photograph of the person running the business, for the about page. It ships
-  as the same generated placeholder card the launch realizations use, and story
-  25 — seeing who you would be working with — is not served until it is real
+  as a generated placeholder card, and story 25 — seeing who you would be
+  working with — is not served until it is real
 - Privacy policy details, replacing placeholder text
-- Photographs and metadata for the nine launch realizations
-- Hero video, whenever it is shot
+- Venue and date for each of the six launch realizations — photographs and the
+  rest of the metadata are in; only `place` and `date` remain
+  `[DO UZUPEŁNIENIA]`
 - Confirmation that Vercel Web Analytics is what the client means by
   "analytics", rather than Google Analytics
 
 ### Risks
 
-**Nine realizations is a thin archive.** The layouts must look deliberate at
-that volume rather than sparse, and detail pages must hold up when an event has
-only five photographs. Design for the sparse case first; a layout that only
-works when full will look broken at launch.
+**Six realizations is a thin archive, thinner than the nine planned for.** The
+layouts must look deliberate at that volume rather than sparse, and detail
+pages must hold up when an event has only two photographs — `urodziny-18` and
+`urodziny-30` launch at exactly that, on the reasoning that the gallery layout
+was already designed for the sparse case rather than held back for more
+photographs that may not arrive. Design for the sparse case first; a layout
+that only works when full will look broken at launch.
 
 **A dark palette is unforgiving of inconsistent photography.** This works in the
 site's favour — a dark ground hides uneven exposure across a mixed archive — but

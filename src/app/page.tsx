@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 
 import { ContactChannels } from "@/components/contact-channels";
@@ -10,51 +9,17 @@ import { localBusinessSchema } from "@/lib/local-business";
 import { sharePreview } from "@/lib/metadata";
 import { site } from "@/lib/site";
 import { wybranePytania } from "@content/faq";
-import {
-  type Kategoria,
-  realizacje,
-  realizacjeInCategory,
-} from "@content/realizacje";
+import { realizacje } from "@content/realizacje";
 
 /**
  * The page a stranger from Google lands on.
  *
  * It has seconds to answer three questions — what this business does, where it
- * does it, and whether the work is any good — and then to hand the visitor the
- * one of two roads they came for. Everything below is in that order: a
- * photograph, a sentence, the fork, the work, the questions people ask before
- * writing, and a way to write.
+ * does it, and whether the work is any good — and then to hand the visitor on
+ * to the work itself. Everything below is in that order: a photograph, a
+ * sentence, the work, the questions people ask before writing, and a way to
+ * write.
  */
-
-/**
- * The two roads into the archive.
- *
- * This split is the reason the home page exists in the shape it does.
- * `/realizacje` is deliberately one page holding both categories, which is
- * right for ranking a thin archive and wrong for search intent: "dekoracje
- * weselne Szczecin" and "dekoracje urodzinowe Szczecin" are different queries
- * asked by different people. The headings here carry those queries, and each
- * sends its visitor straight to the section they meant.
- */
-const DROGI: readonly {
-  kategoria: Kategoria;
-  heading: string;
-  lead: string;
-  cta: string;
-}[] = [
-  {
-    kategoria: "wesela",
-    heading: "Dekoracje weselne",
-    lead: "Brama ceremonii, przejście, sala i stół prezydialny — cała oprawa jednego dnia, spójna od pierwszego zdjęcia do ostatniego.",
-    cta: "Zobacz wesela",
-  },
-  {
-    kategoria: "imprezy",
-    heading: "Dekoracje urodzinowe i okolicznościowe",
-    lead: "Urodziny, chrzciny, jubileusze i przyjęcia rodzinne — od ścianki za tortem po aranżację całej sali.",
-    cta: "Zobacz imprezy",
-  },
-];
 
 /**
  * How many realizations the home page shows before sending the visitor on.
@@ -65,20 +30,16 @@ const DROGI: readonly {
 const WYBRANE = 4;
 
 /**
- * The two-across grid both card sections use, and how wide a card in it
+ * The grid "Wybrane realizacje" is shown in, and how wide a card in it
  * actually gets.
  *
  * The class list and the `sizes` string are one decision and are kept in one
  * place for the reason `/realizacje` gives for the same pairing: `next/image`
- * says nothing when the two disagree, it just serves a soft picture. Stating
- * them separately at each section would be the third and fourth place this
- * width is written down.
+ * says nothing when the two disagree, it just serves a soft picture.
  *
- * Two columns rather than four, because two is the only arrangement that holds
- * at both counts these sections can take — four selected realizations once the
- * launch archive lands, and the two placeholder events until it does. Four
- * across would also make a card small enough that the decoration in it stops
- * being legible, which is the one thing a visitor came to look at.
+ * Two columns rather than four: four across would make a card small enough
+ * that the decoration in it stops being legible, which is the one thing a
+ * visitor came to look at.
  */
 const SIATKA = {
   className: "mt-12 grid grid-cols-1 gap-12 sm:mt-16 lg:grid-cols-2 lg:gap-16",
@@ -125,18 +86,6 @@ export const metadata: Metadata = {
 const pracowniaSchema = localBusinessSchema();
 
 export default function HomePage() {
-  /*
-   * The category's own work supplies the picture, so the fork shows what it
-   * leads to. A category with nothing in it is dropped rather than shown as an
-   * empty frame linking to an empty section — `flatMap` rather than a filter
-   * because dropping it is what proves to the type checker that the survivors
-   * have a cover.
-   */
-  const drogi = DROGI.flatMap((droga) => {
-    const okladka = realizacjeInCategory(droga.kategoria)[0]?.cover;
-    return okladka ? [{ ...droga, okladka }] : [];
-  });
-
   const wybrane = realizacje.slice(0, WYBRANE);
 
   return (
@@ -214,56 +163,6 @@ export default function HomePage() {
             </Link>
           </p>
         </div>
-      </section>
-
-      <section
-        aria-labelledby="co-dekorujemy"
-        className="page-shell pb-20 sm:pb-28"
-      >
-        <h2
-          id="co-dekorujemy"
-          className="font-display text-3xl text-blush-200 sm:text-4xl"
-        >
-          Co dekorujemy
-        </h2>
-
-        <ul className={SIATKA.className}>
-          {drogi.map((droga) => (
-            <li key={droga.kategoria}>
-              <Link
-                href={`/realizacje#${droga.kategoria}`}
-                className="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blush-300"
-              >
-                <div className="relative aspect-3/2 overflow-hidden bg-plum-900">
-                  <Image
-                    src={droga.okladka.image}
-                    /*
-                     * Empty for the same reason the realization cards' covers
-                     * are: the link is already named by the heading and the
-                     * sentence below it, and a described photograph inside it
-                     * would make a screen reader read the card twice.
-                     */
-                    alt=""
-                    placeholder="blur"
-                    fill
-                    sizes={SIATKA.sizes}
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                  />
-                </div>
-
-                <h3 className="mt-6 font-display text-2xl text-blush-200 transition-colors group-hover:text-blush-100 sm:text-3xl">
-                  {droga.heading}
-                </h3>
-                <p className="mt-3 max-w-md leading-relaxed text-cream-50/75">
-                  {droga.lead}
-                </p>
-                <p className="mt-5 text-sm tracking-[0.2em] text-blush-300 uppercase">
-                  {droga.cta}
-                </p>
-              </Link>
-            </li>
-          ))}
-        </ul>
       </section>
 
       <section aria-labelledby="wybrane" className="page-shell pb-20 sm:pb-28">
