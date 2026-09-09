@@ -1,17 +1,16 @@
 import { expect, test } from "@playwright/test";
 
 /**
- * The one realization the repository publishes today. These are authored
- * content, so replacing the placeholder event means editing them — a coupling
- * that is deliberate, and that fails loudly rather than quietly passing
- * against a page that no longer exists.
+ * One of the realizations the repository publishes today. These are authored
+ * content, so replacing this event means editing them — a coupling that is
+ * deliberate, and that fails loudly rather than quietly passing against a
+ * page that no longer exists.
  */
-const SLUG = "wesele-anny-i-piotra";
-const TITLE = "Wesele Anny i Piotra";
-const PLACE = "Pałac Krąg";
-const DATE = "Czerwiec 2026";
-const STYLE = "Pudrowy róż, biel i eukaliptus";
-const PHOTO_COUNT = 8;
+const SLUG = "wesele";
+const TITLE = "Wesele";
+const STYLE =
+  "Balonowe kolumny i łuki w zieleni, złocie, srebrze i bieli — wewnątrz sali i w plenerze ogrodu";
+const PHOTO_COUNT = 7;
 
 const url = `/realizacje/${SLUG}`;
 
@@ -26,7 +25,7 @@ async function scrollToBottom(page: import("@playwright/test").Page) {
   });
 }
 
-test("shows where and when the event was, its style, and an introduction", async ({
+test("shows its style and an introduction, and no unfilled placeholder text", async ({
   page,
 }) => {
   await page.goto(url);
@@ -34,17 +33,24 @@ test("shows where and when the event was, its style, and an introduction", async
   await expect(page.getByRole("heading", { level: 1 })).toContainText(TITLE);
 
   const article = page.getByRole("main");
-  await expect(article).toContainText(PLACE);
-  await expect(article).toContainText(DATE);
   await expect(article).toContainText(STYLE);
   // A distinctive fragment of the two-sentence introduction.
-  await expect(article).toContainText("siedemdziesięciu osób");
+  await expect(article).toContainText("stołu prezydialnego");
+
+  /*
+   * `place` and `date` are outstanding client input for every launch
+   * realization and ship as `[DO UZUPEŁNIENIA]` — rendered conditionally
+   * rather than as literal text, so a visitor to this real, published page
+   * never sees the marker. A regression here would be a silent one: the page
+   * would still look complete.
+   */
+  await expect(article).not.toContainText("DO UZUPEŁNIENIA");
 });
 
 test("shows every photograph of the event, each with its own description", async ({
   page,
 }) => {
-  // Eight photographs, each brought into view and waited for in turn.
+  // Seven photographs, each brought into view and waited for in turn.
   test.slow();
 
   await page.goto(url);
