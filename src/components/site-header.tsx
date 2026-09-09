@@ -24,8 +24,8 @@ export function SiteHeader() {
            * to a wordmark that already names the site, so a screen reader
            * does not announce the link twice.
            */}
-          <Image src={znak} alt="" width={40} height={40} className="shrink-0" />
-          <span className="font-display text-xl tracking-[0.35em] text-blush-200 uppercase sm:text-2xl">
+          <Image src={znak} alt="" width={56} height={56} className="shrink-0" />
+          <span className="font-wordmark text-2xl tracking-[0.35em] text-blush-200 uppercase sm:text-3xl">
             {site.wordmark}
           </span>
         </Link>
