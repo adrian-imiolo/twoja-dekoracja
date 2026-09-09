@@ -20,6 +20,7 @@ const photos: readonly [Fotografia, ...Fotografia[]] = [
   {
     image: zdjecie01,
     alt: "Ścianka z papierowych stokrotek w pudrowym różu i kremie, z personalizowanym napisem „Chrzest święty i roczek Poli” oraz białą cyfrą 1",
+    position: "center 15%",
   },
   {
     image: zdjecie02,
