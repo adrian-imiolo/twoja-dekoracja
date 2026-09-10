@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { PrimaryCtaButton } from "@/components/primary-cta";
+import { PrimaryCtaButton } from "@/components/ui/primary-cta";
 import { isPending, site, telHref } from "@/lib/site";
 import type {
   OdpowiedzNaZapytanie,

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { JsonLd } from "@/components/json-ld";
-import { PrimaryCta } from "@/components/primary-cta";
+import { PrimaryCta } from "@/components/ui/primary-cta";
 import { sharePreview } from "@/lib/metadata";
 import { site } from "@/lib/site";
 import { pytania } from "@content/faq";

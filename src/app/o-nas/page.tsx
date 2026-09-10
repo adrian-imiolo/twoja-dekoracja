@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 
-import { PrimaryCta } from "@/components/primary-cta";
-import { QuietLink } from "@/components/quiet-link";
+import { PrimaryCta } from "@/components/ui/primary-cta";
+import { QuietLink } from "@/components/ui/quiet-link";
 import { asOgImage, sharePreview } from "@/lib/metadata";
 import { DO_UZUPELNIENIA, site } from "@/lib/site";
 import { portret } from "@content/o-nas";

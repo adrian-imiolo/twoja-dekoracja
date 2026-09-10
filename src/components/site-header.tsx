@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import znak from "@/app/icon.png";
-import { QuietLink } from "@/components/quiet-link";
+import { QuietLink } from "@/components/ui/quiet-link";
 import { site } from "@/lib/site";
 
 export function SiteHeader() {

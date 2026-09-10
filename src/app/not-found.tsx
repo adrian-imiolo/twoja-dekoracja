@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { QuietLink } from "@/components/quiet-link";
+import { QuietLink } from "@/components/ui/quiet-link";
 import { realizacje } from "@content/realizacje";
 
 /**
