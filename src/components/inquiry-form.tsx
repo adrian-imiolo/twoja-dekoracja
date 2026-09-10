@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { PrimaryCtaButton } from "@/components/primary-cta";
 import { isPending, site, telHref } from "@/lib/site";
 import type {
   OdpowiedzNaZapytanie,
@@ -228,13 +229,9 @@ export function InquiryForm() {
       />
 
       <div className="mt-2 flex flex-wrap items-center gap-6">
-        <button
-          type="submit"
-          disabled={stan === "wysylanie"}
-          className="border border-blush-300 px-8 py-4 text-sm tracking-[0.2em] text-blush-200 uppercase transition-colors hover:bg-blush-300 hover:text-plum-950 disabled:cursor-not-allowed disabled:opacity-50"
-        >
+        <PrimaryCtaButton type="submit" disabled={stan === "wysylanie"}>
           {stan === "wysylanie" ? "Wysyłanie…" : "Wyślij zapytanie"}
-        </button>
+        </PrimaryCtaButton>
 
         {stan === "niedostarczone" && <Niepowodzenie />}
       </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ContactChannels } from "@/components/contact-channels";
 import { HeroMedia } from "@/components/hero-media";
 import { JsonLd } from "@/components/json-ld";
+import { PrimaryCta } from "@/components/primary-cta";
 import { QuietLink } from "@/components/quiet-link";
 import { RealizationCard } from "@/components/realization-card";
 import { localBusinessSchema } from "@/lib/local-business";
@@ -115,12 +116,7 @@ export default function HomePage() {
           </p>
 
           <div className="mt-10 flex flex-wrap gap-4">
-            <Link
-              href="/realizacje"
-              className="border border-blush-300 px-8 py-4 text-sm tracking-[0.2em] text-blush-200 uppercase transition-colors hover:bg-blush-300 hover:text-plum-950"
-            >
-              Zobacz realizacje
-            </Link>
+            <PrimaryCta href="/realizacje">Zobacz realizacje</PrimaryCta>
             <Link
               href="/kontakt"
               className="border border-plum-800 px-8 py-4 text-sm tracking-[0.2em] text-cream-50/85 uppercase transition-colors hover:border-blush-300 hover:text-blush-200"
@@ -228,12 +224,7 @@ export default function HomePage() {
           </p>
 
           <p className="mt-10">
-            <Link
-              href="/kontakt"
-              className="inline-block border border-blush-300 px-8 py-4 text-sm tracking-[0.2em] text-blush-200 uppercase transition-colors hover:bg-blush-300 hover:text-plum-950"
-            >
-              Wypełnij formularz
-            </Link>
+            <PrimaryCta href="/kontakt">Wypełnij formularz</PrimaryCta>
           </p>
 
           <ContactChannels className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-10" />

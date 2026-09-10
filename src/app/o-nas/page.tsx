@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 
+import { PrimaryCta } from "@/components/primary-cta";
 import { QuietLink } from "@/components/quiet-link";
 import { asOgImage, sharePreview } from "@/lib/metadata";
 import { DO_UZUPELNIENIA, site } from "@/lib/site";
@@ -155,12 +155,7 @@ export default function ONasPage() {
           Napiszcie, co planujecie i kiedy — odpiszemy, czy termin jest wolny.
         </p>
         <p className="mt-8">
-          <Link
-            href="/kontakt"
-            className="inline-block border border-blush-300 px-8 py-4 text-sm tracking-[0.2em] text-blush-200 uppercase transition-colors hover:bg-blush-300 hover:text-plum-950"
-          >
-            Napisz do nas
-          </Link>
+          <PrimaryCta href="/kontakt">Napisz do nas</PrimaryCta>
         </p>
       </section>
     </div>

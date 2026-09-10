@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 import { JsonLd } from "@/components/json-ld";
+import { PrimaryCta } from "@/components/primary-cta";
 import { sharePreview } from "@/lib/metadata";
 import { site } from "@/lib/site";
 import { pytania } from "@content/faq";
@@ -104,12 +104,7 @@ export default function FaqPage() {
           ustalone.
         </p>
         <p className="mt-8">
-          <Link
-            href="/kontakt"
-            className="inline-block border border-blush-300 px-8 py-4 text-sm tracking-[0.2em] text-blush-200 uppercase transition-colors hover:bg-blush-300 hover:text-plum-950"
-          >
-            Zadaj pytanie
-          </Link>
+          <PrimaryCta href="/kontakt">Zadaj pytanie</PrimaryCta>
         </p>
       </section>
     </div>
