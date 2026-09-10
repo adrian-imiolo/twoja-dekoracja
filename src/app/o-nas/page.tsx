@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import { QuietLink } from "@/components/quiet-link";
 import { asOgImage, sharePreview } from "@/lib/metadata";
 import { DO_UZUPELNIENIA, site } from "@/lib/site";
 import { portret } from "@content/o-nas";
@@ -140,12 +141,7 @@ export default function ONasPage() {
               {site.city} i okolice
             </p>
             <p className="mt-8">
-              <Link
-                href="/faq"
-                className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
-              >
-                Częste pytania
-              </Link>
+              <QuietLink href="/faq">Częste pytania</QuietLink>
             </p>
           </section>
         </div>

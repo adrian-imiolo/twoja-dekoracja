@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { QuietLink } from "@/components/quiet-link";
 import { realizacje } from "@content/realizacje";
 
 /**
@@ -69,12 +70,7 @@ export default function NotFound() {
       </ul>
 
       <p className="mt-12 text-center">
-        <Link
-          href="/"
-          className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
-        >
-          Strona główna
-        </Link>
+        <QuietLink href="/">Strona główna</QuietLink>
       </p>
     </div>
   );

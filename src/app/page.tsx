@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ContactChannels } from "@/components/contact-channels";
 import { HeroMedia } from "@/components/hero-media";
 import { JsonLd } from "@/components/json-ld";
+import { QuietLink } from "@/components/quiet-link";
 import { RealizationCard } from "@/components/realization-card";
 import { localBusinessSchema } from "@/lib/local-business";
 import { sharePreview } from "@/lib/metadata";
@@ -155,12 +156,7 @@ export default function HomePage() {
             {site.city} i okolice
           </p>
           <p className="mt-8">
-            <Link
-              href="/o-nas"
-              className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
-            >
-              Poznaj nas
-            </Link>
+            <QuietLink href="/o-nas">Poznaj nas</QuietLink>
           </p>
         </div>
       </section>
@@ -182,12 +178,7 @@ export default function HomePage() {
         </ul>
 
         <p className="mt-16">
-          <Link
-            href="/realizacje"
-            className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
-          >
-            Wszystkie realizacje
-          </Link>
+          <QuietLink href="/realizacje">Wszystkie realizacje</QuietLink>
         </p>
       </section>
 
@@ -216,12 +207,7 @@ export default function HomePage() {
         </dl>
 
         <p className="mt-12">
-          <Link
-            href="/faq"
-            className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
-          >
-            Wszystkie pytania
-          </Link>
+          <QuietLink href="/faq">Wszystkie pytania</QuietLink>
         </p>
       </section>
 

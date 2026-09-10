@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import znak from "@/app/icon.png";
+import { QuietLink } from "@/components/quiet-link";
 import { site } from "@/lib/site";
 
 export function SiteHeader() {
@@ -47,30 +48,10 @@ export function SiteHeader() {
           aria-label="Główna"
           className="flex flex-wrap items-center gap-x-6 gap-y-3 sm:gap-x-8"
         >
-          <Link
-            href="/realizacje"
-            className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
-          >
-            Realizacje
-          </Link>
-          <Link
-            href="/o-nas"
-            className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
-          >
-            O nas
-          </Link>
-          <Link
-            href="/faq"
-            className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
-          >
-            FAQ
-          </Link>
-          <Link
-            href="/kontakt"
-            className="text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100"
-          >
-            Kontakt
-          </Link>
+          <QuietLink href="/realizacje">Realizacje</QuietLink>
+          <QuietLink href="/o-nas">O nas</QuietLink>
+          <QuietLink href="/faq">FAQ</QuietLink>
+          <QuietLink href="/kontakt">Kontakt</QuietLink>
         </nav>
       </div>
     </header>
