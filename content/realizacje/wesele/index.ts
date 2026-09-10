@@ -24,6 +24,8 @@ const photos: readonly [Fotografia, ...Fotografia[]] = [
   {
     image: zdjecie01,
     alt: "Okrągła brama z balonów w zieleni, bieli i srebrze, ustawiona na trawniku ogrodu z altaną w tle",
+    position: "center 52%",
+    zoom: 1.2,
   },
   {
     image: zdjecie02,

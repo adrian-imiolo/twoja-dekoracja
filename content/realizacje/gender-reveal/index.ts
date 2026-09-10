@@ -17,6 +17,9 @@ const photos: readonly [Fotografia, ...Fotografia[]] = [
   {
     image: zdjecie01,
     alt: "Balonowe koło w błękicie, różu i beżu na pomoście nad leśnym jeziorem, z napisem „Oh Baby”",
+    position: "center 44%",
+    zoom: 1.5,
+    zoomOrigin: "42% 50%",
   },
   {
     image: zdjecie02,

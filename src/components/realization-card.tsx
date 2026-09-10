@@ -49,8 +49,16 @@ export function RealizationCard({
           fill
           sizes={sizes}
           style={
-            realizacja.cover.position
-              ? { objectPosition: realizacja.cover.position }
+            realizacja.cover.position || realizacja.cover.zoom
+              ? {
+                  objectPosition: realizacja.cover.position,
+                  transform: realizacja.cover.zoom
+                    ? `scale(${realizacja.cover.zoom})`
+                    : undefined,
+                  transformOrigin: realizacja.cover.zoom
+                    ? (realizacja.cover.zoomOrigin ?? "50% 50%")
+                    : undefined,
+                }
               : undefined
           }
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"

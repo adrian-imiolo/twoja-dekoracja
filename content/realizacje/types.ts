@@ -46,8 +46,32 @@ export interface Fotografia {
    * `RealizationCard`). Absent unless the default centre crop cuts into the
    * subject — most photographs never need it. The full-shape gallery on a
    * realization's own page ignores this; nothing there is ever cropped.
+   *
+   * Most cover photographs are portrait, shot for a phone. Forced into the
+   * landscape `aspect-4/3` frame, `object-fit: cover` is always width-bound
+   * — it must show 100% of the image's width — so this can only pan the crop
+   * vertically. It cannot crop in on a subject that reads small side to
+   * side; that is what `zoom` is for.
    */
   position?: string;
+  /**
+   * A magnification factor (e.g. `1.5`) applied via CSS `transform: scale()`
+   * on top of the `position` crop, for a cover whose subject still reads
+   * small in the frame after panning — typically a decoration photographed
+   * from far enough back that lawn, water or a storefront fills the sides.
+   * Absent unless the subject needs it; most covers are already tight
+   * enough that `position` alone is sufficient.
+   */
+  zoom?: number;
+  /**
+   * Where `zoom` magnifies from, as a CSS `transform-origin` value.
+   * Defaults to `"50% 50%"` when `zoom` is set without it — correct
+   * whenever `position` already centres the subject in the panned crop.
+   * Set explicitly only when the subject sits off-centre horizontally
+   * (`position`'s own horizontal component is a no-op on these width-bound
+   * covers, so it cannot compensate for that).
+   */
+  zoomOrigin?: string;
 }
 
 export interface Realizacja {
