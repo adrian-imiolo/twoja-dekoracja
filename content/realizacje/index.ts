@@ -6,6 +6,7 @@ import type { Realizacja } from "./types";
 import { urodziny18 } from "./urodziny-18";
 import { urodziny30 } from "./urodziny-30";
 import { wesele } from "./wesele";
+import { weseleKiM } from "./wesele-k-i-m";
 
 export { KATEGORIA_LABEL } from "./types";
 export type { Fotografia, Kategoria, Realizacja } from "./types";
@@ -19,6 +20,7 @@ export type { Fotografia, Kategoria, Realizacja } from "./types";
  */
 export const realizacje: readonly Realizacja[] = [
   wesele,
+  weseleKiM,
   urodziny30,
   urodziny18,
   chrzestIRoczek,
