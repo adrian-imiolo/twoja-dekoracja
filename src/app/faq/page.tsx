@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { JsonLd } from "@/components/json-ld";
+import { CalloutPanel } from "@/components/ui/callout-panel";
 import { PrimaryCta } from "@/components/ui/primary-cta";
 import { sharePreview } from "@/lib/metadata";
 import { site } from "@/lib/site";
@@ -95,7 +96,10 @@ export default function FaqPage() {
        * question has one the page could not answer, which is the moment the
        * form is worth the most.
        */}
-      <section className="mt-20 max-w-3xl border border-plum-800 bg-plum-900 px-8 py-12 sm:px-12">
+      <CalloutPanel
+        as="section"
+        className="mt-20 max-w-3xl px-8 py-12 sm:px-12"
+      >
         <h2 className="font-display text-2xl leading-snug text-cream-50 sm:text-3xl">
           Nie ma tu Waszego pytania?
         </h2>
@@ -106,7 +110,7 @@ export default function FaqPage() {
         <p className="mt-8">
           <PrimaryCta href="/kontakt">Zadaj pytanie</PrimaryCta>
         </p>
-      </section>
+      </CalloutPanel>
     </div>
   );
 }

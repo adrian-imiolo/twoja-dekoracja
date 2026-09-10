@@ -5,6 +5,7 @@ import { ContactChannels } from "@/components/contact-channels";
 import { HeroMedia } from "@/components/hero-media";
 import { JsonLd } from "@/components/json-ld";
 import { RealizationCard } from "@/components/realization-card";
+import { CalloutPanel } from "@/components/ui/callout-panel";
 import { PrimaryCta } from "@/components/ui/primary-cta";
 import { QuietLink } from "@/components/ui/quiet-link";
 import { localBusinessSchema } from "@/lib/local-business";
@@ -214,7 +215,7 @@ export default function HomePage() {
        * not have to load another page to find the number.
        */}
       <section id="kontakt" className="page-shell scroll-mt-12 pb-24 sm:pb-32">
-        <div className="border border-plum-800 bg-plum-900 px-8 py-16 text-center sm:px-16">
+        <CalloutPanel className="px-8 py-16 text-center sm:px-16">
           <h2 className="font-display text-3xl leading-tight text-cream-50 sm:text-4xl">
             Zostaw nam wiadomość
           </h2>
@@ -228,7 +229,7 @@ export default function HomePage() {
           </p>
 
           <ContactChannels className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-10" />
-        </div>
+        </CalloutPanel>
       </section>
     </>
   );

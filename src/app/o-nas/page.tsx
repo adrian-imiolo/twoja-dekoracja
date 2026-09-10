@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 
+import { CalloutPanel } from "@/components/ui/callout-panel";
 import { PrimaryCta } from "@/components/ui/primary-cta";
 import { QuietLink } from "@/components/ui/quiet-link";
 import { asOgImage, sharePreview } from "@/lib/metadata";
@@ -147,7 +148,10 @@ export default function ONasPage() {
         </div>
       </div>
 
-      <section className="mt-20 border border-plum-800 bg-plum-900 px-8 py-12 text-center sm:mt-28 sm:px-16 sm:py-16">
+      <CalloutPanel
+        as="section"
+        className="mt-20 px-8 py-12 text-center sm:mt-28 sm:px-16 sm:py-16"
+      >
         <h2 className="font-display text-2xl leading-tight text-cream-50 sm:text-3xl">
           Opowiedzcie nam o swoim przyjęciu
         </h2>
@@ -157,7 +161,7 @@ export default function ONasPage() {
         <p className="mt-8">
           <PrimaryCta href="/kontakt">Napisz do nas</PrimaryCta>
         </p>
-      </section>
+      </CalloutPanel>
     </div>
   );
 }

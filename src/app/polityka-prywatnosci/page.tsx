@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { CalloutPanel } from "@/components/ui/callout-panel";
 import { sharePreview } from "@/lib/metadata";
 import { DO_UZUPELNIENIA, site } from "@/lib/site";
 
@@ -96,7 +97,10 @@ export default function PolitykaPrywatnosciPage() {
          * what the code does rather than by a lawyer — a reader has no way to
          * tell those two kinds of sentence apart, so the notice covers both.
          */}
-        <p className="mt-10 border border-plum-800 bg-plum-900 px-6 py-5 text-sm leading-relaxed text-cream-50/75">
+        <CalloutPanel
+          as="p"
+          className="mt-10 px-6 py-5 text-sm leading-relaxed text-cream-50/75"
+        >
           <strong>To jest wersja robocza dokumentu.</strong> Fragmenty oznaczone{" "}
           <strong>{DO_UZUPELNIENIA}</strong> czekają na dane osoby prowadzącej
           pracownię, a pozostała treść wymaga jej potwierdzenia. Do czasu
@@ -109,7 +113,7 @@ export default function PolitykaPrywatnosciPage() {
             formularz kontaktowy
           </Link>
           .
-        </p>
+        </CalloutPanel>
 
         <Sekcja id="administrator" tytul="Kto administruje danymi">
           <p>
