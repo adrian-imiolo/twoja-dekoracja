@@ -6,9 +6,9 @@ import kadrTytulowy from "./poster.jpg";
  * What the home page's first screen shows.
  *
  * Content, not layout, and that is the whole point of the folder. The design
- * spec commits to a hero that ships as a still now and gains the client's
- * footage later; keeping both the poster and the video here means that later
- * is an edit to this file rather than a change to the page.
+ * spec commits to a hero that stands up as a still and gains motion when there
+ * is footage to add; keeping both the poster and the video here is what makes
+ * that a change to this file rather than to the page.
  */
 
 /**
@@ -37,8 +37,14 @@ export interface Hero {
    */
   poster: Fotografia;
   /**
-   * Absent until the client supplies footage. Its absence is the launch state,
-   * not a fault: nothing on the page waits for it.
+   * Optional, and absence is a state rather than a fault: nothing on the page
+   * waits for footage, and a hero without it is the still on its own.
+   *
+   * This field is the site's only statement of whether footage exists. Nothing
+   * else asserts it — not the component that mounts the video, not the page —
+   * so adding or withdrawing footage is an edit here and nowhere else, with a
+   * single exception: `e2e/home.spec.ts` holds a test that the footage plays,
+   * which has to be deleted alongside a withdrawal.
    */
   video?: HeroVideoSource;
 }

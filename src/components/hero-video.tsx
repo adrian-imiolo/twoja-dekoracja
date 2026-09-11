@@ -17,9 +17,9 @@ export const HERO_POSTER_ID = "hero-poster";
 /**
  * The hero's footage, layered over the poster that is already on screen.
  *
- * Mounted only when a video exists, which at launch it does not — so the home
- * page ships with no client JavaScript in its hero at all, and gains this the
- * day the client's footage lands.
+ * Mounted only when `content/hero` carries a video. That file is the one place
+ * that decides; this component assumes no answer and is correct either way,
+ * which is what keeps adding or withdrawing footage a content edit.
  *
  * Two rules shape everything below, both from the design spec:
  *

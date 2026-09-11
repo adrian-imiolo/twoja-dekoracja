@@ -6,8 +6,8 @@ import { hero } from "@content/hero";
 /**
  * The picture behind the home page's first screen.
  *
- * Built poster-first, which is an architectural decision rather than a stand-in
- * for the missing footage. The still is the hero element and the page's
+ * Built poster-first, which is an architectural decision and not a way of
+ * coping without footage. The still is the hero element and the page's
  * largest-contentful-paint candidate; a video, when one exists, is a layer over
  * it. That ordering is what makes the client's footage a content change: the
  * frame, its height and everything sitting on top of it are already final, so
