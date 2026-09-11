@@ -37,8 +37,8 @@ const TRASY_STALE = [
  * answered with.
  *
  * Keyed by path rather than by full URL so the assertions read as routes. Only
- * same-origin links are followed: `tel:`, `mailto:` and the Instagram profile
- * are not this site's to answer for.
+ * same-origin links are followed: `tel:`, `mailto:` and the Instagram and
+ * Facebook profiles are not this site's to answer for.
  */
 async function przejdzCalyServis(
   page: Page,

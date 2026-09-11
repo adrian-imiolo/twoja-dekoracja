@@ -1,4 +1,4 @@
-import { instagramHref, isPending, site, telHref } from "@/lib/site";
+import { imie, instagramHref, site, telHref } from "@/lib/site";
 
 /**
  * The ways of reaching this business that are not the form.
@@ -10,44 +10,61 @@ import { instagramHref, isPending, site, telHref } from "@/lib/site";
  */
 
 /**
- * One way of getting in touch.
+ * One way of getting in touch: what it is called, what a visitor reads, and
+ * where tapping it goes.
  *
- * The address is a function of the value rather than a value beside it,
- * because the two must not be built independently: a `tel:` composed from the
- * placeholder dials nothing, and a tapped link that does nothing reads as a
- * broken site rather than an unfinished one. Keeping it a function means the
- * address is only ever composed for a value the site actually knows.
+ * The address is held beside the value rather than derived from it at render,
+ * because the two are not always the same string. A phone number is its own
+ * label and `tel:` is a transformation of it; the Facebook profile has no
+ * readable form at all — its address is `profile.php?id=61561290465565`, which
+ * is not something to print at somebody. Separating the two lets a channel be
+ * named in Polish and addressed in whatever shape the service actually uses.
  */
 interface Kanal {
   etykieta: string;
   wartosc: string;
-  adres: (wartosc: string) => string;
+  adres: string;
 }
 
 /**
  * The channels, in the order someone deciding how to make contact meets them.
  *
- * Phone first: the reason for showing these at all, rather than only a form,
- * is the visitor who would rather call than write. All three are outstanding
- * client input and show as placeholders until they arrive, at which point they
- * become tappable with no change here.
+ * Phones first, and one per person: the reason for showing any of this rather
+ * than only the form is the visitor who would rather call than write, and that
+ * visitor is choosing who to speak to. An unlabelled second number would read
+ * as an overflow line for the first.
+ *
+ * Both names come from `site.owners` rather than being written out here, so
+ * the order a visitor meets the two of them is the same order the footer and
+ * `/o-nas` introduce them in — set once, in one place.
  */
 const KANALY: readonly Kanal[] = [
-  {
-    etykieta: "Telefon",
-    wartosc: site.phone,
-    adres: telHref,
-  },
+  ...site.owners.map((wlascicielka) => ({
+    etykieta: `Telefon — ${imie(wlascicielka)}`,
+    wartosc: wlascicielka.phone,
+    adres: telHref(wlascicielka.phone),
+  })),
   {
     etykieta: "E-mail",
     wartosc: site.email,
-    adres: (adres) => `mailto:${adres}`,
+    adres: `mailto:${site.email}`,
   },
   {
     etykieta: "Instagram",
-    wartosc: site.instagram,
     // Shown to a human with its leading "@", which the profile URL cannot have.
-    adres: instagramHref,
+    wartosc: site.instagram,
+    adres: instagramHref(site.instagram),
+  },
+  {
+    etykieta: "Facebook",
+    /*
+     * The business's name rather than the address, because the address is a
+     * numeric profile id. Every other channel here prints something a visitor
+     * could copy down and use elsewhere; this one cannot, so it prints the
+     * thing they are being taken to instead.
+     */
+    wartosc: site.name,
+    adres: site.facebook,
   },
 ];
 
@@ -59,16 +76,12 @@ export function ContactChannels({ className }: { className: string }) {
           <span className="block text-xs tracking-[0.25em] text-blush-300 uppercase">
             {kanal.etykieta}
           </span>
-          {isPending(kanal.wartosc) ? (
-            <span className="mt-2 block text-cream-50/60">{kanal.wartosc}</span>
-          ) : (
-            <a
-              href={kanal.adres(kanal.wartosc)}
-              className="mt-2 block text-lg text-cream-50 transition-colors hover:text-blush-200"
-            >
-              {kanal.wartosc}
-            </a>
-          )}
+          <a
+            href={kanal.adres}
+            className="mt-2 block text-lg text-cream-50 transition-colors hover:text-blush-200"
+          >
+            {kanal.wartosc}
+          </a>
         </li>
       ))}
     </ul>

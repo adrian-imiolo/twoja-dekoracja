@@ -1,20 +1,25 @@
 /**
  * Facts about the business that more than one page needs.
  *
- * The owner's name, phone, email and Instagram handle are outstanding client
- * input and ship as placeholders until they arrive; the footer needs a real
- * shape before the real values exist. Polish inflects place names, so the city
- * is held in both the nominative it is listed under and the locative that
- * prose needs — "w Szczecin" is a grammatical error a visitor will notice.
+ * Polish inflects place names, so the city is held in every case the site's
+ * prose actually asks for rather than in the one a database would store: the
+ * nominative it is listed under, the locative that "w …" takes and the
+ * genitive that "ze …" takes. None can be derived from another by a template,
+ * and both "w Szczecin" and "z Szczecinie" are errors a visitor from the city
+ * notices before they notice anything else on the page.
  */
 /**
  * What the site shows where it is waiting on the client.
  *
  * Exported because two kinds of hole need the same marker and a visitor must
- * not be able to tell them apart. `site` uses it for a business fact nobody
- * has supplied yet; `/polityka-prywatnosci` and `/o-nas` use it inside prose,
- * for a sentence only the client can write. Both are the same promise to
- * whoever is reading a preview — this is unfinished, and here is where.
+ * not be able to tell them apart. A realization uses it for a venue or a date
+ * nobody has looked up yet; `/polityka-prywatnosci` uses it inside prose, for
+ * a sentence only the person running the business can write. Both are the same
+ * promise to whoever is reading — this is unfinished, and here is where.
+ *
+ * `site` itself no longer holds one. Every business fact it carries is now
+ * real, which is why nothing outside this module compares against the marker
+ * to decide whether a phone number can be dialled.
  *
  * Rendering it is what this is for. Asking whether a value *is* it stays
  * `isPending`'s job: the sentinel's shape is then compared in exactly one
@@ -25,10 +30,10 @@ export const DO_UZUPELNIENIA = "[DO UZUPEŁNIENIA]";
 /**
  * Whether a fact is still a placeholder rather than something the site knows.
  *
- * A page asks this to decide what it can build out of a value. A phone number
- * the site knows becomes a `tel:` link the visitor taps; the placeholder can
- * only be shown as text, because a link to `tel:[DO UZUPEŁNIENIA]` dials
- * nothing and looks like a fault rather than an unfinished detail.
+ * A page asks this to decide what it can build out of a value. A venue the
+ * site knows can be shown beside a date; the placeholder cannot be shown at
+ * all, because literal `[DO UZUPEŁNIENIA]` on a published realization reads as
+ * a fault rather than as an unfinished detail.
  *
  * A question rather than a comparison every caller writes for itself. The
  * marker is exported for rendering, but its *shape* is only ever tested here —
@@ -122,6 +127,49 @@ function resolveSiteUrl(): string {
   return "http://localhost:3000";
 }
 
+/**
+ * One of the people who runs the business, with the number that reaches her.
+ *
+ * The name and the number are one fact rather than two lists kept in step,
+ * because every place the site offers a way of calling has to say whose phone
+ * it is. Two bare numbers under one "Telefon" label read as a switchboard,
+ * which is precisely what `/o-nas` spends a screen establishing this is not.
+ */
+export interface Wlasciciel {
+  name: string;
+  phone: string;
+}
+
+/**
+ * Who runs the business, in the order they are introduced.
+ *
+ * A pair rather than a single owner, and the reason this module holds a list
+ * at all: the site is two people who both turn up at the venue, and a visitor
+ * choosing who to call is choosing between named people rather than dialling
+ * an office. Order is authored — it is the order both names appear in
+ * everywhere they appear together, so the footer and the contact list cannot
+ * disagree about who is named first.
+ */
+const WLASCICIELKI: readonly Wlasciciel[] = [
+  { name: "Agnieszka Imioło", phone: "+48 505 964 523" },
+  { name: "Joanna Woźniak", phone: "+48 516 833 449" },
+];
+
+/**
+ * The first name, which is how a person is labelled beside her own number.
+ *
+ * "Telefon — Agnieszka" is what somebody deciding who to call actually reads.
+ * The full name is already in the footer and on `/o-nas`, and repeating it
+ * against the number turns a short warm list into a staff directory.
+ *
+ * Splitting on the first space is deliberately not cleverer than it needs to
+ * be: it handles a Polish given name, and a name it would get wrong is a name
+ * to write into `WLASCICIELKI` the way it should be read.
+ */
+export function imie(wlasciciel: Wlasciciel): string {
+  return wlasciciel.name.split(" ")[0];
+}
+
 export const site = {
   name: "Twoja Dekoracja",
   url: resolveSiteUrl(),
@@ -131,9 +179,17 @@ export const site = {
     "Dekoracje weselne, urodzinowe i okolicznościowe w Szczecinie i okolicach.",
   city: "Szczecin",
   cityLocative: "Szczecinie",
+  cityGenitive: "Szczecina",
   serviceArea: ["Szczecin"],
-  owner: DO_UZUPELNIENIA,
-  phone: DO_UZUPELNIENIA,
-  email: DO_UZUPELNIENIA,
-  instagram: DO_UZUPELNIENIA,
+  owners: WLASCICIELKI,
+  email: "twoja.dekoracja.kontakt@gmail.com",
+  instagram: "@twoja.dekoracja",
+  /*
+   * Held as the whole address rather than as a handle, because this profile
+   * has none — Facebook issues a numeric `profile.php?id=…` URL until a page
+   * claims a vanity name, and there is nothing to compose a link out of. If
+   * the profile ever gains one, this becomes a handle and grows a helper
+   * beside `instagramHref`; until then the honest shape is the URL itself.
+   */
+  facebook: "https://www.facebook.com/profile.php?id=61561290465565",
 } as const;

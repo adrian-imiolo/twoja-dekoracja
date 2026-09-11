@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 import { PrimaryCtaButton } from "@/components/ui/primary-cta";
-import { isPending, site, telHref } from "@/lib/site";
+import { imie, site, telHref } from "@/lib/site";
 import type {
   OdpowiedzNaZapytanie,
   SygnalyAntybot,
@@ -259,31 +259,33 @@ function Potwierdzenie() {
 /**
  * What a visitor is given when the message did not get out.
  *
- * The phone number rather than an apology: the point of saying anything at all
- * is that the inquiry still reaches its destination. It becomes a number to
- * dial only once the site knows one — a `tel:` built from the placeholder
- * dials nothing and reads as a second fault on top of the first.
+ * A number to dial rather than an apology: the point of saying anything at all
+ * is that the inquiry still reaches its destination. This is the one place on
+ * the site where a contact detail is load-bearing in the moment it is read —
+ * the visitor has already written the message once and has just been told it
+ * went nowhere, and the next thing they do is either call or leave.
+ *
+ * Both numbers, named, for the same reason `ContactChannels` names them: a
+ * visitor who has just hit a fault should not also have to guess which of two
+ * strangers to ring.
  */
 function Niepowodzenie() {
-  const telefon = site.phone;
-
   return (
     <p role="alert" className="text-cream-50/85">
-      Nie udało się wysłać wiadomości.{" "}
-      {isPending(telefon) ? (
-        <>Prosimy o telefon albo wiadomość na Instagramie.</>
-      ) : (
-        <>
-          Prosimy o telefon:{" "}
+      Nie udało się wysłać wiadomości. Prosimy o telefon:{" "}
+      {site.owners.map((wlascicielka, pozycja) => (
+        <Fragment key={wlascicielka.name}>
+          {pozycja > 0 ? " lub " : ""}
+          {imie(wlascicielka)}{" "}
           <a
-            href={telHref(telefon)}
+            href={telHref(wlascicielka.phone)}
             className="text-blush-200 underline underline-offset-4"
           >
-            {telefon}
+            {wlascicielka.phone}
           </a>
-          .
-        </>
-      )}
+        </Fragment>
+      ))}
+      .
     </p>
   );
 }

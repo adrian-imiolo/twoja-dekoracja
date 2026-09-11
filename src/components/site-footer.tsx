@@ -8,8 +8,15 @@ import { site } from "@/lib/site";
  *
  * No registration numbers, because none exist — the business is działalność
  * nierejestrowana, with no NIP and no REGON to print. What stands in their
- * place is the owner's name and the region they work in, which is what a
+ * place is both owners' names and the region they work in, which is what a
  * visitor is actually checking for at the bottom of a page.
+ *
+ * Facebook is deliberately absent here while Instagram is not. The footer
+ * prints contact facts as plain text rather than links, and Instagram survives
+ * that because "@twoja.dekoracja" is a handle somebody can read and type. The
+ * Facebook profile has no handle — only a numeric `profile.php?id=…` URL —
+ * and an unlinked word "Facebook" is not a way of reaching anybody. It is
+ * offered where it can be a real link instead: `ContactChannels`.
  */
 export function SiteFooter() {
   return (
@@ -21,9 +28,21 @@ export function SiteFooter() {
         <p>
           {site.tagline} — {site.city} i okolice.
         </p>
+        {/*
+         * One line per person rather than both run together, because the two
+         * names and the two numbers have to stay paired to be worth printing
+         * — a visitor reading four values on one line cannot tell which
+         * number belongs to whom.
+         */}
         <p>
-          {site.owner} · tel. {site.phone} · {site.email} · Instagram{" "}
-          {site.instagram}
+          {site.owners.map((wlascicielka) => (
+            <span key={wlascicielka.name} className="block">
+              {wlascicielka.name} · tel. {wlascicielka.phone}
+            </span>
+          ))}
+        </p>
+        <p>
+          {site.email} · Instagram {site.instagram}
         </p>
         {/*
          * In the footer rather than in the header nav, because it belongs to

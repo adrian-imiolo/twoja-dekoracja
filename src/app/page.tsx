@@ -228,7 +228,13 @@ export default function HomePage() {
             <PrimaryCta href="/kontakt">Wypełnij formularz</PrimaryCta>
           </p>
 
-          <ContactChannels className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-10" />
+          {/*
+           * Wrapping, because this band carries five channels — two named
+           * phones, an address, and two profiles — and a single row of them
+           * would either squeeze the email past legibility or push off the
+           * side of a narrow laptop.
+           */}
+          <ContactChannels className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-10 sm:gap-y-8" />
         </CalloutPanel>
       </section>
     </>

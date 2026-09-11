@@ -117,14 +117,18 @@ export default function PolitykaPrywatnosciPage() {
 
         <Sekcja id="administrator" tytul="Kto administruje danymi">
           <p>
-            Administratorem danych osobowych jest {site.owner}, osoba fizyczna
-            prowadząca pracownię dekoracji {site.name} w {site.cityLocative} w
-            ramach działalności nierejestrowanej. Nie jest to spółka ani
-            zarejestrowana firma, dlatego nie podajemy numerów NIP ani REGON —
-            nie zostały nadane.
+            Administratorami danych osobowych są{" "}
+            {site.owners.map((wlascicielka) => wlascicielka.name).join(" i ")} —
+            osoby fizyczne prowadzące pracownię dekoracji {site.name} w{" "}
+            {site.cityLocative} w ramach działalności nierejestrowanej. Nie jest
+            to spółka ani zarejestrowana firma, dlatego nie podajemy numerów NIP
+            ani REGON — nie zostały nadane.
           </p>
           <p>
-            Kontakt w sprawach danych osobowych: {site.email}, tel. {site.phone}
+            Kontakt w sprawach danych osobowych: {site.email}, tel.{" "}
+            {site.owners
+              .map((wlascicielka) => wlascicielka.phone)
+              .join(" lub ")}
             , adres korespondencyjny {DO_UZUPELNIENIA}.
           </p>
         </Sekcja>
@@ -228,8 +232,9 @@ export default function PolitykaPrywatnosciPage() {
         <Sekcja id="usuniecie" tytul="Jak zażądać usunięcia danych">
           <p>
             Wystarczy jedna wiadomość na {site.email} albo telefon pod{" "}
-            {site.phone} z informacją, że dane mają zostać usunięte. Nie trzeba
-            tego uzasadniać ani wypełniać żadnego wniosku.
+            {site.owners.map((wlascicielka) => wlascicielka.phone).join(" lub ")}{" "}
+            z informacją, że dane mają zostać usunięte. Nie trzeba tego
+            uzasadniać ani wypełniać żadnego wniosku.
           </p>
           <p>
             Usuwamy korespondencję najpóźniej w ciągu miesiąca od zgłoszenia i
