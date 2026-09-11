@@ -120,7 +120,7 @@ function resolveSiteUrl(): string {
 
   if (process.env.VERCEL) {
     throw new Error(
-      "Build na Vercelu nie zna własnej domeny — ustaw NEXT_PUBLIC_SITE_URL.",
+      "Build na Vercelu nie zna własnej domeny - ustaw NEXT_PUBLIC_SITE_URL.",
     );
   }
 
@@ -158,9 +158,10 @@ const WLASCICIELKI: readonly Wlasciciel[] = [
 /**
  * The first name, which is how a person is labelled beside her own number.
  *
- * "Telefon — Agnieszka" is what somebody deciding who to call actually reads.
- * The full name is already in the footer and on `/o-nas`, and repeating it
- * against the number turns a short warm list into a staff directory.
+ * "Telefon - Agnieszka" is what somebody deciding who to call actually reads,
+ * and it is all a visitor is given: surnames are published on one page only,
+ * the privacy policy, where RODO obliges them. Everywhere else a given name
+ * is warmer and is the whole of what is needed to pick a number.
  *
  * Splitting on the first space is deliberately not cleverer than it needs to
  * be: it handles a Polish given name, and a name it would get wrong is a name

@@ -63,24 +63,24 @@ export const pytania: readonly Pytanie[] = [
     id: "cena",
     pytanie: "Ile kosztuje dekoracja?",
     odpowiedz:
-      "Wycena zależy od wielkości sali, liczby stołów i tego, ile elementów dekoracji się na nie składa — inaczej wygląda sama ścianka za tortem, inaczej oprawa całego wesela. Po opisie przyjęcia podajemy widełki, a po ustaleniu szczegółów konkretną kwotę, i nie zmienia się ona później bez Waszej zgody.",
+      "Wycena zależy od wielkości sali, liczby stołów i tego, ile elementów dekoracji się na nie składa - inaczej wygląda sama ścianka za tortem, inaczej oprawa całego wesela. Po opisie przyjęcia podajemy widełki, a po ustaleniu szczegółów konkretną kwotę, i nie zmienia się ona później bez Waszej zgody.",
   },
   {
     id: "termin",
     pytanie: "Z jakim wyprzedzeniem rezerwować termin?",
     odpowiedz:
-      "Terminy weselne w sezonie rozchodzą się z dużym wyprzedzeniem, przy mniejszych przyjęciach bywa, że wystarczy kilka tygodni. Najprościej napisać z datą — odpowiemy, czy jest jeszcze wolna, zanim zaczniemy rozmawiać o czymkolwiek innym.",
+      "Terminy weselne w sezonie rozchodzą się z dużym wyprzedzeniem, przy mniejszych przyjęciach bywa, że wystarczy kilka tygodni. Najprościej napisać z datą - odpowiemy, czy jest jeszcze wolna, zanim zaczniemy rozmawiać o czymkolwiek innym.",
   },
   {
     id: "obszar",
     pytanie: "Gdzie pracujecie?",
-    odpowiedz: `${site.city} i okolice. Przy większych realizacjach dojeżdżamy również dalej, więc dalszy adres nie przekreśla rozmowy — napiszcie, gdzie jest sala, a odpowiemy wprost.`,
+    odpowiedz: `${site.city} i okolice. Przy większych realizacjach dojeżdżamy również dalej, więc dalszy adres nie przekreśla rozmowy - napiszcie, gdzie jest sala, a odpowiemy wprost.`,
   },
   {
     id: "pierwsza-rozmowa",
     pytanie: "Jak wygląda pierwsza rozmowa?",
     odpowiedz:
-      "Pytamy o datę, miejsce i to, jak wyobrażacie sobie salę — czasem wystarczy kilka zdjęć, które Wam się podobają. Z tego powstaje propozycja dekoracji i wycena. Rozmowa do niczego nie zobowiązuje i nic nie jest ustalone, dopóki obie strony tego nie potwierdzą.",
+      "Pytamy o datę, miejsce i to, jak wyobrażacie sobie salę - czasem wystarczy kilka zdjęć, które Wam się podobają. Z tego powstaje propozycja dekoracji i wycena. Rozmowa do niczego nie zobowiązuje i nic nie jest ustalone, dopóki obie strony tego nie potwierdzą.",
   },
   {
     id: "montaz",
@@ -92,7 +92,7 @@ export const pytania: readonly Pytanie[] = [
     id: "zakres",
     pytanie: "Co dokładnie obejmuje dekoracja?",
     odpowiedz:
-      "Najczęściej: dekorację stołu pary młodej lub jubilata, stołów gości, ścianki fotograficznej i wejścia na salę. Ceremonia w plenerze albo w kościele, strefa tortu czy oprawa świec to osobne elementy, które można dołożyć lub pominąć — mówimy wprost, co jest w wycenie, a co nie.",
+      "Najczęściej: dekorację stołu pary młodej lub jubilata, stołów gości, ścianki fotograficznej i wejścia na salę. Ceremonia w plenerze albo w kościele, strefa tortu czy oprawa świec to osobne elementy, które można dołożyć lub pominąć - mówimy wprost, co jest w wycenie, a co nie.",
   },
   {
     id: "rezerwacja",
@@ -104,7 +104,7 @@ export const pytania: readonly Pytanie[] = [
     id: "rozliczenie",
     pytanie: "Jak wygląda rozliczenie?",
     odpowiedz:
-      "Na całość otrzymujecie pisemne potwierdzenie zapłaty — rachunek. Ustalona kwota jest kwotą końcową: nie dochodzą do niej dojazd ani demontaż, o ile nie zmienia się zakres dekoracji.",
+      "Na całość otrzymujecie pisemne potwierdzenie zapłaty - rachunek. Ustalona kwota jest kwotą końcową: nie dochodzą do niej dojazd ani demontaż, o ile nie zmienia się zakres dekoracji.",
   },
   {
     id: "zmiany",

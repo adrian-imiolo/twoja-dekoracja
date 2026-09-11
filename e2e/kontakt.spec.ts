@@ -142,7 +142,7 @@ test("offers the ways of getting in touch that are not the form", async ({
   // Each phone is labelled with whose it is — an unlabelled second number
   // reads as an overflow line for the first rather than as another person.
   for (const kanal of [
-    ...site.owners.map((wlascicielka) => `Telefon — ${imie(wlascicielka)}`),
+    ...site.owners.map((wlascicielka) => `Telefon - ${imie(wlascicielka)}`),
     "E-mail",
     "Instagram",
     "Facebook",

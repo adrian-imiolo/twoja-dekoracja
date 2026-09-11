@@ -35,6 +35,15 @@ import { DO_UZUPELNIENIA, site } from "@/lib/site";
  * data, which here is simply the individual running the business.
  */
 
+/**
+ * When this document last said something different.
+ *
+ * Hand-written rather than derived from the build, which would restamp it on
+ * every unrelated deploy and quietly tell a reader the terms had changed. It
+ * moves when the text moves, and only then.
+ */
+const AKTUALIZACJA = "11 września 2026";
+
 const OPIS = `Jakie dane zbiera formularz kontaktowy ${site.name}, po co, na jakiej podstawie i jak zażądać ich usunięcia.`;
 
 export const metadata: Metadata = {
@@ -42,7 +51,7 @@ export const metadata: Metadata = {
   description: OPIS,
   ...sharePreview({
     path: "/polityka-prywatnosci",
-    title: `Polityka prywatności — ${site.name}`,
+    title: `Polityka prywatności - ${site.name}`,
     description: OPIS,
   }),
 };
@@ -82,7 +91,7 @@ export default function PolitykaPrywatnosciPage() {
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-cream-50/85">{OPIS}</p>
         <p className="mt-4 text-sm text-cream-50/60">
-          Ostatnia aktualizacja: {DO_UZUPELNIENIA}
+          Ostatnia aktualizacja: {AKTUALIZACJA}
         </p>
 
         {/*
@@ -118,11 +127,11 @@ export default function PolitykaPrywatnosciPage() {
         <Sekcja id="administrator" tytul="Kto administruje danymi">
           <p>
             Administratorami danych osobowych są{" "}
-            {site.owners.map((wlascicielka) => wlascicielka.name).join(" i ")} —
+            {site.owners.map((wlascicielka) => wlascicielka.name).join(" i ")} -
             osoby fizyczne prowadzące pracownię dekoracji {site.name} w{" "}
             {site.cityLocative} w ramach działalności nierejestrowanej. Nie jest
             to spółka ani zarejestrowana firma, dlatego nie podajemy numerów NIP
-            ani REGON — nie zostały nadane.
+            ani REGON - nie zostały nadane.
           </p>
           <p>
             Kontakt w sprawach danych osobowych: {site.email}, tel.{" "}
@@ -140,7 +149,7 @@ export default function PolitykaPrywatnosciPage() {
           </p>
           <ul className="ml-5 list-disc space-y-2">
             <li>imię,</li>
-            <li>adres e-mail albo numer telefonu — ten, który zostawicie,</li>
+            <li>adres e-mail albo numer telefonu - ten, który zostawicie,</li>
             <li>rodzaj uroczystości,</li>
             <li>przybliżony termin,</li>
             <li>treść wiadomości.</li>
@@ -164,8 +173,8 @@ export default function PolitykaPrywatnosciPage() {
             ustaleniu, czy i na jakich warunkach możemy przygotować dekorację.
           </p>
           <p>
-            Podstawą prawną jest art. 6 ust. 1 lit. b RODO — podjęcie działań na
-            żądanie osoby, której dane dotyczą, przed zawarciem umowy — oraz
+            Podstawą prawną jest art. 6 ust. 1 lit. b RODO - podjęcie działań na
+            żądanie osoby, której dane dotyczą, przed zawarciem umowy - oraz
             art. 6 ust. 1 lit. f RODO, czyli nasz prawnie uzasadniony interes
             polegający na prowadzeniu korespondencji i na ewentualnym ustaleniu
             lub dochodzeniu roszczeń.
@@ -184,11 +193,11 @@ export default function PolitykaPrywatnosciPage() {
           </p>
           <ul className="ml-5 list-disc space-y-2">
             <li>
-              <strong>Resend</strong> — dostarcza wiadomość z formularza na
+              <strong>Resend</strong> - dostarcza wiadomość z formularza na
               skrzynkę pracowni,
             </li>
             <li>
-              <strong>Vercel</strong> — utrzymuje serwis i obsługuje ruch na
+              <strong>Vercel</strong> - utrzymuje serwis i obsługuje ruch na
               stronie.
             </li>
           </ul>
@@ -205,7 +214,7 @@ export default function PolitykaPrywatnosciPage() {
             Korespondencja z zapytaniem pozostaje na skrzynce pocztowej
             pracowni przez {DO_UZUPELNIENIA} od ostatniego kontaktu, po czym
             jest usuwana. Jeżeli z zapytania wyniknie współpraca, dane związane
-            z realizacją przechowujemy przez okres wymagany przepisami —
+            z realizacją przechowujemy przez okres wymagany przepisami -
             {DO_UZUPELNIENIA}.
           </p>
         </Sekcja>
@@ -239,8 +248,8 @@ export default function PolitykaPrywatnosciPage() {
           <p>
             Usuwamy korespondencję najpóźniej w ciągu miesiąca od zgłoszenia i
             potwierdzamy to w odpowiedzi. Jeżeli jakieś dane musimy zachować
-            dłużej — na przykład dlatego, że wiążą się z rozliczeniem już
-            wykonanej dekoracji — napiszemy wprost, które to dane i do kiedy.
+            dłużej - na przykład dlatego, że wiążą się z rozliczeniem już
+            wykonanej dekoracji - napiszemy wprost, które to dane i do kiedy.
           </p>
         </Sekcja>
 
@@ -248,7 +257,7 @@ export default function PolitykaPrywatnosciPage() {
           <p>
             Serwis nie zapisuje własnych plików cookies, nie profiluje
             odwiedzających i nie śledzi ich na innych stronach. Dlatego nie
-            wyświetlamy okna zgody na cookies — nie ma na co jej wyrażać.
+            wyświetlamy okna zgody na cookies - nie ma na co jej wyrażać.
           </p>
           {/*
            * Vercel Web Analytics is in scope for the first release and lands
@@ -258,7 +267,7 @@ export default function PolitykaPrywatnosciPage() {
            * statistics.
            */}
           <p>
-            Statystyki odwiedzin, jeśli je zbieramy, są zbiorcze i anonimowe —
+            Statystyki odwiedzin, jeśli je zbieramy, są zbiorcze i anonimowe -
             nie pozwalają ustalić, kto odwiedził stronę.
           </p>
         </Sekcja>

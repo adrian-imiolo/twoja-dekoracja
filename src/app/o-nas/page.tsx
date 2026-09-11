@@ -5,7 +5,7 @@ import { CalloutPanel } from "@/components/ui/callout-panel";
 import { PrimaryCta } from "@/components/ui/primary-cta";
 import { QuietLink } from "@/components/ui/quiet-link";
 import { asOgImage, sharePreview } from "@/lib/metadata";
-import { site } from "@/lib/site";
+import { imie, site } from "@/lib/site";
 import { portret } from "@content/o-nas";
 
 /**
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   description: OPIS,
   ...sharePreview({
     path: "/o-nas",
-    title: `O nas — ${site.name}`,
+    title: `O nas - ${site.name}`,
     description: OPIS,
     // The one page whose subject is the person rather than the work, so it
     // previews with the portrait the page itself leads on.
@@ -61,7 +61,7 @@ export default function ONasPage() {
          */}
         <p className="mt-6 text-lg leading-relaxed text-cream-50/85">
           {site.name} to niewielka pracownia dekoracji ze {site.cityGenitive}.
-          Nie jest to agencja z centralą i podwykonawcami — jesteśmy we dwie, a
+          Nie jest to agencja z centralą i podwykonawcami - jesteśmy we dwie, a
           przy każdym przyjęciu jesteśmy obie: od pustej sali po ostatni
           element, który z niej zabieramy.
         </p>
@@ -87,7 +87,7 @@ export default function ONasPage() {
             />
           </div>
           <p className="mt-5 text-sm leading-relaxed text-cream-50/60">
-            {site.owners.map((wlascicielka) => wlascicielka.name).join(" i ")}
+            {site.owners.map(imie).join(" i ")}
             <br />
             {site.name}, {site.city}
           </p>
@@ -104,10 +104,10 @@ export default function ONasPage() {
             {/* The owners' own story, in their words, written up. */}
             <p className="mt-6 leading-relaxed text-cream-50/80">
               Obie skończyłyśmy studia architektoniczne i obie trafiłyśmy tu tą
-              samą drogą — od patrzenia na wnętrze jak na coś, co się
+              samą drogą - od patrzenia na wnętrze jak na coś, co się
               projektuje, a nie tylko zastawia stołami. Zaczęło się od przyjęć w
               rodzinie i u znajomych: chrzciny, osiemnastka, potem pierwsze
-              wesele. Za każdym razem okazywało się to samo — że to, co dla nas
+              wesele. Za każdym razem okazywało się to samo - że to, co dla nas
               jest układaniem kompozycji, proporcji i światła, dla kogoś innego
               jest dniem, który zapamięta na zawsze. Z przysługi dla bliskich
               zrobiła się pasja, a z pasji to, czym zajmujemy się dziś.
@@ -123,7 +123,7 @@ export default function ONasPage() {
             </h2>
             <p className="mt-6 leading-relaxed text-cream-50/80">
               Wesele albo okrągłe urodziny zdarzają się raz. Nikt nie ma na nie
-              drugiego podejścia i nikt nie ćwiczy ich wcześniej — a osoby,
+              drugiego podejścia i nikt nie ćwiczy ich wcześniej - a osoby,
               które je organizują, mają tego dnia sto innych rzeczy na głowie.
               Dekoracja jest jedną z niewielu, które da się z nich zdjąć w
               całości.
@@ -138,7 +138,7 @@ export default function ONasPage() {
               Najbardziej lubimy dwa momenty. Pierwszy, kiedy wychodzi się z
               sali, która kilka godzin wcześniej była pusta, i widzi się ją
               skończoną. Drugi, kiedy wchodzą do niej goście. Dlatego bierzemy
-              tylko tyle przyjęć, ile jesteśmy w stanie obsłużyć osobiście —
+              tylko tyle przyjęć, ile jesteśmy w stanie obsłużyć osobiście -
               wolimy zrobić mniej i być na miejscu od początku do końca, niż
               rozpisać się na kilka sal naraz i wysłać na nie kogoś, kto Waszą
               dekorację widzi pierwszy raz.
@@ -154,7 +154,7 @@ export default function ONasPage() {
             </h2>
             <p className="mt-6 leading-relaxed text-cream-50/80">
               Rozmawiamy o tym, jak wyobrażacie sobie salę, i proponujemy
-              dekorację, która to oddaje — a potem przyjeżdżamy, budujemy ją od
+              dekorację, która to oddaje - a potem przyjeżdżamy, budujemy ją od
               zera i zabieramy po przyjęciu. Ustalona kwota jest kwotą końcową,
               a wszystko, co jest w niej zawarte, mówimy wprost, zanim
               cokolwiek zostanie zarezerwowane.
@@ -177,7 +177,7 @@ export default function ONasPage() {
           Opowiedzcie nam o swoim przyjęciu
         </h2>
         <p className="mx-auto mt-4 max-w-xl leading-relaxed text-cream-50/80">
-          Napiszcie, co planujecie i kiedy — odpiszemy, czy termin jest wolny.
+          Napiszcie, co planujecie i kiedy - odpiszemy, czy termin jest wolny.
         </p>
         <p className="mt-8">
           <PrimaryCta href="/kontakt">Napisz do nas</PrimaryCta>

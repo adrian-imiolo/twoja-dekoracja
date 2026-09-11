@@ -1,3 +1,11 @@
+import type { ReactNode } from "react";
+
+import {
+  IkonaFacebooka,
+  IkonaInstagrama,
+  IkonaMaila,
+  IkonaTelefonu,
+} from "@/components/ui/channel-icons";
 import { imie, instagramHref, site, telHref } from "@/lib/site";
 
 /**
@@ -24,6 +32,13 @@ interface Kanal {
   etykieta: string;
   wartosc: string;
   adres: string;
+  /*
+   * Decoration over the label, not a replacement for it. Two of these are
+   * brand marks a visitor recognises before they read anything, which is the
+   * whole reason they are here — but a mark alone would leave the channel
+   * unnamed for anyone who does not recognise it, so the text stays.
+   */
+  ikona: ReactNode;
 }
 
 /**
@@ -40,20 +55,23 @@ interface Kanal {
  */
 const KANALY: readonly Kanal[] = [
   ...site.owners.map((wlascicielka) => ({
-    etykieta: `Telefon — ${imie(wlascicielka)}`,
+    etykieta: `Telefon - ${imie(wlascicielka)}`,
     wartosc: wlascicielka.phone,
     adres: telHref(wlascicielka.phone),
+    ikona: <IkonaTelefonu />,
   })),
   {
     etykieta: "E-mail",
     wartosc: site.email,
     adres: `mailto:${site.email}`,
+    ikona: <IkonaMaila />,
   },
   {
     etykieta: "Instagram",
     // Shown to a human with its leading "@", which the profile URL cannot have.
     wartosc: site.instagram,
     adres: instagramHref(site.instagram),
+    ikona: <IkonaInstagrama />,
   },
   {
     etykieta: "Facebook",
@@ -65,6 +83,7 @@ const KANALY: readonly Kanal[] = [
      */
     wartosc: site.name,
     adres: site.facebook,
+    ikona: <IkonaFacebooka />,
   },
 ];
 
@@ -78,8 +97,9 @@ export function ContactChannels({ className }: { className: string }) {
           </span>
           <a
             href={kanal.adres}
-            className="mt-2 block text-lg text-cream-50 transition-colors hover:text-blush-200"
+            className="mt-2 flex items-center gap-2.5 text-lg text-cream-50 transition-colors hover:text-blush-200"
           >
+            <span className="text-blush-300">{kanal.ikona}</span>
             {kanal.wartosc}
           </a>
         </li>

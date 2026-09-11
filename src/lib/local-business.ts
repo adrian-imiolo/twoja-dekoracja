@@ -32,17 +32,17 @@ export function localBusinessSchema(): Record<string, unknown> {
     // this one instead of describing the business a second time.
     "@id": `${site.url}/#pracownia`,
     // The brand, which is what a search result should say and what every page
-    // already carries. The people behind it are `legalName` below.
+    // already carries.
     name: site.name,
     url: site.url,
     description: site.description,
     /*
-     * Both names, because unregistered activity has no entity to name apart
-     * from the individuals running it — and here there are two of them. A
-     * `legalName` carrying one of the pair would be a claim that the other is
-     * staff, which is not what this business is.
+     * No `legalName`. Unregistered activity has no entity to name apart from
+     * the individuals running it, so the only value this key could carry is
+     * two people's full names — and those are published on exactly one page,
+     * the privacy policy, where RODO obliges it. `sameAs` and `telephone` are
+     * enough for a search engine to treat this as one business.
      */
-    legalName: site.owners.map((wlascicielka) => wlascicielka.name).join(" i "),
     /*
      * Both numbers rather than a nominated primary. Neither is a switchboard
      * that reaches the other, so publishing one would send half the callers to

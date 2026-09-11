@@ -9,7 +9,7 @@ import { expect, test } from "@playwright/test";
 const SLUG = "wesele";
 const TITLE = "Wesele";
 const STYLE =
-  "Balonowe kolumny i łuki w zieleni, złocie, srebrze i bieli — wewnątrz sali i w plenerze ogrodu";
+  "Balonowe kolumny i łuki w zieleni, złocie, srebrze i bieli - wewnątrz sali i w plenerze ogrodu";
 const PHOTO_COUNT = 7;
 
 const url = `/realizacje/${SLUG}`;

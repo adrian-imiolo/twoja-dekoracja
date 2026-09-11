@@ -40,11 +40,12 @@ describe("localBusinessSchema", () => {
     expect(localBusinessSchema().name).toBe(site.name);
   });
 
-  it("names every owner, because none of them is the business's staff", () => {
-    const legalName = localBusinessSchema().legalName;
+  it("publishes no surname, which belongs to the privacy policy alone", () => {
+    const wydruk = JSON.stringify(localBusinessSchema());
 
+    expect(localBusinessSchema()).not.toHaveProperty("legalName");
     for (const wlascicielka of site.owners) {
-      expect(legalName).toContain(wlascicielka.name);
+      expect(wydruk).not.toContain(wlascicielka.name);
     }
   });
 

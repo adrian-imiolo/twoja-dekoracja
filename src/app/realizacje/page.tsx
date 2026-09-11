@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description: `Wesela i przyjęcia okolicznościowe, które dekorowaliśmy w ${site.cityLocative} i okolicach. Zdjęcia z każdej realizacji.`,
   ...sharePreview({
     path: "/realizacje",
-    title: `Realizacje — ${site.name}`,
+    title: `Realizacje - ${site.name}`,
     description: `Wesela i przyjęcia okolicznościowe, które dekorowaliśmy w ${site.cityLocative} i okolicach.`,
   }),
 };

@@ -73,7 +73,7 @@ export const metadata: Metadata = {
   description: site.description,
   ...sharePreview({
     path: "/",
-    title: `${site.name} — ${site.tagline.toLowerCase()} w ${site.cityLocative}`,
+    title: `${site.name} - ${site.tagline.toLowerCase()} w ${site.cityLocative}`,
     description: site.description,
   }),
 };
@@ -112,7 +112,7 @@ export default function HomePage() {
             {site.tagline} w {site.cityLocative}
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-cream-50/85">
-            Projektujemy i budujemy oprawę wesel, urodzin i przyjęć rodzinnych —
+            Projektujemy i budujemy oprawę wesel, urodzin i przyjęć rodzinnych -
             od bramy ceremonii po ostatnią świecę na stole.
           </p>
 
@@ -146,7 +146,7 @@ export default function HomePage() {
           <p className="mt-6 text-lg leading-relaxed text-cream-50/80">
             Dekorujemy wesela i przyjęcia w {site.cityLocative} i okolicach.
             Przyjeżdżamy na salę, budujemy dekorację od zera i zabieramy ją po
-            przyjęciu — tak, żeby jedyną rzeczą, o której trzeba pamiętać, było
+            przyjęciu - tak, żeby jedyną rzeczą, o której trzeba pamiętać, było
             to, kogo posadzić przy którym stole.
           </p>
           <p className="mt-8 text-sm tracking-[0.2em] text-blush-300 uppercase">
@@ -220,7 +220,7 @@ export default function HomePage() {
             Zostaw nam wiadomość
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-cream-50/80">
-            Napiszcie, co planujecie i kiedy — odpiszemy, czy termin jest wolny
+            Napiszcie, co planujecie i kiedy - odpiszemy, czy termin jest wolny
             i co da się z niego zrobić.
           </p>
 

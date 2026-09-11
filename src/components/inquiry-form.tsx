@@ -246,10 +246,10 @@ function Potwierdzenie() {
       className="border border-blush-300 bg-plum-900 px-8 py-12 text-center"
     >
       <p className="font-display text-2xl text-blush-200 sm:text-3xl">
-        Dziękujemy — wiadomość dotarła.
+        Dziękujemy - wiadomość dotarła.
       </p>
       <p className="mx-auto mt-4 max-w-md leading-relaxed text-cream-50/80">
-        Odpiszemy najszybciej, jak się da — zwykle tego samego albo następnego
+        Odpiszemy najszybciej, jak się da - zwykle tego samego albo następnego
         dnia. Nie trzeba wysyłać jej drugi raz.
       </p>
     </div>
@@ -274,7 +274,7 @@ function Niepowodzenie() {
     <p role="alert" className="text-cream-50/85">
       Nie udało się wysłać wiadomości. Prosimy o telefon:{" "}
       {site.owners.map((wlascicielka, pozycja) => (
-        <Fragment key={wlascicielka.name}>
+        <Fragment key={wlascicielka.phone}>
           {pozycja > 0 ? " lub " : ""}
           {imie(wlascicielka)}{" "}
           <a

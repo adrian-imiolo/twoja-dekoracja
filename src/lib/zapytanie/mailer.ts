@@ -68,7 +68,7 @@ export function composeInquiryEmail(zapytanie: Zapytanie, to: string): InquiryEm
      * truncates, so the two facts that settle "can I take this?" come before
      * the one that is in the body anyway.
      */
-    subject: `Zapytanie: ${typ}, ${zapytanie.termin} — ${zapytanie.imie}`,
+    subject: `Zapytanie: ${typ}, ${zapytanie.termin} - ${zapytanie.imie}`,
     text: [
       `Imię: ${zapytanie.imie}`,
       `Kontakt: ${zapytanie.kontakt}`,

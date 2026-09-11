@@ -21,14 +21,14 @@ import { pytania } from "@content/faq";
  * three of them and the two pages must not disagree.
  */
 
-const OPIS = `Cena, terminy, obszar działania, montaż i demontaż — odpowiedzi na najczęstsze pytania o dekoracje wesel i przyjęć w ${site.cityLocative}.`;
+const OPIS = `Cena, terminy, obszar działania, montaż i demontaż - odpowiedzi na najczęstsze pytania o dekoracje wesel i przyjęć w ${site.cityLocative}.`;
 
 export const metadata: Metadata = {
   title: "Częste pytania",
   description: OPIS,
   ...sharePreview({
     path: "/faq",
-    title: `Częste pytania — ${site.name}`,
+    title: `Częste pytania - ${site.name}`,
     description: OPIS,
   }),
 };
@@ -104,7 +104,7 @@ export default function FaqPage() {
           Nie ma tu Waszego pytania?
         </h2>
         <p className="mt-4 leading-relaxed text-cream-50/80">
-          Napiszcie — odpowiadamy na wszystko, także zanim cokolwiek zostanie
+          Napiszcie - odpowiadamy na wszystko, także zanim cokolwiek zostanie
           ustalone.
         </p>
         <p className="mt-8">
