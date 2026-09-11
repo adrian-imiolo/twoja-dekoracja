@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { QuietLink } from "@/components/ui/quiet-link";
+import { miejsceITermin } from "@/lib/site";
 import { realizacje } from "@content/realizacje";
 
 /**
@@ -61,9 +62,19 @@ export default function NotFound() {
               <span className="font-display text-xl text-blush-200">
                 {realizacja.title}
               </span>
-              <span className="mt-1 block text-sm text-cream-50/70">
-                {realizacja.place} · {realizacja.date}
-              </span>
+              {/*
+               * Through `miejsceITermin` like every other place that shows a
+               * venue, rather than joining the two fields here. This page
+               * composed them itself and so published a literal
+               * `[DO UZUPEŁNIENIA] · [DO UZUPEŁNIENIA]` for every realization
+               * whose venue has not been looked up yet — on the one page a
+               * visitor reaches already suspecting the site is broken.
+               */}
+              {miejsceITermin(realizacja) ? (
+                <span className="mt-1 block text-sm text-cream-50/70">
+                  {miejsceITermin(realizacja)}
+                </span>
+              ) : null}
             </Link>
           </li>
         ))}
