@@ -1,4 +1,4 @@
-import { expect, test, type Locator } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 
 /**
  * The home page, seen the way a stranger arriving from Google sees it.
@@ -26,6 +26,31 @@ async function expectLoaded(zdjecie: Locator) {
     .toBe(true);
 }
 
+/**
+ * When the poster finished arriving, and when each piece of footage started
+ * being fetched, read off the browser's own resource timeline.
+ *
+ * The timeline is the right witness here rather than Playwright's request
+ * events: it is recorded by the browser as the connection actually behaved,
+ * at high resolution, instead of being reconstructed from timestamps taken on
+ * the test's side of the wire.
+ */
+async function heroMediaTiming(page: Page, posterSrc: string) {
+  return page.evaluate(function readTimeline(src) {
+    const entries = performance.getEntriesByType(
+      "resource",
+    ) as PerformanceResourceTiming[];
+
+    return {
+      posterResponseEnd:
+        entries.find((entry) => entry.name === src)?.responseEnd ?? null,
+      mediaStarts: entries
+        .filter((entry) => /\.(mp4|webm|mov)(\?|$)/i.test(entry.name))
+        .map((entry) => entry.startTime),
+    };
+  }, posterSrc);
+}
+
 test("leads from the home page into a realization and its photographs", async ({
   page,
 }) => {
@@ -44,25 +69,22 @@ test("leads from the home page into a realization and its photographs", async ({
   await expectLoaded(page.getByRole("main").getByRole("img").first());
 });
 
-test("opens on a photograph that loads eagerly, and asks for no video", async ({
+test("opens on a photograph that loads eagerly, and lets it paint before fetching footage", async ({
   page,
 }) => {
   /*
    * The hero is built poster-first: the still is the page's
-   * largest-contentful-paint candidate and a video, when the client supplies
-   * one, is layered over it and requested only after that paint. At launch
-   * there is no footage at all, and this is what keeps it that way — a video
-   * dropped in eagerly would compete with the poster for the connection on
-   * the one page whose speed the business's entire acquisition channel is
-   * graded on.
+   * largest-contentful-paint candidate, and footage — when `content/hero`
+   * carries any — is layered over it and requested only once it has painted.
+   * Footage fetched any earlier would compete with the poster for the
+   * connection on the one page whose speed the business's entire acquisition
+   * channel is graded on.
+   *
+   * Nothing here asserts whether footage exists; that fact belongs to
+   * `content/hero/index.ts` alone. With none, no media is ever requested and
+   * the ordering below holds over an empty list, which is the right answer
+   * for that state rather than a gap in it.
    */
-  const mediaRequests: string[] = [];
-  page.on("request", function recordMedia(request) {
-    if (/\.(mp4|webm|mov)(\?|$)/i.test(request.url())) {
-      mediaRequests.push(request.url());
-    }
-  });
-
   await page.goto("/");
 
   const poster = page.getByRole("main").getByRole("img").first();
@@ -76,8 +98,69 @@ test("opens on a photograph that loads eagerly, and asks for no video", async ({
    */
   expect(await poster.getAttribute("loading")).not.toBe("lazy");
 
-  await expect(page.locator("video")).toHaveCount(0);
-  expect(mediaRequests).toEqual([]);
+  // Resolved from the rendered element rather than rebuilt from Next's image
+  // URL shape, which is an implementation detail this spec has no business
+  // knowing.
+  const posterSrc = await poster.evaluate(
+    (image) => (image as HTMLImageElement).currentSrc,
+  );
+
+  /*
+   * The mount gate runs a frame after the poster paints, and the request
+   * follows the mount, so both trail the assertions above. Wait for them
+   * rather than reading the timeline early — a timeline sampled before the
+   * request exists would satisfy the ordering by having nothing in it.
+   */
+  const video = page.locator("video");
+  await video
+    .waitFor({ state: "attached", timeout: 10_000 })
+    .catch(function withoutFootage() {});
+
+  if (await video.count()) {
+    await expect
+      .poll(async () => (await heroMediaTiming(page, posterSrc)).mediaStarts.length)
+      .toBeGreaterThan(0);
+  }
+
+  const { posterResponseEnd, mediaStarts } = await heroMediaTiming(
+    page,
+    posterSrc,
+  );
+
+  expect(posterResponseEnd).not.toBeNull();
+  for (const start of mediaStarts) {
+    expect(start).toBeGreaterThanOrEqual(posterResponseEnd!);
+  }
+});
+
+test("plays the footage layered over the poster", async ({ page }) => {
+  /*
+   * The one failure on this page that hides itself completely. The hero is
+   * built to degrade to the still: the video is held transparent until it
+   * reports playing, and a source that 404s or decodes to nothing simply
+   * never appears. A renamed file or a bad re-encode would leave the page
+   * looking exactly right, so this is the only thing that would notice.
+   *
+   * Delete this test — deliberately, alongside the `video` entry — if the
+   * client's footage is ever withdrawn. Its going red is the point.
+   */
+  await page.goto("/");
+
+  const video = page.locator("video");
+  await video.waitFor({ state: "attached" });
+
+  await expect
+    .poll(() =>
+      video.evaluate((element) => {
+        const footage = element as HTMLVideoElement;
+        return !footage.paused && footage.currentTime > 0;
+      }),
+    )
+    .toBe(true);
+
+  // Revealed, not merely running. The fade-in is driven by the same `playing`
+  // event, and it is what actually puts the footage in front of the poster.
+  await expect(video).toHaveClass(/opacity-100/);
 });
 
 test("puts a way of making contact within one click of the first screen", async ({
