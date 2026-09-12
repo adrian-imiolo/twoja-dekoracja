@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { QuietLink } from "@/components/ui/quiet-link";
+import { PrimaryCta } from "@/components/ui/primary-cta";
 import { sasiednieRealizacje, type Realizacja } from "@content/realizacje";
 
 /**
@@ -48,8 +48,14 @@ export function RealizationNav({ slug }: { slug: string }) {
         ) : null}
       </div>
 
+      {/*
+       * The one loud thing in the band. The neighbours are a choice between
+       * two named events and read as titles; this is the way out of the choice
+       * altogether, which is what the visitor who has stopped caring about
+       * this event needs to find without hunting for it.
+       */}
       <p className="mt-10 text-center sm:mt-12">
-        <QuietLink href="/realizacje">Wszystkie realizacje</QuietLink>
+        <PrimaryCta href="/realizacje">Wszystkie realizacje</PrimaryCta>
       </p>
     </nav>
   );

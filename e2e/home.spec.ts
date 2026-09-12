@@ -69,6 +69,37 @@ test("leads from the home page into a realization and its photographs", async ({
   await expectLoaded(page.getByRole("main").getByRole("img").first());
 });
 
+/**
+ * The hand-off the whole page is built to make.
+ *
+ * Four realizations are a sample; the archive is the work. A visitor who never
+ * finds the way into it has been shown a quarter of the thing the page exists
+ * to sell — which is why the link is the hero's button rather than the small
+ * caption it used to be, and why the trip is followed here rather than assumed
+ * from the presence of an `href`.
+ *
+ * Nothing below asserts how the link is drawn. That it is a bordered button is
+ * markup, which this suite deliberately does not constrain; that it is visible
+ * without hover, tall enough for a thumb and inside the gutter at 320px is a
+ * behaviour, and `responsive.spec.ts` is where the site asks it of every page
+ * at once.
+ */
+test("hands the visitor on from the four selected realizations to the whole archive", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  const wybrane = page.getByRole("region", { name: "Wybrane realizacje" });
+  const doArchiwum = wybrane.getByRole("link", {
+    name: "Wszystkie realizacje",
+  });
+
+  await doArchiwum.click();
+
+  await expect(page).toHaveURL(/\/realizacje$/, { timeout: 15_000 });
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+});
+
 test("opens on a photograph that loads eagerly, and lets it paint before fetching footage", async ({
   page,
 }) => {

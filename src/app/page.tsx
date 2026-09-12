@@ -174,8 +174,22 @@ export default function HomePage() {
           ))}
         </ul>
 
-        <p className="mt-16">
-          <QuietLink href="/realizacje">Wszystkie realizacje</QuietLink>
+        {/*
+         * The hero's button rather than a quiet link: four realizations are a
+         * sample and the archive is the work, so this is the hand-off the page
+         * is built to make, and as a caption under the last card it was
+         * competing with the next section's heading and losing. The FAQ
+         * teaser's link below stays quiet for the other half of that reason —
+         * two bordered buttons on one screen share the attention this one
+         * needs all of.
+         *
+         * No count in the label ("Wszystkie realizacje (7)"), tempting as it
+         * is: at 320px the button is already 268px of a 272px column, and the
+         * three extra characters push it past the gutter. The archive's own
+         * page answers "how many" on arrival.
+         */}
+        <p className="mt-16 text-center">
+          <PrimaryCta href="/realizacje">Wszystkie realizacje</PrimaryCta>
         </p>
       </section>
 
