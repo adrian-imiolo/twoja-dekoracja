@@ -96,42 +96,30 @@ test.describe("the footer", () => {
   });
 
   /*
-   * The widths between a phone and a desktop are where a column can be too
-   * narrow for the one word it has to hold — the e-mail address — without
-   * the page itself ever getting wider. So every link is checked against the
-   * viewport edge, not only the document's scroll width.
+   * The one question about a narrow footer that is the footer's own: on a
+   * phone the columns collapse into a single stack rather than wrapping into
+   * a ragged block. Everything else a width can do to this footer — a page
+   * that scrolls sideways, a link past the right edge, a target too small for
+   * a thumb — is asserted over every page of the site, this one included, in
+   * `responsive.spec.ts`, and asking it twice only gives the 36px floor two
+   * homes to drift apart in.
    */
-  for (const szerokosc of [390, 640, 768, 1024, 1280]) {
-    test(`keeps every link inside a ${szerokosc}px viewport`, async ({
-      page,
-    }) => {
-      await page.setViewportSize({ width: szerokosc, height: 844 });
-      await page.goto("/polityka-prywatnosci");
+  test("collapses into one column on a phone", async ({ page }) => {
+    // The page is already loaded; narrowing it is what lays the footer out
+    // again, and the grid that does the collapsing is pure CSS.
+    await page.setViewportSize({ width: 390, height: 844 });
 
-      const { scrollWidth, innerWidth } = await page.evaluate(() => ({
-        scrollWidth: document.documentElement.scrollWidth,
-        innerWidth: window.innerWidth,
-      }));
-      expect(scrollWidth).toBeLessThanOrEqual(innerWidth);
+    const leweKrawedzie = await page
+      .getByRole("contentinfo")
+      .getByRole("link")
+      .evaluateAll((elementy) =>
+        elementy.map((element) =>
+          Math.round(element.getBoundingClientRect().left),
+        ),
+      );
 
-      const ramki = await page
-        .getByRole("contentinfo")
-        .getByRole("link")
-        .evaluateAll((elementy) =>
-          elementy.map((element) => element.getBoundingClientRect()),
-        );
-      for (const ramka of ramki) {
-        expect(ramka.right).toBeLessThanOrEqual(innerWidth);
-        // Comfortable to tap, not merely possible — WCAG 2.5.8's floor is 24.
-        expect(ramka.height).toBeGreaterThanOrEqual(36);
-      }
-
-      if (szerokosc === 390) {
-        // Columns collapse into one rather than wrapping into a ragged block:
-        // every link then starts at the same left edge.
-        const lewe = new Set(ramki.map((ramka) => Math.round(ramka.left)));
-        expect(lewe.size).toBe(1);
-      }
-    });
-  }
+    // Collapsed, not wrapped: every link starts at the same left edge. A
+    // footer with no links at all fails this too, which is the right answer.
+    expect(new Set(leweKrawedzie).size).toBe(1);
+  });
 });

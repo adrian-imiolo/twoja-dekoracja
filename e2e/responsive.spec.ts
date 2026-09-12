@@ -37,22 +37,35 @@ import { przejdzCalyServis, przewinCalaStrone } from "./crawl";
  *   24px and exempts links inline in a sentence, whose size a line of text
  *   dictates; a target standing on its own — a nav link, a button, a field —
  *   has no such excuse and is held to 36px, the height the footer's links
- *   and the contact channels were designed to and `footer.spec.ts` already
- *   asks of them.
+ *   and the contact channels were designed to. Asked below the tablet width
+ *   only — above it a pointer lands where it is put — so the floor holds on
+ *   the phone widths and is not a promise about a desktop. This file is the
+ *   only place it is written down: a second copy in a page's own spec is a
+ *   number that drifts.
  */
 
 /**
- * The widths that matter, and why these four.
+ * The widths that matter, and why these five.
  *
  * 320 is the narrowest phone still worth supporting and the width at which a
  * letter-spaced wordmark beside four nav links first has to give. 390 is the
- * phone most visitors hold. 768 is a tablet held upright, the first width
- * `sm:` and `md:` layouts both apply at; 1024 is a tablet turned sideways or
- * a small laptop, where `lg:` grids first appear and are at their tightest.
+ * phone most visitors hold. 640 is where every `sm:` layout on this site
+ * switches on, and so where a column is the narrowest it will ever be — the
+ * footer's e-mail address is one word with nowhere to break, and the width
+ * that gives it least room is the width it runs out of first. 768 is a tablet
+ * held upright, and the width from which this suite stops treating a viewport
+ * as something held in one hand. 1024 is a tablet turned sideways or a small
+ * laptop, where `lg:` grids first appear and are at their tightest.
+ *
+ * Nothing wider. The site's layouts are written in `sm:` and `lg:` and
+ * nothing above them, so a desktop is `lg:` again with room to spare — a
+ * width already measured where it is tightest, which is the measurement that
+ * can fail.
  */
 const SZEROKOSCI = [
   { width: 320, height: 568 },
   { width: 390, height: 844 },
+  { width: 640, height: 960 },
   { width: 768, height: 1024 },
   { width: 1024, height: 768 },
 ] as const;
