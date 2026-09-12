@@ -18,7 +18,16 @@ const photos: readonly [Fotografia, ...Fotografia[]] = [
   {
     image: zdjecie01,
     alt: "Balonowa brama w bordowej czerwieni, czerni i kremie w kamiennym, sklepionym wnętrzu piwnicy, obok stołu bilardowego",
-    position: "center 15%",
+    /*
+     * A 4:5 photograph in the card's 4:3 frame: the frame holds 60% of the
+     * height, but the arch plus the numerals span 66% of it (rows ~430–1615
+     * of 1800), so no pan fits the whole subject and `zoom` only shrinks the
+     * window. This pan keeps the "18" whole and lets the arch bleed off the
+     * top edge, which reads as a crop rather than as a cut-off caption.
+     * Measured in a browser for #32 — don't re-tune the percentage; the
+     * remaining escape is a different photograph.
+     */
+    position: "center 72%",
   },
   {
     image: zdjecie02,
