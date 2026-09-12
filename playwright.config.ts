@@ -1,11 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const isCI = Boolean(process.env.CI);
-// Kept in step with `resolveSiteUrl`'s localhost fallback in `src/lib/site.ts`,
-// which is what the built pages name themselves during this suite. Moving the
-// port without moving that constant leaves the structured-data test asserting
-// one origin against a site that publishes another.
-const port = 3000;
+// Deliberately not 3000. The sibling `shop_sznyt_design` backend lives there,
+// and two projects sharing a port means a suite that either cannot start or,
+// worse, quietly reports on the other one's server.
+const port = 3100;
 const baseURL = `http://localhost:${port}`;
 
 // The suite drives a real browser against a production build rather than the
@@ -29,6 +28,15 @@ export default defineConfig({
   webServer: {
     command: `npm run build && npm run start -- --port ${port}`,
     url: baseURL,
+    /*
+     * The suite names the URL it will serve from rather than leaving the build
+     * to guess it. `resolveSiteUrl` in `src/lib/site.ts` falls back to
+     * localhost:3000, which was only ever right here by coincidence of the
+     * port; saying it outright is what lets the port move. `NEXT_PUBLIC_*` is
+     * inlined at build time, so this is the origin the canonicals and the
+     * structured data actually carry.
+     */
+    env: { NEXT_PUBLIC_SITE_URL: baseURL },
     /*
      * Never adopt whatever is already listening. Reuse is how this suite spent
      * two days reporting on someone else's process: an unrelated server held
