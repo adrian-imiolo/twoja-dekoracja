@@ -1,39 +1,48 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
-import { CalloutPanel } from "@/components/ui/callout-panel";
 import { sharePreview } from "@/lib/metadata";
-import { DO_UZUPELNIENIA, site } from "@/lib/site";
+import { site } from "@/lib/site";
 
 /**
  * The document RODO obliges the site to publish, because the contact form
  * collects personal data from people in the EU.
  *
- * Its route, layout, footer link and structure are real from the first
- * release; the copy is not finished, and says so on the page. Every gap is
- * marked `[DO UZUPEŁNIENIA]` — the same marker `site` uses for the business
- * facts it does not know yet — so the outstanding items are visible to the
- * client reading a preview rather than buried in a comment only a developer
- * would find.
+ * Nothing here is a placeholder any more, and the draft notice that used to
+ * stand at the top is gone with them. The owners have read the document and
+ * the facts it was waiting on — who they are, where a request reaches them,
+ * how long an inquiry is kept — are written out below.
  *
  * What is written out is what the code actually does, taken from
  * `src/lib/zapytanie`: the five fields the form collects, the mailer that
- * carries them, and the host that serves the page. Those are not placeholders
- * and must be corrected here if the form or the delivery path changes — a
- * privacy policy that describes a different system than the one running is
- * worse than a short one, because it is a statement of fact the business has
- * published about itself.
+ * carries them, and the host that serves the page. Those must be corrected
+ * here if the form or the delivery path changes — a privacy policy that
+ * describes a different system than the one running is worse than a short
+ * one, because it is a statement of fact the business has published about
+ * itself.
  *
- * What is left as a marker is what only the client can answer: who they are,
- * where data requests reach them, and how long they keep an inquiry. The whole
- * document needs their review before launch regardless — nothing here is legal
- * advice, and none of it has been through a lawyer.
+ * Two decisions worth not re-litigating by accident. There is no postal
+ * address: art. 13 ust. 1 lit. a RODO asks for contact details good enough to
+ * exercise a right, and the only address this business has is the flat it is
+ * run from, beside names and faces the site already publishes. And the
+ * retention periods — 24 months for correspondence, 5 tax years for a booking
+ * — are the owners' stated practice, not a default to be quietly widened.
  *
- * The controller is a person, not a company. The business is działalność
+ * None of this has been through a lawyer, and none of it is legal advice.
+ *
+ * The controllers are people, not a company. The business is działalność
  * nierejestrowana: it has no NIP, no REGON and no legal entity to name, and
- * RODO does not care — the controller is whoever decides what happens to the
- * data, which here is simply the individual running the business.
+ * RODO does not care — a controller is whoever decides what happens to the
+ * data, which here is simply the two individuals running the business.
  */
+
+/**
+ * When this document last said something different.
+ *
+ * Hand-written rather than derived from the build, which would restamp it on
+ * every unrelated deploy and quietly tell a reader the terms had changed. It
+ * moves when the text moves, and only then.
+ */
+const AKTUALIZACJA = "11 września 2026";
 
 const OPIS = `Jakie dane zbiera formularz kontaktowy ${site.name}, po co, na jakiej podstawie i jak zażądać ich usunięcia.`;
 
@@ -42,7 +51,7 @@ export const metadata: Metadata = {
   description: OPIS,
   ...sharePreview({
     path: "/polityka-prywatnosci",
-    title: `Polityka prywatności — ${site.name}`,
+    title: `Polityka prywatności - ${site.name}`,
     description: OPIS,
   }),
 };
@@ -82,50 +91,33 @@ export default function PolitykaPrywatnosciPage() {
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-cream-50/85">{OPIS}</p>
         <p className="mt-4 text-sm text-cream-50/60">
-          Ostatnia aktualizacja: {DO_UZUPELNIENIA}
+          Ostatnia aktualizacja: {AKTUALIZACJA}
         </p>
-
-        {/*
-         * Stated on the page rather than only in the repository. A visitor who
-         * reads an unfinished policy and is not told it is unfinished has been
-         * misled about the one document whose whole purpose is not to mislead
-         * them.
-         *
-         * It says the whole document is a draft, not only that some fragments
-         * are missing. The rest of the text names RODO articles and processors
-         * with the confidence of a finished policy, and it was written from
-         * what the code does rather than by a lawyer — a reader has no way to
-         * tell those two kinds of sentence apart, so the notice covers both.
-         */}
-        <CalloutPanel
-          as="p"
-          className="mt-10 px-6 py-5 text-sm leading-relaxed text-cream-50/75"
-        >
-          <strong>To jest wersja robocza dokumentu.</strong> Fragmenty oznaczone{" "}
-          <strong>{DO_UZUPELNIENIA}</strong> czekają na dane osoby prowadzącej
-          pracownię, a pozostała treść wymaga jej potwierdzenia. Do czasu
-          uzupełnienia w sprawach dotyczących danych osobowych prosimy o kontakt
-          przez{" "}
-          <Link
-            href="/kontakt"
-            className="text-blush-200 underline underline-offset-4 transition-colors hover:text-blush-100"
-          >
-            formularz kontaktowy
-          </Link>
-          .
-        </CalloutPanel>
 
         <Sekcja id="administrator" tytul="Kto administruje danymi">
           <p>
-            Administratorem danych osobowych jest {site.owner}, osoba fizyczna
-            prowadząca pracownię dekoracji {site.name} w {site.cityLocative} w
-            ramach działalności nierejestrowanej. Nie jest to spółka ani
-            zarejestrowana firma, dlatego nie podajemy numerów NIP ani REGON —
-            nie zostały nadane.
+            Administratorami danych osobowych są{" "}
+            {site.owners.map((wlascicielka) => wlascicielka.name).join(" i ")} -
+            osoby fizyczne prowadzące pracownię dekoracji {site.name} w{" "}
+            {site.cityLocative} w ramach działalności nierejestrowanej. Nie jest
+            to spółka ani zarejestrowana firma, dlatego nie podajemy numerów NIP
+            ani REGON - nie zostały nadane.
           </p>
+          {/*
+           * An e-mail address and two numbers, and deliberately no postal one.
+           * Art. 13 ust. 1 lit. a RODO asks for contact details sufficient to
+           * exercise a right, which these are; it does not ask for an address.
+           * The only address this business has is the flat it is run from, and
+           * the site already publishes both owners' given names, their faces
+           * and their mobile numbers - a home address on top of that is the
+           * piece that cannot be taken back once it has been indexed.
+           */}
           <p>
-            Kontakt w sprawach danych osobowych: {site.email}, tel. {site.phone}
-            , adres korespondencyjny {DO_UZUPELNIENIA}.
+            Kontakt w sprawach danych osobowych: {site.email}, tel.{" "}
+            {site.owners
+              .map((wlascicielka) => wlascicielka.phone)
+              .join(" lub ")}
+            .
           </p>
         </Sekcja>
 
@@ -136,7 +128,7 @@ export default function PolitykaPrywatnosciPage() {
           </p>
           <ul className="ml-5 list-disc space-y-2">
             <li>imię,</li>
-            <li>adres e-mail albo numer telefonu — ten, który zostawicie,</li>
+            <li>adres e-mail albo numer telefonu - ten, który zostawicie,</li>
             <li>rodzaj uroczystości,</li>
             <li>przybliżony termin,</li>
             <li>treść wiadomości.</li>
@@ -160,8 +152,8 @@ export default function PolitykaPrywatnosciPage() {
             ustaleniu, czy i na jakich warunkach możemy przygotować dekorację.
           </p>
           <p>
-            Podstawą prawną jest art. 6 ust. 1 lit. b RODO — podjęcie działań na
-            żądanie osoby, której dane dotyczą, przed zawarciem umowy — oraz
+            Podstawą prawną jest art. 6 ust. 1 lit. b RODO - podjęcie działań na
+            żądanie osoby, której dane dotyczą, przed zawarciem umowy - oraz
             art. 6 ust. 1 lit. f RODO, czyli nasz prawnie uzasadniony interes
             polegający na prowadzeniu korespondencji i na ewentualnym ustaleniu
             lub dochodzeniu roszczeń.
@@ -180,11 +172,11 @@ export default function PolitykaPrywatnosciPage() {
           </p>
           <ul className="ml-5 list-disc space-y-2">
             <li>
-              <strong>Resend</strong> — dostarcza wiadomość z formularza na
+              <strong>Resend</strong> - dostarcza wiadomość z formularza na
               skrzynkę pracowni,
             </li>
             <li>
-              <strong>Vercel</strong> — utrzymuje serwis i obsługuje ruch na
+              <strong>Vercel</strong> - utrzymuje serwis i obsługuje ruch na
               stronie.
             </li>
           </ul>
@@ -199,10 +191,11 @@ export default function PolitykaPrywatnosciPage() {
         <Sekcja id="okres" tytul="Jak długo je przechowujemy">
           <p>
             Korespondencja z zapytaniem pozostaje na skrzynce pocztowej
-            pracowni przez {DO_UZUPELNIENIA} od ostatniego kontaktu, po czym
-            jest usuwana. Jeżeli z zapytania wyniknie współpraca, dane związane
-            z realizacją przechowujemy przez okres wymagany przepisami —
-            {DO_UZUPELNIENIA}.
+            pracowni przez 24 miesiące od ostatniego kontaktu, po czym jest
+            usuwana. Jeżeli z zapytania wyniknie współpraca, dane związane z
+            realizacją przechowujemy przez okres wymagany przepisami
+            podatkowymi - 5 lat, licząc od końca roku kalendarzowego, w którym
+            odbyło się przyjęcie.
           </p>
         </Sekcja>
 
@@ -228,14 +221,15 @@ export default function PolitykaPrywatnosciPage() {
         <Sekcja id="usuniecie" tytul="Jak zażądać usunięcia danych">
           <p>
             Wystarczy jedna wiadomość na {site.email} albo telefon pod{" "}
-            {site.phone} z informacją, że dane mają zostać usunięte. Nie trzeba
-            tego uzasadniać ani wypełniać żadnego wniosku.
+            {site.owners.map((wlascicielka) => wlascicielka.phone).join(" lub ")}{" "}
+            z informacją, że dane mają zostać usunięte. Nie trzeba tego
+            uzasadniać ani wypełniać żadnego wniosku.
           </p>
           <p>
             Usuwamy korespondencję najpóźniej w ciągu miesiąca od zgłoszenia i
             potwierdzamy to w odpowiedzi. Jeżeli jakieś dane musimy zachować
-            dłużej — na przykład dlatego, że wiążą się z rozliczeniem już
-            wykonanej dekoracji — napiszemy wprost, które to dane i do kiedy.
+            dłużej - na przykład dlatego, że wiążą się z rozliczeniem już
+            wykonanej dekoracji - napiszemy wprost, które to dane i do kiedy.
           </p>
         </Sekcja>
 
@@ -243,7 +237,7 @@ export default function PolitykaPrywatnosciPage() {
           <p>
             Serwis nie zapisuje własnych plików cookies, nie profiluje
             odwiedzających i nie śledzi ich na innych stronach. Dlatego nie
-            wyświetlamy okna zgody na cookies — nie ma na co jej wyrażać.
+            wyświetlamy okna zgody na cookies - nie ma na co jej wyrażać.
           </p>
           {/*
            * Vercel Web Analytics is in scope for the first release and lands
@@ -253,7 +247,7 @@ export default function PolitykaPrywatnosciPage() {
            * statistics.
            */}
           <p>
-            Statystyki odwiedzin, jeśli je zbieramy, są zbiorcze i anonimowe —
+            Statystyki odwiedzin, jeśli je zbieramy, są zbiorcze i anonimowe -
             nie pozwalają ustalić, kto odwiedził stronę.
           </p>
         </Sekcja>

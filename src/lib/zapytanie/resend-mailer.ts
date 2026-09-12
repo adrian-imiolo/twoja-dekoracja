@@ -50,9 +50,9 @@ const ODBIORCA_ZASTEPCZY = "kontakt@localhost";
 const transportDoKonsoli: Transport = async (email: InquiryEmail) => {
   console.info(
     [
-      "[zapytanie] RESEND_API_KEY nie jest ustawiony — nic nie zostało wysłane.",
+      "[zapytanie] RESEND_API_KEY nie jest ustawiony - nic nie zostało wysłane.",
       `Do: ${email.to}`,
-      `Odpowiedz do: ${email.replyTo ?? "—"}`,
+      `Odpowiedz do: ${email.replyTo ?? "-"}`,
       `Temat: ${email.subject}`,
       email.text,
     ].join("\n"),
@@ -110,7 +110,7 @@ export function resolveInquiryMailer(): InquiryMailer {
   if (!apiKey || !odbiorca) {
     if (process.env.VERCEL) {
       throw new Error(
-        "Wysyłka zapytań nie jest skonfigurowana — ustaw RESEND_API_KEY i CONTACT_TO_EMAIL.",
+        "Wysyłka zapytań nie jest skonfigurowana - ustaw RESEND_API_KEY i CONTACT_TO_EMAIL.",
       );
     }
     return inquiryMailer(odbiorca ?? ODBIORCA_ZASTEPCZY, transportDoKonsoli);

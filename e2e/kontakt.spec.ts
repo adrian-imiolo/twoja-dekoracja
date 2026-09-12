@@ -1,5 +1,6 @@
 import { expect, type Page, test } from "@playwright/test";
 
+import { imie, site, telHref } from "../src/lib/site";
 import { MINIMALNY_CZAS_MS } from "../src/lib/zapytanie/handler";
 
 /**
@@ -113,6 +114,19 @@ test("hands over another way of reaching us when delivery fails", async ({
   await expect(page.locator("form").getByRole("alert")).toContainText(
     "Nie udało się wysłać wiadomości",
   );
+
+  /*
+   * The substance of the failure state, not just its wording: every owner's
+   * number is offered as something the visitor taps. Asserting the sentence
+   * alone would pass against a message that names a number nobody can dial,
+   * which is the fault this state exists to prevent.
+   */
+  for (const wlascicielka of site.owners) {
+    await expect(
+      page.locator("form").getByRole("link", { name: wlascicielka.phone }),
+    ).toHaveAttribute("href", telHref(wlascicielka.phone));
+  }
+
   // Still there to try again with, and never claiming a send that failed.
   await expect(
     page.getByRole("button", { name: "Wyślij zapytanie" }),
@@ -125,7 +139,14 @@ test("offers the ways of getting in touch that are not the form", async ({
 }) => {
   await page.goto("/kontakt");
 
-  for (const kanal of ["Telefon", "E-mail", "Instagram"]) {
+  // Each phone is labelled with whose it is — an unlabelled second number
+  // reads as an overflow line for the first rather than as another person.
+  for (const kanal of [
+    ...site.owners.map((wlascicielka) => `Telefon - ${imie(wlascicielka)}`),
+    "E-mail",
+    "Instagram",
+    "Facebook",
+  ]) {
     await expect(page.getByText(kanal, { exact: true })).toBeVisible();
   }
 });

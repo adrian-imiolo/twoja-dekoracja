@@ -31,13 +31,13 @@ export function assertRealizacjeValid(realizacje: readonly Realizacja[]): void {
   for (const realizacja of realizacje) {
     if (!SLUG.test(realizacja.slug)) {
       throw new Error(
-        `Slug "${realizacja.slug}" jest nieprawidłowy — dozwolone są tylko małe litery, cyfry i pojedyncze myślniki.`,
+        `Slug "${realizacja.slug}" jest nieprawidłowy - dozwolone są tylko małe litery, cyfry i pojedyncze myślniki.`,
       );
     }
 
     if (seen.has(realizacja.slug)) {
       throw new Error(
-        `Realizacja "${realizacja.slug}" jest w rejestrze więcej niż raz — slug musi być unikalny.`,
+        `Realizacja "${realizacja.slug}" jest w rejestrze więcej niż raz - slug musi być unikalny.`,
       );
     }
     seen.add(realizacja.slug);
@@ -69,7 +69,7 @@ function assertHasAltText(
 ): void {
   if (zdjecie.alt.trim() === "") {
     throw new Error(
-      `Realizacja "${slug}": ${label} nie ma tekstu alt — każde zdjęcie potrzebuje opisu po polsku.`,
+      `Realizacja "${slug}": ${label} nie ma tekstu alt - każde zdjęcie potrzebuje opisu po polsku.`,
     );
   }
 }

@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { site } from "../src/lib/site";
+
 /**
  * Every address the site offers a visitor, followed and checked.
  *
@@ -37,8 +39,8 @@ const TRASY_STALE = [
  * answered with.
  *
  * Keyed by path rather than by full URL so the assertions read as routes. Only
- * same-origin links are followed: `tel:`, `mailto:` and the Instagram profile
- * are not this site's to answer for.
+ * same-origin links are followed: `tel:`, `mailto:` and the Instagram and
+ * Facebook profiles are not this site's to answer for.
  */
 async function przejdzCalyServis(
   page: Page,
@@ -151,4 +153,38 @@ test("the sitemap names every page the site publishes, and only those", async ({
   expect(uporzadkowane(adresy.map((adres) => adres.pathname))).toEqual(
     uporzadkowane(odwiedzone.keys()),
   );
+});
+
+/**
+ * Surnames belong to one page, and the check has to be over the source rather
+ * than over what is painted.
+ *
+ * React serialises list keys into the RSC payload, so a `key={owner.name}`
+ * ships both surnames in the HTML of every page while rendering neither — a
+ * leak that is invisible in a browser, invisible in review, and exactly the
+ * kind a privacy decision is made to prevent. `toContain` over the response
+ * body is what sees it.
+ */
+test("keeps surnames off every page but the privacy policy", async ({
+  page,
+}) => {
+  const nazwiska = site.owners.map(
+    (wlascicielka) => wlascicielka.name.split(" ").slice(1).join(" "),
+  );
+
+  for (const trasa of TRASY_STALE) {
+    const odpowiedz = await page.goto(trasa);
+    const tresc = (await odpowiedz!.text());
+
+    for (const nazwisko of nazwiska) {
+      if (trasa === "/polityka-prywatnosci") {
+        // RODO obliges the controller to be named, and this is where it is done.
+        expect(tresc).toContain(nazwisko);
+      } else {
+        expect(tresc, `${nazwisko} leaked into ${trasa}`).not.toContain(
+          nazwisko,
+        );
+      }
+    }
+  }
 });

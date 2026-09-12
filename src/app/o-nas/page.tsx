@@ -5,7 +5,7 @@ import { CalloutPanel } from "@/components/ui/callout-panel";
 import { PrimaryCta } from "@/components/ui/primary-cta";
 import { QuietLink } from "@/components/ui/quiet-link";
 import { asOgImage, sharePreview } from "@/lib/metadata";
-import { DO_UZUPELNIENIA, site } from "@/lib/site";
+import { imie, site } from "@/lib/site";
 import { portret } from "@content/o-nas";
 
 /**
@@ -16,16 +16,16 @@ import { portret } from "@content/o-nas";
  * only one that answers who would actually turn up at the venue. For a service
  * bought on trust it does as much work as the photographs do.
  *
- * PLACEHOLDER COPY, with one deliberate exception to how the rest of the site
- * handles that. Everywhere else, placeholder prose is plausible invented copy
- * the client rewrites. Here the personal story is left as an explicit
- * `[DO UZUPEŁNIENIA]` marker instead, because inventing one is different in
- * kind from inventing a lead time: a fabricated account of why a real person
- * does this work is not a rough draft of the truth, and it is the single
- * paragraph on the site most likely to be read closely and quoted back. What
- * *is* written out is what the site already knows to be true — what the
- * business does, where, and how it works — so the page has a real shape to
- * receive the story rather than being a page of markers.
+ * The story is the owners' own, given by them and written up here rather than
+ * invented — which is why it stayed a `[DO UZUPEŁNIENIA]` marker until they
+ * had told it. A fabricated account of why a real person does this work is not
+ * a rough draft of the truth, and this is the paragraph on the site most
+ * likely to be read closely and quoted back.
+ *
+ * What the page deliberately does not say is that either of them does this
+ * full time. The business is działalność nierejestrowana, which caps monthly
+ * revenue — "na pełen etat" would be warm, plausible, and contradicted by the
+ * same legal status the footer and the privacy policy both rest on.
  */
 
 const OPIS = `Kto stoi za pracownią ${site.name} i dlaczego zajmujemy się dekoracjami przyjęć w ${site.cityLocative}.`;
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   description: OPIS,
   ...sharePreview({
     path: "/o-nas",
-    title: `O nas — ${site.name}`,
+    title: `O nas - ${site.name}`,
     description: OPIS,
     // The one page whose subject is the person rather than the work, so it
     // previews with the portrait the page itself leads on.
@@ -51,12 +51,19 @@ export default function ONasPage() {
           Kim jesteśmy
         </p>
         <h1 className="mt-6 font-display text-4xl leading-tight text-cream-50 sm:text-5xl">
-          Za każdą dekoracją stoi konkretna osoba
+          Za każdą dekoracją stoją konkretne osoby
         </h1>
+        {/*
+         * The genitive, not the locative: "pracownia dekoracji ze Szczecina".
+         * The locative beside it is the form "w …" takes and is what the page
+         * description uses — putting either in the other's place is the kind
+         * of error a visitor from the city reads before they read anything.
+         */}
         <p className="mt-6 text-lg leading-relaxed text-cream-50/85">
-          {site.name} to niewielka pracownia dekoracji z {site.cityLocative}.
-          Nie jest to agencja z centralą i podwykonawcami — przyjęć w sezonie
-          bierzemy tyle, ile da się zrobić dobrze.
+          {site.name} to niewielka pracownia dekoracji ze {site.cityGenitive}.
+          Nie jest to agencja z centralą i podwykonawcami - jesteśmy we dwie, a
+          przy każdym przyjęciu jesteśmy obie: od pustej sali po ostatni
+          element, który z niej zabieramy.
         </p>
       </header>
 
@@ -80,7 +87,7 @@ export default function ONasPage() {
             />
           </div>
           <p className="mt-5 text-sm leading-relaxed text-cream-50/60">
-            {site.owner}
+            {site.owners.map(imie).join(" i ")}
             <br />
             {site.name}, {site.city}
           </p>
@@ -94,13 +101,16 @@ export default function ONasPage() {
             >
               Jak to się zaczęło
             </h2>
-            {/*
-             * The client's own story, in their words. Everything the site can
-             * honestly say without it is already said above and below.
-             */}
+            {/* The owners' own story, in their words, written up. */}
             <p className="mt-6 leading-relaxed text-cream-50/80">
-              {DO_UZUPELNIENIA} — historia pracowni: od czego się zaczęło, jak
-              długo trwa i co po drodze okazało się najważniejsze.
+              Obie skończyłyśmy studia architektoniczne i obie trafiłyśmy tu tą
+              samą drogą - od patrzenia na wnętrze jak na coś, co się
+              projektuje, a nie tylko zastawia stołami. Zaczęło się od przyjęć w
+              rodzinie i u znajomych: chrzciny, osiemnastka, potem pierwsze
+              wesele. Za każdym razem okazywało się to samo - że to, co dla nas
+              jest układaniem kompozycji, proporcji i światła, dla kogoś innego
+              jest dniem, który zapamięta na zawsze. Z przysługi dla bliskich
+              zrobiła się pasja, a z pasji to, czym zajmujemy się dziś.
             </p>
           </section>
 
@@ -113,14 +123,25 @@ export default function ONasPage() {
             </h2>
             <p className="mt-6 leading-relaxed text-cream-50/80">
               Wesele albo okrągłe urodziny zdarzają się raz. Nikt nie ma na nie
-              drugiego podejścia i nikt nie ćwiczy ich wcześniej — a osoby,
+              drugiego podejścia i nikt nie ćwiczy ich wcześniej - a osoby,
               które je organizują, mają tego dnia sto innych rzeczy na głowie.
               Dekoracja jest jedną z niewielu, które da się z nich zdjąć w
               całości.
             </p>
+            {/*
+             * Where the limit on how much work is taken on belongs: stated as
+             * a preference that follows from what the two of them enjoy,
+             * rather than announced up front as a constraint. The same fact
+             * read as an excuse when it led the page.
+             */}
             <p className="mt-4 leading-relaxed text-cream-50/80">
-              {DO_UZUPELNIENIA} — kilka zdań o tym, co w tej pracy daje
-              satysfakcję i dlaczego robi się ją właśnie tak.
+              Najbardziej lubimy dwa momenty. Pierwszy, kiedy wychodzi się z
+              sali, która kilka godzin wcześniej była pusta, i widzi się ją
+              skończoną. Drugi, kiedy wchodzą do niej goście. Dlatego bierzemy
+              tylko tyle przyjęć, ile jesteśmy w stanie obsłużyć osobiście -
+              wolimy zrobić mniej i być na miejscu od początku do końca, niż
+              rozpisać się na kilka sal naraz i wysłać na nie kogoś, kto Waszą
+              dekorację widzi pierwszy raz.
             </p>
           </section>
 
@@ -133,7 +154,7 @@ export default function ONasPage() {
             </h2>
             <p className="mt-6 leading-relaxed text-cream-50/80">
               Rozmawiamy o tym, jak wyobrażacie sobie salę, i proponujemy
-              dekorację, która to oddaje — a potem przyjeżdżamy, budujemy ją od
+              dekorację, która to oddaje - a potem przyjeżdżamy, budujemy ją od
               zera i zabieramy po przyjęciu. Ustalona kwota jest kwotą końcową,
               a wszystko, co jest w niej zawarte, mówimy wprost, zanim
               cokolwiek zostanie zarezerwowane.
@@ -156,7 +177,7 @@ export default function ONasPage() {
           Opowiedzcie nam o swoim przyjęciu
         </h2>
         <p className="mx-auto mt-4 max-w-xl leading-relaxed text-cream-50/80">
-          Napiszcie, co planujecie i kiedy — odpiszemy, czy termin jest wolny.
+          Napiszcie, co planujecie i kiedy - odpiszemy, czy termin jest wolny.
         </p>
         <p className="mt-8">
           <PrimaryCta href="/kontakt">Napisz do nas</PrimaryCta>

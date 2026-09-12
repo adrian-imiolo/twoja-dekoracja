@@ -16,7 +16,7 @@ import { site } from "@/lib/site";
  */
 
 const OPIS =
-  "Napisz do nas — powiedz, co planujecie i kiedy, a odpiszemy, czy termin jest wolny.";
+  "Napisz do nas - powiedz, co planujecie i kiedy, a odpiszemy, czy termin jest wolny.";
 
 /**
  * What a search result shows, which the page's own lead deliberately does not
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   description: META_OPIS,
   ...sharePreview({
     path: "/kontakt",
-    title: `Kontakt — ${site.name}`,
+    title: `Kontakt - ${site.name}`,
     description: META_OPIS,
   }),
 };

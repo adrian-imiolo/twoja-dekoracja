@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { site } from "@/lib/site";
+import { imie, site } from "@/lib/site";
 
 /**
  * The last thing on every page: who this business is, and the one link RODO
@@ -8,8 +8,16 @@ import { site } from "@/lib/site";
  *
  * No registration numbers, because none exist — the business is działalność
  * nierejestrowana, with no NIP and no REGON to print. What stands in their
- * place is the owner's name and the region they work in, which is what a
- * visitor is actually checking for at the bottom of a page.
+ * place is the owners' given names and the region they work in, which is
+ * what a visitor is actually checking for at the bottom of a page. Surnames
+ * appear on one page only — the privacy policy, where RODO obliges them.
+ *
+ * Facebook is deliberately absent here while Instagram is not. The footer
+ * prints contact facts as plain text rather than links, and Instagram survives
+ * that because "@twoja.dekoracja" is a handle somebody can read and type. The
+ * Facebook profile has no handle — only a numeric `profile.php?id=…` URL —
+ * and an unlinked word "Facebook" is not a way of reaching anybody. It is
+ * offered where it can be a real link instead: `ContactChannels`.
  */
 export function SiteFooter() {
   return (
@@ -19,11 +27,29 @@ export function SiteFooter() {
           {site.wordmark}
         </p>
         <p>
-          {site.tagline} — {site.city} i okolice.
+          {site.tagline} - {site.city} i okolice.
+        </p>
+        {/*
+         * One line per person rather than both run together, because the name
+         * and the number have to stay paired to be worth printing — a visitor
+         * reading four values on one line cannot tell which number belongs to
+         * whom.
+         *
+         * Keyed by phone, not by name. React serialises list keys into the RSC
+         * payload, so keying on `name` would ship both surnames in the source
+         * of every page on the site while rendering neither. The number is
+         * already published here and is unique per owner, which `site.test.ts`
+         * asserts.
+         */}
+        <p>
+          {site.owners.map((wlascicielka) => (
+            <span key={wlascicielka.phone} className="block">
+              {imie(wlascicielka)} · tel. {wlascicielka.phone}
+            </span>
+          ))}
         </p>
         <p>
-          {site.owner} · tel. {site.phone} · {site.email} · Instagram{" "}
-          {site.instagram}
+          {site.email} · Instagram {site.instagram}
         </p>
         {/*
          * In the footer rather than in the header nav, because it belongs to

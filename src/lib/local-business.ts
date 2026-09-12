@@ -1,4 +1,4 @@
-import { instagramHref, isPending, site } from "@/lib/site";
+import { instagramHref, site } from "@/lib/site";
 import { realizacje } from "@content/realizacje";
 
 /**
@@ -15,6 +15,14 @@ import { realizacje } from "@content/realizacje";
  * real and is accepted deliberately — Google wants an address before it will
  * show a local rich result, so this block earns entity understanding rather
  * than a card. See the design spec's "Legal identity".
+ *
+ * Nothing here is guarded against `[DO UZUPEŁNIENIA]` any more. Every business
+ * fact this block publishes is now a real value in `site`, so the conditional
+ * that used to drop an unsupplied key could no longer fire, and a branch that
+ * cannot be taken is worse than no branch — it suggests a protection that is
+ * not being performed. What survives is the test asserting the serialized
+ * block never contains the marker, which is where a regression would actually
+ * be caught.
  */
 export function localBusinessSchema(): Record<string, unknown> {
   return {
@@ -23,22 +31,29 @@ export function localBusinessSchema(): Record<string, unknown> {
     // A name for the entity, so a later block on another page can point at
     // this one instead of describing the business a second time.
     "@id": `${site.url}/#pracownia`,
-    /*
-     * The brand, which every page already carries and no one is waiting on.
-     * It is deliberately not guarded: a `LocalBusiness` with no `name` is a
-     * block Google discards, and the thing #12 is waiting for is the person's
-     * name, which is `legalName` below. Unregistered activity has no entity
-     * to name apart from the individual running it.
-     */
+    // The brand, which is what a search result should say and what every page
+    // already carries.
     name: site.name,
     url: site.url,
     description: site.description,
-    ...ifKnown("legalName", site.owner),
-    ...ifKnown("telephone", site.phone),
-    ...ifKnown("email", site.email),
-    ...(isPending(site.instagram)
-      ? {}
-      : { sameAs: [instagramHref(site.instagram)] }),
+    /*
+     * No `legalName`. Unregistered activity has no entity to name apart from
+     * the individuals running it, so the only value this key could carry is
+     * two people's full names — and those are published on exactly one page,
+     * the privacy policy, where RODO obliges it. `sameAs` and `telephone` are
+     * enough for a search engine to treat this as one business.
+     */
+    /*
+     * Both numbers rather than a nominated primary. Neither is a switchboard
+     * that reaches the other, so publishing one would send half the callers to
+     * a person who cannot answer for the booking. `telephone` accepts repeated
+     * values, and two is the truth.
+     */
+    telephone: site.owners.map((wlascicielka) => wlascicielka.phone),
+    email: site.email,
+    // Every profile that is the same entity as this one, which is what makes a
+    // search engine treat the site and the socials as one business.
+    sameAs: [instagramHref(site.instagram), site.facebook],
     areaServed: site.serviceArea.map((miasto) => ({
       "@type": "City",
       name: miasto,
@@ -55,24 +70,6 @@ export function localBusinessSchema(): Record<string, unknown> {
      */
     ...obraz(realizacje.slice(0, 1).map((realizacja) => realizacja.cover)),
   };
-}
-
-/**
- * A key, or nothing at all.
- *
- * The distinction this whole module turns on, and the reason it is a named
- * function with its own tests rather than a conditional spread written out
- * four times. A page renders the marker so a reader can see what is missing;
- * markup a machine reads must not, because a search engine has no way to tell
- * `[DO UZUPEŁNIENIA]` from a phone number somebody chose — it takes it as the
- * answer and publishes it. An absent key is read as "not stated", which is the
- * truth.
- */
-export function ifKnown(
-  klucz: string,
-  wartosc: string,
-): Record<string, string> {
-  return isPending(wartosc) ? {} : { [klucz]: wartosc };
 }
 
 function obraz(

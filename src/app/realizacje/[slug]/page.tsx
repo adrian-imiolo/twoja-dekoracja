@@ -57,7 +57,7 @@ export async function generateMetadata({
   const path = `/realizacje/${realizacja.slug}`;
   const gdzieKiedy = miejsceITermin(realizacja);
   const title = gdzieKiedy
-    ? `${realizacja.title} — ${gdzieKiedy}`
+    ? `${realizacja.title} - ${gdzieKiedy}`
     : realizacja.title;
 
   return {
@@ -66,7 +66,7 @@ export async function generateMetadata({
     ...sharePreview({
       type: "article",
       path,
-      title: `${title} — ${site.name}`,
+      title: `${title} - ${site.name}`,
       description: realizacja.intro,
       images: [asOgImage(realizacja.cover)],
     }),

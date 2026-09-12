@@ -60,9 +60,9 @@ export const wesele: Realizacja = {
   place: DO_UZUPELNIENIA,
   date: DO_UZUPELNIENIA,
   style:
-    "Balonowe kolumny i łuki w zieleni, złocie, srebrze i bieli — wewnątrz sali i w plenerze ogrodu",
+    "Balonowe kolumny i łuki w zieleni, złocie, srebrze i bieli - wewnątrz sali i w plenerze ogrodu",
   intro:
-    "Kolumny i okrągłe bramy z balonów w zieleni, złocie i bieli — od powitania gości w sali po ściankę do zdjęć w ogrodzie. Spójna dekoracja na cały dzień, od stołu prezydialnego po plener.",
+    "Kolumny i okrągłe bramy z balonów w zieleni, złocie i bieli - od powitania gości w sali po ściankę do zdjęć w ogrodzie. Spójna dekoracja na cały dzień, od stołu prezydialnego po plener.",
   cover: photos[0],
   photos,
 };

@@ -99,7 +99,7 @@ export const zapytanieSchema = z.object({
     .string()
     .trim()
     .min(2, "Podaj imię, żebyśmy wiedzieli, jak się zwracać.")
-    .max(80, "To imię jest za długie — wystarczy samo imię."),
+    .max(80, "To imię jest za długie - wystarczy samo imię."),
 
   kontakt: z
     .string()
@@ -110,7 +110,7 @@ export const zapytanieSchema = z.object({
         wygladaJakEmail(kontakt)
           ? KSZTALT_EMAILA.test(kontakt)
           : jestNumerem(kontakt),
-      "Sprawdź adres e-mail albo numer telefonu — nie możemy odpisać na ten wpis.",
+      "Sprawdź adres e-mail albo numer telefonu - nie możemy odpisać na ten wpis.",
     ),
 
   typWydarzenia: z.enum(WARTOSCI_TYPOW, {
@@ -130,14 +130,14 @@ export const zapytanieSchema = z.object({
   termin: z
     .string()
     .trim()
-    .min(3, "Podaj przybliżony termin — wystarczy miesiąc albo pora roku.")
+    .min(3, "Podaj przybliżony termin - wystarczy miesiąc albo pora roku.")
     .max(60, "Wystarczy sam termin, resztę opisz w wiadomości."),
 
   wiadomosc: z
     .string()
     .trim()
-    .min(10, "Napisz kilka słów o przyjęciu — łatwiej nam wtedy odpowiedzieć.")
-    .max(2000, "Ta wiadomość jest za długa — resztę opowiesz nam w rozmowie."),
+    .min(10, "Napisz kilka słów o przyjęciu - łatwiej nam wtedy odpowiedzieć.")
+    .max(2000, "Ta wiadomość jest za długa - resztę opowiesz nam w rozmowie."),
 });
 
 /** A submission that has been through `zapytanieSchema` and survived. */

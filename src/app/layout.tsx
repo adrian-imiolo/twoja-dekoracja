@@ -38,8 +38,8 @@ export const metadata: Metadata = {
   // most of all — is resolved against this.
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — dekoracje weselne i okolicznościowe w ${site.cityLocative}`,
-    template: `%s — ${site.name}`,
+    default: `${site.name} - dekoracje weselne i okolicznościowe w ${site.cityLocative}`,
+    template: `%s - ${site.name}`,
   },
   description: site.description,
 };
