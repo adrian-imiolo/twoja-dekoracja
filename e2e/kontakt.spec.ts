@@ -171,23 +171,6 @@ test("leads to the form from the site header", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 });
 
-test("fits a phone screen, with the hidden field pushing nothing off the side", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/kontakt");
-
-  const { scrollWidth, innerWidth } = await page.evaluate(() => ({
-    scrollWidth: document.documentElement.scrollWidth,
-    innerWidth: window.innerWidth,
-  }));
-
-  // The honeypot is parked off-canvas rather than hidden, which is exactly the
-  // kind of positioning that quietly widens a page on the one viewport most of
-  // this site's visitors use.
-  expect(scrollWidth).toBeLessThanOrEqual(innerWidth);
-});
-
 /**
  * Which taps keep the visitor on the site and which hand them away.
  *

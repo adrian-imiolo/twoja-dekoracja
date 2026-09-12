@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { przewinCalaStrone } from "./crawl";
+
 /**
  * One of the realizations the repository publishes today. These are authored
  * content, so replacing this event means editing them — a coupling that is
@@ -15,16 +17,6 @@ const PHOTO_COUNT = 7;
 const url = `/realizacje/${SLUG}`;
 
 /** Scroll the whole page so lazily loaded photographs are actually requested. */
-async function scrollToBottom(page: import("@playwright/test").Page) {
-  await page.evaluate(async () => {
-    for (let y = 0; y < document.body.scrollHeight; y += window.innerHeight) {
-      window.scrollTo(0, y);
-      await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
-    }
-    window.scrollTo(0, document.body.scrollHeight);
-  });
-}
-
 test("shows its style and an introduction, and no unfilled placeholder text", async ({
   page,
 }) => {
@@ -101,7 +93,7 @@ test("shows every photograph of the event, each with its own description", async
 
 test("holds its layout still while the photographs load", async ({ page }) => {
   await page.goto(url);
-  await scrollToBottom(page);
+  await przewinCalaStrone(page);
 
   const shift = await page.evaluate(() => {
     type LayoutShift = PerformanceEntry & {
@@ -153,7 +145,7 @@ test("sets its photographs one after another rather than in a grid", async ({
   page,
 }) => {
   await page.goto(url);
-  await scrollToBottom(page);
+  await przewinCalaStrone(page);
 
   const boxes = await photographBoxes(page);
   expect(boxes.length).toBeGreaterThan(1);
@@ -166,22 +158,21 @@ test("sets its photographs one after another rather than in a grid", async ({
   }
 });
 
-test("scrolls vertically on a phone, with nothing pushed off the side", async ({
+// Whether the page fits a phone at all is `responsive.spec.ts`'s question,
+// asked of every page at once; this is only about how big the photographs are.
+test("shows its photographs large on a phone, one below another", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(url);
-  await scrollToBottom(page);
+  await przewinCalaStrone(page);
 
-  const { scrollWidth, innerWidth, scrollHeight, innerHeight } =
-    await page.evaluate(() => ({
-      scrollWidth: document.documentElement.scrollWidth,
-      innerWidth: window.innerWidth,
-      scrollHeight: document.documentElement.scrollHeight,
-      innerHeight: window.innerHeight,
-    }));
+  const { innerWidth, scrollHeight, innerHeight } = await page.evaluate(() => ({
+    innerWidth: window.innerWidth,
+    scrollHeight: document.documentElement.scrollHeight,
+    innerHeight: window.innerHeight,
+  }));
 
-  expect(scrollWidth).toBeLessThanOrEqual(innerWidth);
   expect(scrollHeight).toBeGreaterThan(innerHeight);
 
   // Large photographs, not thumbnails: each one fills the column it is given.

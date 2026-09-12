@@ -1,6 +1,7 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 import { site } from "../src/lib/site";
+import { przejdzCalyServis, TRASY_STALE } from "./crawl";
 
 /**
  * Every address the site offers a visitor, followed and checked.
@@ -14,67 +15,11 @@ import { site } from "../src/lib/site";
  * The routes are crawled rather than listed, so the check is over what the
  * site actually offers rather than over a list that has to be remembered. A
  * hand-maintained list would go stale exactly when a page is added — which is
- * the moment the check is worth having. The list below is the floor beneath
+ * the moment the check is worth having. `TRASY_STALE` is the floor beneath
  * the crawl: it names the routes the site must offer, so a navigation that
  * quietly stops linking somewhere fails here rather than passing on an empty
  * crawl.
  */
-
-/**
- * The pages that exist regardless of what content is in the registry, in the
- * order a visitor meets them. Realization details are not here — they come and
- * go with the archive, and the crawl asserts their shape instead.
- */
-const TRASY_STALE = [
-  "/",
-  "/o-nas",
-  "/realizacje",
-  "/faq",
-  "/kontakt",
-  "/polityka-prywatnosci",
-] as const;
-
-/**
- * Where a crawl starting at the home page can get to, and what each address
- * answered with.
- *
- * Keyed by path rather than by full URL so the assertions read as routes. Only
- * same-origin links are followed: `tel:`, `mailto:` and the Instagram and
- * Facebook profiles are not this site's to answer for.
- */
-async function przejdzCalyServis(
-  page: Page,
-  baseURL: string,
-): Promise<Map<string, number>> {
-  const odwiedzone = new Map<string, number>();
-  const kolejka = ["/"];
-
-  while (kolejka.length > 0) {
-    const sciezka = kolejka.shift()!;
-    if (odwiedzone.has(sciezka)) continue;
-
-    const odpowiedz = await page.goto(sciezka);
-    odwiedzone.set(sciezka, odpowiedz?.status() ?? 0);
-
-    const adresy = await page
-      .locator("a[href]")
-      .evaluateAll((kotwice) =>
-        kotwice.map((kotwica) => (kotwica as HTMLAnchorElement).href),
-      );
-
-    for (const adres of adresy) {
-      const url = new URL(adres, baseURL);
-      if (url.origin !== new URL(baseURL).origin) continue;
-
-      // An in-page anchor is the same document; following it would crawl the
-      // same page once per section heading.
-      const kolejnaSciezka = url.pathname;
-      if (!odwiedzone.has(kolejnaSciezka)) kolejka.push(kolejnaSciezka);
-    }
-  }
-
-  return odwiedzone;
-}
 
 test("every navigable route responds successfully", async ({
   page,
