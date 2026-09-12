@@ -73,7 +73,7 @@ export function composeInquiryEmail(zapytanie: Zapytanie, to: string): InquiryEm
       `Imię: ${zapytanie.imie}`,
       `Kontakt: ${zapytanie.kontakt}`,
       `Rodzaj uroczystości: ${typ}`,
-      `Przybliżony termin: ${zapytanie.termin}`,
+      `Termin: ${zapytanie.termin}`,
       "",
       "Wiadomość:",
       zapytanie.wiadomosc,

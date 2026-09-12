@@ -187,7 +187,7 @@ export function InquiryForm() {
 
       <Pole
         pole="termin"
-        etykieta="Przybliżony termin"
+        etykieta="Termin"
         wartosc={pola.termin}
         blad={bledy.termin}
         onChange={zmien}

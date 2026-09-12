@@ -26,7 +26,12 @@ async function wypelnij(page: Page) {
   await page
     .getByLabel("Rodzaj uroczystości")
     .selectOption({ label: ZAPYTANIE.typWydarzenia });
-  await page.getByLabel("Przybliżony termin").fill(ZAPYTANIE.termin);
+  /*
+   * Exact, here and in the assertion below, because `getByLabel` matches on a
+   * substring: plain "Termin" would still find a field labelled "Przybliżony
+   * termin", and the test would pass against the label it is pinning down.
+   */
+  await page.getByLabel("Termin", { exact: true }).fill(ZAPYTANIE.termin);
   await page.getByLabel("Wiadomość").fill(ZAPYTANIE.wiadomosc);
 
   /*
@@ -75,10 +80,10 @@ test("names the fields it cannot accept, and sends nothing", async ({
     "Imię",
     "E-mail albo telefon",
     "Rodzaj uroczystości",
-    "Przybliżony termin",
+    "Termin",
     "Wiadomość",
   ]) {
-    await expect(page.getByLabel(etykieta)).toHaveAttribute(
+    await expect(page.getByLabel(etykieta, { exact: true })).toHaveAttribute(
       "aria-invalid",
       "true",
     );
