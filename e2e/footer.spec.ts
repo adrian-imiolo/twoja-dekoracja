@@ -32,34 +32,48 @@ test.describe("the footer", () => {
   }) => {
     const stopka = page.getByRole("contentinfo");
 
+    /*
+     * A footer row carries no label of its own. What a sighted visitor reads
+     * is the number under its owner's name, the address, the handle, the
+     * business's name beside Facebook's mark — and what kind of row it is
+     * reaches a screen reader through the link's name instead, which is the
+     * only thing telling them that "Twoja Dekoracja" leads to Facebook.
+     */
     const kanaly = [
       ...site.owners.map((wlascicielka) => ({
-        etykieta: `Telefon - ${imie(wlascicielka)}`,
+        rodzaj: "Telefon",
+        widoczne: [imie(wlascicielka), wlascicielka.phone],
         adres: telHref(wlascicielka.phone),
       })),
-      { etykieta: "E-mail", adres: `mailto:${site.email}` },
-      { etykieta: "Instagram", adres: instagramHref(site.instagram) },
-      { etykieta: "Facebook", adres: site.facebook },
+      { rodzaj: "E-mail", widoczne: [site.email], adres: `mailto:${site.email}` },
+      {
+        rodzaj: "Instagram",
+        widoczne: [site.instagram],
+        adres: instagramHref(site.instagram),
+      },
+      { rodzaj: "Facebook", widoczne: [site.name], adres: site.facebook },
     ];
 
     for (const kanal of kanaly) {
-      await expect(
-        stopka.getByText(kanal.etykieta, { exact: true }),
-      ).toBeVisible();
       const odnosnik = stopka.locator(`a[href="${kanal.adres}"]`);
       await expect(odnosnik).toBeVisible();
+      for (const tekst of kanal.widoczne) {
+        await expect(odnosnik).toContainText(tekst);
+      }
+      await expect(odnosnik).toHaveAccessibleName(new RegExp(kanal.rodzaj));
       // The glyph the channel carries everywhere else on the site.
       await expect(odnosnik.locator("svg")).toHaveCount(1);
     }
   });
 
-  test("links every page of the site, and the privacy policy beside them", async ({
+  test("links every page of the site, and the privacy policy below them", async ({
     page,
   }) => {
     const stopka = page.getByRole("contentinfo");
 
     // The same list the header reads, so a page added there is asserted here
-    // without this file being told — plus the one link only the footer has.
+    // without this file being told — plus the one link only the footer has,
+    // in the strip under the columns rather than among the site's pages.
     for (const strona of [
       ...STRONY,
       { nazwa: "Polityka prywatności", sciezka: "/polityka-prywatnosci" },
