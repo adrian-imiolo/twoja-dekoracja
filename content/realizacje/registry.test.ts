@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { findRealizacja, realizacje } from "./index";
+import { findRealizacja, realizacje, sasiednieRealizacje } from "./index";
 
 /**
  * Static assertions over the published content — closer to a build-time check
@@ -72,5 +72,51 @@ describe("realization registry", () => {
 
   it("returns nothing for a slug it does not publish", () => {
     expect(findRealizacja("wesele-ktorego-nie-bylo")).toBeUndefined();
+  });
+
+  /**
+   * Prev/next follow the array as authored, because the archive is read in
+   * that order and the band at the bottom of an event is a way of reading on.
+   * The ends drop the missing direction rather than wrapping: "next" on the
+   * last event leading back to the first reads as a loop with no exit, and
+   * a visitor cannot tell they have now seen everything.
+   */
+  describe("neighbours", () => {
+    it("gives the first realization a next but no previous", () => {
+      const [pierwsza, druga] = realizacje;
+
+      expect(sasiednieRealizacje(pierwsza.slug)).toEqual({
+        poprzednia: undefined,
+        nastepna: druga,
+      });
+    });
+
+    it("gives the last realization a previous but no next", () => {
+      const ostatnia = realizacje[realizacje.length - 1];
+      const przedostatnia = realizacje[realizacje.length - 2];
+
+      expect(sasiednieRealizacje(ostatnia.slug)).toEqual({
+        poprzednia: przedostatnia,
+        nastepna: undefined,
+      });
+    });
+
+    it("gives a middle realization both neighbours, in authored order", () => {
+      expect(realizacje.length).toBeGreaterThanOrEqual(3);
+
+      for (let i = 1; i < realizacje.length - 1; i += 1) {
+        expect(sasiednieRealizacje(realizacje[i].slug)).toEqual({
+          poprzednia: realizacje[i - 1],
+          nastepna: realizacje[i + 1],
+        });
+      }
+    });
+
+    it("gives no neighbours to a slug it does not publish", () => {
+      expect(sasiednieRealizacje("wesele-ktorego-nie-bylo")).toEqual({
+        poprzednia: undefined,
+        nastepna: undefined,
+      });
+    });
   });
 });

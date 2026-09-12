@@ -41,3 +41,25 @@ assertRealizacjeValid(realizacje);
 export function findRealizacja(slug: string): Realizacja | undefined {
   return realizacje.find((realizacja) => realizacja.slug === slug);
 }
+
+/**
+ * The realizations either side of one, in the authored order above.
+ *
+ * Lives here rather than in the page because the registry owns the order: a
+ * page that reached into the array to find its neighbours would be a second
+ * place that knows how the archive is sequenced. Either side is `undefined`
+ * at the ends — no wrapping, so the last event has no "next" and a visitor
+ * can tell they have seen everything.
+ */
+export function sasiednieRealizacje(slug: string): {
+  poprzednia: Realizacja | undefined;
+  nastepna: Realizacja | undefined;
+} {
+  const index = realizacje.findIndex((realizacja) => realizacja.slug === slug);
+  if (index === -1) return { poprzednia: undefined, nastepna: undefined };
+
+  return {
+    poprzednia: realizacje[index - 1],
+    nastepna: realizacje[index + 1],
+  };
+}
