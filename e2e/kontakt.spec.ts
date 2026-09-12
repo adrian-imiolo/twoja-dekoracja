@@ -1,6 +1,6 @@
 import { expect, type Page, test } from "@playwright/test";
 
-import { imie, site, telHref } from "../src/lib/site";
+import { imie, instagramHref, site, telHref } from "../src/lib/site";
 import { MINIMALNY_CZAS_MS } from "../src/lib/zapytanie/handler";
 
 /**
@@ -184,3 +184,43 @@ test("fits a phone screen, with the hidden field pushing nothing off the side", 
   // this site's visitors use.
   expect(scrollWidth).toBeLessThanOrEqual(innerWidth);
 });
+
+/**
+ * Which taps keep the visitor on the site and which hand them away.
+ *
+ * Both pages that offer the channels are checked, because the one that matters
+ * most is the home page's closing band — that is where somebody is deciding
+ * whether to write, and a social feed opened over the top of that decision is
+ * a visitor who does not come back.
+ */
+for (const sciezka of ["/", "/kontakt"]) {
+  test(`opens the profiles in a new tab and dialling in place, on ${sciezka}`, async ({
+    page,
+  }) => {
+    await page.goto(sciezka);
+
+    for (const adres of [instagramHref(site.instagram), site.facebook]) {
+      const profil = page.locator(`a[href="${adres}"]`).first();
+      await expect(profil).toHaveAttribute("target", "_blank");
+      await expect(profil).toHaveAttribute("rel", "noopener noreferrer");
+      // WCAG 3.2.5: a link that changes context has to say so before it is
+      // followed, and the icon beside it says nothing to a screen reader.
+      await expect(profil).toContainText("otwiera się w nowej karcie");
+    }
+
+    /*
+     * `tel:` and `mailto:` hand off to another application. A new tab opened
+     * for one of them never gets a document and is left sitting empty on the
+     * visitor's desktop.
+     */
+    const bezNowejKarty = [
+      ...site.owners.map((wlascicielka) => telHref(wlascicielka.phone)),
+      `mailto:${site.email}`,
+    ];
+    for (const adres of bezNowejKarty) {
+      await expect(
+        page.locator(`a[href="${adres}"]`).first(),
+      ).not.toHaveAttribute("target", "_blank");
+    }
+  });
+}

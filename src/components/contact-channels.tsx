@@ -39,6 +39,20 @@ interface Kanal {
    * unnamed for anyone who does not recognise it, so the text stays.
    */
   ikona: ReactNode;
+  /*
+   * Whether following this hands the visitor to somewhere that is not this
+   * site, and so has to be opened beside it rather than over it. Decided per
+   * channel rather than sniffed from the address at render, because the two
+   * addresses that leave are not the only two that are not internal paths:
+   * `tel:` and `mailto:` leave for another application entirely, and a new tab
+   * for one of those is a blank tab left sitting on the visitor's desktop.
+   *
+   * It lives beside the channel rather than at the call site so that both
+   * places offering these — the home page's closing band and `/kontakt` —
+   * read one decision instead of each repeating a rule of its own, and so the
+   * footer rebuild inherits it rather than growing a second rule that drifts.
+   */
+  zewnetrzny: boolean;
 }
 
 /**
@@ -59,12 +73,14 @@ const KANALY: readonly Kanal[] = [
     wartosc: wlascicielka.phone,
     adres: telHref(wlascicielka.phone),
     ikona: <IkonaTelefonu />,
+    zewnetrzny: false,
   })),
   {
     etykieta: "E-mail",
     wartosc: site.email,
     adres: `mailto:${site.email}`,
     ikona: <IkonaMaila />,
+    zewnetrzny: false,
   },
   {
     etykieta: "Instagram",
@@ -72,6 +88,7 @@ const KANALY: readonly Kanal[] = [
     wartosc: site.instagram,
     adres: instagramHref(site.instagram),
     ikona: <IkonaInstagrama />,
+    zewnetrzny: true,
   },
   {
     etykieta: "Facebook",
@@ -84,6 +101,7 @@ const KANALY: readonly Kanal[] = [
     wartosc: site.name,
     adres: site.facebook,
     ikona: <IkonaFacebooka />,
+    zewnetrzny: true,
   },
 ];
 
@@ -97,10 +115,26 @@ export function ContactChannels({ className }: { className: string }) {
           </span>
           <a
             href={kanal.adres}
+            target={kanal.zewnetrzny ? "_blank" : undefined}
+            /*
+             * `noopener` so the profile cannot reach back through
+             * `window.opener`; `noreferrer` so it is not told which page sent
+             * the visitor. Both are named rather than left to the browser's
+             * default, which only covers `noopener` and only in current ones.
+             */
+            rel={kanal.zewnetrzny ? "noopener noreferrer" : undefined}
             className="mt-2 flex items-center gap-2.5 text-lg text-cream-50 transition-colors hover:text-blush-200"
           >
             <span className="text-blush-300">{kanal.ikona}</span>
             {kanal.wartosc}
+            {/*
+             * A link that swaps the tab out from under someone has to say so
+             * before it is followed — WCAG 3.2.5. A sighted visitor reads
+             * that from the brand mark; a screen reader is told in words.
+             */}
+            {kanal.zewnetrzny && (
+              <span className="sr-only">(otwiera się w nowej karcie)</span>
+            )}
           </a>
         </li>
       ))}
