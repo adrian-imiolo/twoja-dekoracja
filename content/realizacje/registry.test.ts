@@ -1,4 +1,6 @@
-import { readdirSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
@@ -23,6 +25,15 @@ import { findRealizacja, realizacje, sasiednieRealizacje } from "./index";
  * union changes.
  */
 const KATEGORIE = ["wesela", "imprezy"];
+
+/** This directory — one subdirectory per realization, plus shared modules. */
+const CONTENT_DIR = fileURLToPath(new URL(".", import.meta.url));
+
+function realizationFolders(): string[] {
+  return readdirSync(CONTENT_DIR, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+}
 
 describe("realization registry", () => {
   it("resolves every slug it publishes", () => {
@@ -59,15 +70,50 @@ describe("realization registry", () => {
   });
 
   it("registers every realization folder on disk", () => {
-    const contentDir = fileURLToPath(new URL(".", import.meta.url));
-    const folders = readdirSync(contentDir, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name);
+    const folders = realizationFolders();
 
     expect(folders.length).toBeGreaterThan(0);
     for (const folder of folders) {
       expect(findRealizacja(folder)).toBeDefined();
     }
+  });
+
+  /**
+   * Asked of the bytes on disk, because nothing in the registry can see it.
+   *
+   * A static import resolves to a URL built from the file's name as well as
+   * its contents, so one photograph filed as `wesele/05.jpg` and again as
+   * `wesele-k-i-m/01.jpg` yields two different `src` values and reads as two
+   * photographs to every check that goes through the registry. Only the bytes
+   * disagree — and a visitor who meets the same head table twice under two
+   * titles is being shown one event sold as two.
+   */
+  it("uses no photograph twice", () => {
+    const byContents = new Map<string, string[]>();
+
+    for (const folder of realizationFolders()) {
+      for (const plik of readdirSync(join(CONTENT_DIR, folder))) {
+        // Matched rather than assumed to be `.jpg`: a format this missed
+        // would be skipped silently, which is the one failure worth avoiding.
+        if (!/\.(jpe?g|png|webp|avif)$/i.test(plik)) continue;
+
+        const fingerprint = createHash("sha256")
+          .update(readFileSync(join(CONTENT_DIR, folder, plik)))
+          .digest("hex");
+
+        const places = byContents.get(fingerprint) ?? [];
+        places.push(`${folder}/${plik}`);
+        byContents.set(fingerprint, places);
+      }
+    }
+
+    // Carried as paths rather than a count, so a failure names the files.
+    const twice = [...byContents.values()].filter(
+      (places) => places.length > 1,
+    );
+
+    expect(byContents.size).toBeGreaterThan(0);
+    expect(twice).toEqual([]);
   });
 
   it("returns nothing for a slug it does not publish", () => {
