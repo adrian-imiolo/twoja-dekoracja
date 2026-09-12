@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { RealizationGallery } from "@/components/realization-gallery";
+import { RealizationNav } from "@/components/realization-nav";
 import { asOgImage, sharePreview } from "@/lib/metadata";
 import { miejsceITermin, site } from "@/lib/site";
 import { findRealizacja, realizacje } from "@content/realizacje";
@@ -103,6 +104,8 @@ export default async function RealizacjaPage({
       </header>
 
       <RealizationGallery photos={realizacja.photos} />
+
+      <RealizationNav slug={realizacja.slug} />
     </article>
   );
 }
