@@ -5,10 +5,6 @@ import type { Fotografia, Realizacja } from "../types";
 import zdjecie01 from "./01.jpg";
 import zdjecie02 from "./02.jpg";
 import zdjecie03 from "./03.jpg";
-import zdjecie04 from "./04.jpg";
-import zdjecie05 from "./05.jpg";
-import zdjecie06 from "./06.jpg";
-import zdjecie07 from "./07.jpg";
 
 /*
  * Real event. `place` and `date` ship as `DO_UZUPEŁNIENIA` — the client has
@@ -16,9 +12,14 @@ import zdjecie07 from "./07.jpg";
  * conditionally rather than shown as literal placeholder text; see
  * `RealizationCard` and `/realizacje/[slug]`.
  *
- * Two décor setups from the same wedding: the garden photo wall (01–04) and
- * the indoor reception, including the head table under the same "Młoda Para"
- * neon sign that appears in the site's hero footage (05–07).
+ * One décor setup, photographed three times: the round balloon photo wall on
+ * the lawn. The indoor reception this folder used to also carry belongs to a
+ * different wedding and now lives only in `wesele-k-i-m` — the two were filed
+ * as one event by mistake, and the client confirmed they are not. A fourth
+ * garden frame went at the same time, withdrawn by the client as too near a
+ * repeat of the first. The title names the garden rather than the couple
+ * because nothing in these frames identifies them, and "Wesele" alone no
+ * longer tells the two apart.
  */
 const photos: readonly [Fotografia, ...Fotografia[]] = [
   {
@@ -29,40 +30,24 @@ const photos: readonly [Fotografia, ...Fotografia[]] = [
   },
   {
     image: zdjecie02,
-    alt: "Balonowe koło w zieleni i srebrze między iglastymi drzewami, z widokiem na ścieżkę ogrodu",
+    alt: "Ta sama balonowa brama widziana z daleka, pośrodku ogrodowego trawnika, między strzyżonymi iglakami",
   },
   {
     image: zdjecie03,
-    alt: "Ta sama balonowa brama od strony stawu, z odbiciem chmur na wodzie",
-  },
-  {
-    image: zdjecie04,
     alt: "Kobieta pozuje wewnątrz balonowego koła, trzymając je uniesionymi rękami, na tle ogrodowego trawnika",
-  },
-  {
-    image: zdjecie05,
-    alt: "Balonowa brama w zieleni, złocie i kremie z tabliczkami powitalnymi „Witamy” i inicjałami pary młodej, w jasnym wnętrzu sali",
-  },
-  {
-    image: zdjecie06,
-    alt: "Stół prezydialny na tle zasłon i zieleni z podświetlanym neonowym napisem „Młoda Para”, ozdobiony bukietem z róż i eustomy",
-  },
-  {
-    image: zdjecie07,
-    alt: "Sala weselna z długimi stołami gościnnymi nakrytymi do obiadu, z widokiem na stół prezydialny w głębi",
   },
 ];
 
 export const wesele: Realizacja = {
   slug: "wesele",
-  title: "Wesele",
+  title: "Wesele w ogrodzie",
   category: "wesela",
   place: DO_UZUPELNIENIA,
   date: DO_UZUPELNIENIA,
   style:
-    "Balonowe kolumny i łuki w zieleni, złocie, srebrze i bieli - wewnątrz sali i w plenerze ogrodu",
+    "Okrągła ścianka z balonów w butelkowej zieleni, srebrze i bieli, z tropikalnymi liśćmi - w plenerze ogrodu",
   intro:
-    "Kolumny i okrągłe bramy z balonów w zieleni, złocie i bieli - od powitania gości w sali po ściankę do zdjęć w ogrodzie. Spójna dekoracja na cały dzień, od stołu prezydialnego po plener.",
+    "Okrągła ścianka do zdjęć z balonów w butelkowej zieleni, srebrze i bieli, na trawniku w ogrodzie. Wysoka na tyle, że goście mieszczą się w niej w całości.",
   cover: photos[0],
   photos,
 };

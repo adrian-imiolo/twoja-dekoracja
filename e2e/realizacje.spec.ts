@@ -9,7 +9,7 @@ import { expect, type Page, test } from "@playwright/test";
  * registry by construction could not disagree with a page that mislabelled a
  * card's category. Replacing a launch realization means editing these.
  */
-const WESELE = { slug: "wesele", title: "Wesele", badge: "Wesele" };
+const WESELE = { slug: "wesele", title: "Wesele w ogrodzie", badge: "Wesele" };
 const IMPREZA = {
   slug: "urodziny-30",
   title: "Urodziny 30",

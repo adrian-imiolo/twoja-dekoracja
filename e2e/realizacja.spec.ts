@@ -9,10 +9,10 @@ import { przewinCalaStrone } from "./crawl";
  * page that no longer exists.
  */
 const SLUG = "wesele";
-const TITLE = "Wesele";
+const TITLE = "Wesele w ogrodzie";
 const STYLE =
-  "Balonowe kolumny i łuki w zieleni, złocie, srebrze i bieli - wewnątrz sali i w plenerze ogrodu";
-const PHOTO_COUNT = 7;
+  "Okrągła ścianka z balonów w butelkowej zieleni, srebrze i bieli, z tropikalnymi liśćmi - w plenerze ogrodu";
+const PHOTO_COUNT = 3;
 
 const url = `/realizacje/${SLUG}`;
 
@@ -27,7 +27,7 @@ test("shows its style and an introduction, and no unfilled placeholder text", as
   const article = page.getByRole("main");
   await expect(article).toContainText(STYLE);
   // A distinctive fragment of the two-sentence introduction.
-  await expect(article).toContainText("stołu prezydialnego");
+  await expect(article).toContainText("na trawniku w ogrodzie");
 
   /*
    * `place` and `date` are outstanding client input for every launch
@@ -42,7 +42,7 @@ test("shows its style and an introduction, and no unfilled placeholder text", as
 test("shows every photograph of the event, each with its own description", async ({
   page,
 }) => {
-  // Seven photographs, each brought into view and waited for in turn.
+  // Each photograph is brought into view and waited for in turn.
   test.slow();
 
   await page.goto(url);
@@ -68,10 +68,11 @@ test("shows every photograph of the event, each with its own description", async
    * The difference is not pedantry. A browser gives an image that has scrolled
    * out of sight the lowest priority it has, and will leave the request
    * unfinished indefinitely rather than spend a connection on something nobody
-   * is looking at. Traces of three CI runs show exactly that: the first, sixth,
-   * seventh and eighth photographs served in under 60 ms, and the three left
-   * far above the fold by the scroll never delivered at all. A fast machine
-   * hides it by finishing them before the scroll ends.
+   * is looking at. Traces of three CI runs show exactly that — taken when this
+   * gallery still held seven photographs: the first, sixth, seventh and eighth
+   * served in under 60 ms, and the three left far above the fold by the scroll
+   * never delivered at all. A fast machine hides it by finishing them before
+   * the scroll ends.
    */
   for (let index = 0; index < PHOTO_COUNT; index += 1) {
     const photograph = photographs.nth(index);
