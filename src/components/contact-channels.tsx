@@ -105,6 +105,26 @@ const KANALY: readonly Kanal[] = [
   },
 ];
 
+/**
+ * Where an e-mail address may break if it has to: before the "@", so the two
+ * halves a reader knows — the name and the provider — stay whole. Without a
+ * break opportunity of its own, the address is broken wherever the line runs
+ * out, which on a 320px phone in the closing band is "@g / mail.com". The
+ * Instagram handle starts with "@" and has nothing before it to break after.
+ */
+function zLamaniemPrzedMalpa(wartosc: string): ReactNode {
+  const malpa = wartosc.indexOf("@");
+  if (malpa <= 0) return wartosc;
+
+  return (
+    <>
+      {wartosc.slice(0, malpa)}
+      <wbr />
+      {wartosc.slice(malpa)}
+    </>
+  );
+}
+
 export function ContactChannels({ className }: { className: string }) {
   return (
     <ul className={className}>
@@ -125,14 +145,28 @@ export function ContactChannels({ className }: { className: string }) {
             rel={kanal.zewnetrzny ? "noopener noreferrer" : undefined}
             /*
              * Padded above and below rather than only spaced from the label,
-             * so the thing a thumb lands on is taller than one line of text.
-             * The padding takes the room the old margin gave it, so the
-             * rhythm between label and value is unchanged.
+             * so the thing a thumb lands on is 36px tall — a line of text
+             * plus enough padding to make that up at either size, since the
+             * text is a step smaller on a phone and the padding grows by the
+             * same amount to keep the target where it was.
              */
-            className="mt-1 flex items-center gap-2.5 py-1 text-lg text-cream-50 transition-colors hover:text-blush-200"
+            className="mt-1 flex items-center gap-2.5 py-1.5 text-base text-cream-50 transition-colors hover:text-blush-200 sm:py-1 sm:text-lg"
           >
             <span className="text-blush-300">{kanal.ikona}</span>
-            {kanal.wartosc}
+            {/*
+             * The e-mail address is the longest thing on the site with no
+             * space in it, and a flex item will not shrink below its content.
+             * Left alone it sets the width of every column it sits in — the
+             * footer's, `/kontakt`'s, the closing band's — and on a 320px
+             * phone pushes each of them past the screen. `overflow-wrap:
+             * anywhere` lets it break mid-word only where nothing else fits,
+             * and `min-w-0` lets the flex item give up the width. A size down
+             * on phones keeps it whole in the closing band on a 390px screen,
+             * where at 18px it is a few pixels too wide.
+             */}
+            <span className="min-w-0 [overflow-wrap:anywhere]">
+              {zLamaniemPrzedMalpa(kanal.wartosc)}
+            </span>
             {/*
              * A link that swaps the tab out from under someone has to say so
              * before it is followed — WCAG 3.2.5. A sighted visitor reads

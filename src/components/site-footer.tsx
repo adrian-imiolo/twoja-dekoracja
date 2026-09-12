@@ -4,6 +4,7 @@ import Link from "next/link";
 import znak from "@/app/icon.png";
 import { ContactChannels } from "@/components/contact-channels";
 import { QuietLink } from "@/components/ui/quiet-link";
+import { Wordmark } from "@/components/ui/wordmark";
 import { STRONY } from "@/lib/nawigacja";
 import { site } from "@/lib/site";
 
@@ -64,9 +65,9 @@ export function SiteFooter() {
               height={48}
               className="shrink-0"
             />
-            <span className="font-wordmark text-xl tracking-[0.35em] text-blush-200 uppercase">
-              {site.wordmark}
-            </span>
+            {/* Fluid as in the header: beside the badge on a 320px phone the
+             * name only fits whole at 16px. */}
+            <Wordmark className="text-[clamp(1rem,5vw,1.25rem)]" />
           </Link>
           <p className="leading-relaxed">
             {site.tagline}
@@ -80,13 +81,14 @@ export function SiteFooter() {
            * Each link its own row with room above and below, because on a
            * phone this column is a stack of tap targets rather than a line of
            * text — a row of them would be the header's nav again, and the
-           * header's nav is one scroll away. The padding brings a line of
-           * small caps up to a height a thumb lands on rather than beside.
+           * header's nav is one scroll away. The link brings its own target
+           * height; the row's padding is what keeps two neighbouring targets
+           * from touching, and stretches each across the column's width.
            */}
           <ul className="mt-4 flex flex-col">
             {STRONY.map((strona) => (
-              <li key={strona.sciezka}>
-                <QuietLink href={strona.sciezka} className="block py-2.5">
+              <li key={strona.sciezka} className="py-2.5">
+                <QuietLink href={strona.sciezka} className="w-full">
                   {strona.nazwa}
                 </QuietLink>
               </li>
@@ -98,8 +100,8 @@ export function SiteFooter() {
              * already knows to look, and it is the one place that is on every
              * page including the form they are about to submit.
              */}
-            <li>
-              <QuietLink href="/polityka-prywatnosci" className="block py-2.5">
+            <li className="py-2.5">
+              <QuietLink href="/polityka-prywatnosci" className="w-full">
                 Polityka prywatności
               </QuietLink>
             </li>

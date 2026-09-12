@@ -49,8 +49,13 @@ export default function KontaktPage() {
        * The channels lead on a phone, where they sit above the form, and sit
        * beside it from the width at which both fit — the visitor who came to
        * call should not have to scroll past five inputs to find the number.
+       *
+       * The side column is as wide as the e-mail address at the size the
+       * channels set it, with a little to spare: narrower, and at exactly
+       * 1024px the address breaks over two lines on the one page whose job
+       * is to be copied down.
        */}
-      <div className="mt-16 grid gap-16 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-24">
+      <div className="mt-16 grid gap-16 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-24">
         <section aria-labelledby="formularz" className="order-2 lg:order-1">
           <h2
             id="formularz"
