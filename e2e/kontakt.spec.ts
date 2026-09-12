@@ -89,7 +89,9 @@ test("names the fields it cannot accept, and sends nothing", async ({
     );
   }
   await expect(
-    page.getByText("Sprawdź adres e-mail albo numer telefonu", { exact: false }),
+    page.getByText("Sprawdź adres e-mail albo numer telefonu", {
+      exact: false,
+    }),
   ).toBeVisible();
 
   expect(wyslano).toBe(0);
@@ -146,23 +148,24 @@ test("offers the ways of getting in touch that are not the form", async ({
 
   // Each phone is labelled with whose it is — an unlabelled second number
   // reads as an overflow line for the first rather than as another person.
+  // Scoped to the page's own content: the footer offers the same channels
+  // under the same labels, and an unscoped match would find both.
   for (const kanal of [
     ...site.owners.map((wlascicielka) => `Telefon - ${imie(wlascicielka)}`),
     "E-mail",
     "Instagram",
     "Facebook",
   ]) {
-    await expect(page.getByText(kanal, { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole("main").getByText(kanal, { exact: true }),
+    ).toBeVisible();
   }
 });
 
 test("leads to the form from the site header", async ({ page }) => {
   await page.goto("/");
 
-  await page
-    .getByRole("banner")
-    .getByRole("link", { name: "Kontakt" })
-    .click();
+  await page.getByRole("banner").getByRole("link", { name: "Kontakt" }).click();
 
   await expect(page).toHaveURL(/\/kontakt$/);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

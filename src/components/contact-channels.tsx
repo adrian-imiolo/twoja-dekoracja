@@ -11,10 +11,11 @@ import { imie, instagramHref, site, telHref } from "@/lib/site";
 /**
  * The ways of reaching this business that are not the form.
  *
- * Shared by the home page's closing band and by `/kontakt`, because a visitor
- * who has decided to call must not find a different number depending on which
- * page they decided it on. Only the arrangement differs between the two, which
- * is why the list's classes are the caller's business and nothing else is.
+ * Shared by the home page's closing band, by `/kontakt` and by the footer of
+ * every page, because a visitor who has decided to call must not find a
+ * different number depending on which page they decided it on. Only the
+ * arrangement differs between the three, which is why the list's classes are
+ * the caller's business and nothing else is.
  */
 
 /**
@@ -47,10 +48,9 @@ interface Kanal {
    * `tel:` and `mailto:` leave for another application entirely, and a new tab
    * for one of those is a blank tab left sitting on the visitor's desktop.
    *
-   * It lives beside the channel rather than at the call site so that both
-   * places offering these — the home page's closing band and `/kontakt` —
-   * read one decision instead of each repeating a rule of its own, and so the
-   * footer rebuild inherits it rather than growing a second rule that drifts.
+   * It lives beside the channel rather than at the call site so that every
+   * place offering these — the home page's closing band, `/kontakt` and the
+   * footer — reads one decision instead of each repeating a rule of its own.
    */
   zewnetrzny: boolean;
 }
@@ -123,7 +123,13 @@ export function ContactChannels({ className }: { className: string }) {
              * default, which only covers `noopener` and only in current ones.
              */
             rel={kanal.zewnetrzny ? "noopener noreferrer" : undefined}
-            className="mt-2 flex items-center gap-2.5 text-lg text-cream-50 transition-colors hover:text-blush-200"
+            /*
+             * Padded above and below rather than only spaced from the label,
+             * so the thing a thumb lands on is taller than one line of text.
+             * The padding takes the room the old margin gave it, so the
+             * rhythm between label and value is unchanged.
+             */
+            className="mt-1 flex items-center gap-2.5 py-1 text-lg text-cream-50 transition-colors hover:text-blush-200"
           >
             <span className="text-blush-300">{kanal.ikona}</span>
             {kanal.wartosc}
