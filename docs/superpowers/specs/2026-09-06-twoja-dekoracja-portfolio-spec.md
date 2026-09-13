@@ -18,7 +18,7 @@ Szczecin" cannot find the business at all. Search is how people look for a
 supplier they have never heard of, and the business is invisible in exactly the
 moment a stranger is ready to hire.
 
-Someone who *is* referred — by a venue, a photographer, a friend — has nowhere
+Someone who _is_ referred — by a venue, a photographer, a friend — has nowhere
 credible to be sent. An Instagram grid mixes finished work with stories, reposts
 and personal posts, and cannot be skimmed by someone deciding whether to trust a
 supplier with the decoration of their wedding.
@@ -284,7 +284,7 @@ policy. It is not adopted unless the client specifically requires it.
 
 ### Legal identity
 
-The business operates as *działalność nierejestrowana* — unregistered activity
+The business operates as _działalność nierejestrowana_ — unregistered activity
 under Polish law, with no NIP, REGON, or company entity.
 
 - The footer carries the owner's name, service region, phone, email and
@@ -295,7 +295,7 @@ under Polish law, with no NIP, REGON, or company entity.
 - The privacy policy names an **individual** as data controller. RODO applies to
   unregistered activity; the controller is simply a person rather than a company.
 - No VAT or invoice language appears anywhere. An unregistered business issues a
-  *rachunek*, not a *faktura VAT*, and the FAQ must not imply otherwise.
+  _rachunek_, not a _faktura VAT_, and the FAQ must not imply otherwise.
 
 The privacy policy ships with placeholder legal copy marked for completion. Its
 route, layout, and footer link are real from the first release; only the text is
@@ -467,7 +467,7 @@ objection.
 
 ### A note for the client, outside the site's scope
 
-*Działalność nierejestrowana* carries a monthly revenue ceiling. If this site
+_Działalność nierejestrowana_ carries a monthly revenue ceiling. If this site
 succeeds at its purpose, the business will cross it and need to register. That
 is a decision for the owner to plan for, but it should not arrive as a surprise
 caused by the site working.

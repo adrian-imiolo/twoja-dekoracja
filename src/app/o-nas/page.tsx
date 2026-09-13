@@ -156,8 +156,8 @@ export default function ONasPage() {
               Rozmawiamy o tym, jak wyobrażacie sobie salę, i proponujemy
               dekorację, która to oddaje - a potem przyjeżdżamy, budujemy ją od
               zera i zabieramy po przyjęciu. Ustalona kwota jest kwotą końcową,
-              a wszystko, co jest w niej zawarte, mówimy wprost, zanim
-              cokolwiek zostanie zarezerwowane.
+              a wszystko, co jest w niej zawarte, mówimy wprost, zanim cokolwiek
+              zostanie zarezerwowane.
             </p>
             <p className="mt-6 text-sm tracking-[0.2em] text-blush-300 uppercase">
               {site.city} i okolice

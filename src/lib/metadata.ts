@@ -47,7 +47,9 @@ export function asOgImage(fotografia: Fotografia): OgImage {
  * is the right failure for a site whose content is authored by hand.
  */
 function domyslnyPodglad(): OgImage[] {
-  return realizacje.slice(0, 1).map((realizacja) => asOgImage(realizacja.cover));
+  return realizacje
+    .slice(0, 1)
+    .map((realizacja) => asOgImage(realizacja.cover));
 }
 
 /**

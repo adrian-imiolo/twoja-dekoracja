@@ -113,13 +113,13 @@ test("the sitemap names every page the site publishes, and only those", async ({
 test("keeps surnames off every page but the privacy policy", async ({
   page,
 }) => {
-  const nazwiska = site.owners.map(
-    (wlascicielka) => wlascicielka.name.split(" ").slice(1).join(" "),
+  const nazwiska = site.owners.map((wlascicielka) =>
+    wlascicielka.name.split(" ").slice(1).join(" "),
   );
 
   for (const trasa of TRASY_STALE) {
     const odpowiedz = await page.goto(trasa);
-    const tresc = (await odpowiedz!.text());
+    const tresc = await odpowiedz!.text();
 
     for (const nazwisko of nazwiska) {
       if (trasa === "/polityka-prywatnosci") {

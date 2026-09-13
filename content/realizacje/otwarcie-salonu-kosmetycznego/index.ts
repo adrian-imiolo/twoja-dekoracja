@@ -42,7 +42,8 @@ export const otwarcieSalonuKosmetycznego: Realizacja = {
   category: "imprezy",
   place: DO_UZUPELNIENIA,
   date: DO_UZUPELNIENIA,
-  style: "Łuk balonowy w pudrowym różu, lawendzie i fiolecie przy wejściu do lokalu",
+  style:
+    "Łuk balonowy w pudrowym różu, lawendzie i fiolecie przy wejściu do lokalu",
   intro:
     "Balonowy łuk w różu i fiolecie przy wejściu, na otwarcie nowego salonu kosmetycznego. Dekoracja pomyślana tak, by zatrzymać wzrok przechodniów na chodniku.",
   cover: photos[0],

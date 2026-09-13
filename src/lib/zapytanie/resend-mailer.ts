@@ -57,7 +57,7 @@ const transportDoKonsoli: Transport = async (email: InquiryEmail) => {
       email.text,
     ].join("\n"),
   );
-}
+};
 
 function transportPrzezResend(apiKey: string): Transport {
   const resend = new Resend(apiKey);

@@ -45,16 +45,16 @@ hand-drawn single-line balloon-and-flower illustration in plum ink, the words
 
 ### Palette
 
-| Token | Value | Role |
-|---|---|---|
-| `plum-950` | `#2B1D31` | Page ground |
-| `plum-900` | `#3A2842` | Raised surfaces, cards |
-| `plum-800` | `#4A3350` | Borders, dividers |
-| `plum-600` | `#5C3D62` | Logo ink; buttons on light surfaces |
+| Token       | Value     | Role                                   |
+| ----------- | --------- | -------------------------------------- |
+| `plum-950`  | `#2B1D31` | Page ground                            |
+| `plum-900`  | `#3A2842` | Raised surfaces, cards                 |
+| `plum-800`  | `#4A3350` | Borders, dividers                      |
+| `plum-600`  | `#5C3D62` | Logo ink; buttons on light surfaces    |
 | `blush-300` | `#E0AEC8` | Primary accent — rules, borders, links |
-| `blush-200` | `#F0CFDF` | Secondary accent, brand text |
-| `blush-100` | `#F5DBE7` | Logo circle; light surface blocks |
-| `cream-50` | `#F7EEF3` | Body text on dark |
+| `blush-200` | `#F0CFDF` | Secondary accent, brand text           |
+| `blush-100` | `#F5DBE7` | Logo circle; light surface blocks      |
+| `cream-50`  | `#F7EEF3` | Body text on dark                      |
 
 The dark aubergine ground is the logo's own ink used at page scale, so the site
 stays on-brand while making photographs the brightest thing on screen. The light
@@ -114,16 +114,16 @@ content/realizacje/<slug>/
 Each `index.ts` exports a typed `Realizacja`:
 
 ```ts
-type Kategoria = 'wesela' | 'imprezy';
+type Kategoria = "wesela" | "imprezy";
 
 interface Realizacja {
   slug: string;
-  title: string;         // "Wesele Anny i Piotra"
+  title: string; // "Wesele Anny i Piotra"
   category: Kategoria;
-  place: string;         // "Pałac Mała Wieś"
-  date: string;          // "Czerwiec 2025"
-  style: string;         // "Pastelowe róże, biel, zieleń"
-  intro: string;         // two sentences, maximum
+  place: string; // "Pałac Mała Wieś"
+  date: string; // "Czerwiec 2025"
+  style: string; // "Pastelowe róże, biel, zieleń"
+  intro: string; // two sentences, maximum
   cover: StaticImageData;
   photos: StaticImageData[];
 }
@@ -274,7 +274,7 @@ under Polish law. Consequences for the site:
   and unwise.
 - **The privacy policy names an individual as data controller**, not a company.
 - **No invoice or VAT language anywhere on the site.** An unregistered business
-  issues a *rachunek*, not a *faktura VAT*, and the FAQ must not imply otherwise.
+  issues a _rachunek_, not a _faktura VAT_, and the FAQ must not imply otherwise.
 
 One thing worth flagging to the client, outside the site's scope: działalność
 nierejestrowana carries a monthly revenue ceiling. If this site does its job,

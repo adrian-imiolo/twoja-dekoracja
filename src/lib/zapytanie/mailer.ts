@@ -52,7 +52,10 @@ export interface InquiryMailer {
  * Plain text on purpose. This is mail from one person to one person; HTML buys
  * nothing here and costs deliverability, and the owner reads it on a phone.
  */
-export function composeInquiryEmail(zapytanie: Zapytanie, to: string): InquiryEmail {
+export function composeInquiryEmail(
+  zapytanie: Zapytanie,
+  to: string,
+): InquiryEmail {
   const typ = etykietaTypu(zapytanie.typWydarzenia);
 
   return {

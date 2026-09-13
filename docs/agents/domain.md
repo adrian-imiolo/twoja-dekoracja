@@ -6,7 +6,7 @@ How the engineering skills should consume this repo's domain documentation when 
 
 **Single-context.** One `CONTEXT.md` and one `docs/adr/` at the repo root. This
 is a single Next.js application with no workspaces or packages, and one domain
-vocabulary throughout (*realizacja*, *wesela*, *imprezy*, *zapytanie*).
+vocabulary throughout (_realizacja_, _wesela_, _imprezy_, _zapytanie_).
 
 Neither file exists yet, which is expected and correct — see the rule below
 about proceeding silently. `/domain-modeling` creates them when real terms or

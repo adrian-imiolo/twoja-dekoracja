@@ -52,7 +52,14 @@ describe("assertRealizacjeValid", () => {
     ).toThrow(/wesele-anny-i-piotra/);
   });
 
-  it.each(["", "  ", "Wesele Anny", "wesele anny", "wesele/anny", "wesele--anny"])(
+  it.each([
+    "",
+    "  ",
+    "Wesele Anny",
+    "wesele anny",
+    "wesele/anny",
+    "wesele--anny",
+  ])(
     "rejects %o as a slug, because the slug is also the URL segment",
     (slug) => {
       expect(() => assertRealizacjeValid([realizacja({ slug })])).toThrow(

@@ -149,7 +149,9 @@ test("opens on a photograph that loads eagerly, and lets it paint before fetchin
 
   if (await video.count()) {
     await expect
-      .poll(async () => (await heroMediaTiming(page, posterSrc)).mediaStarts.length)
+      .poll(
+        async () => (await heroMediaTiming(page, posterSrc)).mediaStarts.length,
+      )
       .toBeGreaterThan(0);
   }
 
@@ -237,9 +239,9 @@ test("describes the business to a search engine without giving away an address",
 
   // The service area is the whole point: it is what answers "dekoracje
   // weselne Szczecin" in the absence of a street the business could name.
-  expect(firma.areaServed.map((miasto: { name: string }) => miasto.name)).toContain(
-    "Szczecin",
-  );
+  expect(
+    firma.areaServed.map((miasto: { name: string }) => miasto.name),
+  ).toContain("Szczecin");
 
   // A crawler fetches these without the page they were found on, so a
   // build-relative path resolves nowhere.

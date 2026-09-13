@@ -2,11 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { handleZapytanie } from "./handler";
 import { limitZapytan, type LimitZapytan, MAKSIMUM_NA_OKNO } from "./limit";
-import {
-  type InquiryEmail,
-  type InquiryMailer,
-  inquiryMailer,
-} from "./mailer";
+import { type InquiryEmail, type InquiryMailer, inquiryMailer } from "./mailer";
 
 const ODBIORCA = "kontakt@twojadekoracja.pl";
 
@@ -107,7 +103,12 @@ describe("handleZapytanie", () => {
     const { mailer, wyslane } = recordingMailer();
 
     const response = await przyjmij(
-      submission({ ...POPRAWNE, imie: "", kontakt: "gdzie-tam", wiadomosc: "cze" }),
+      submission({
+        ...POPRAWNE,
+        imie: "",
+        kontakt: "gdzie-tam",
+        wiadomosc: "cze",
+      }),
       mailer,
     );
 

@@ -45,7 +45,11 @@ test.describe("the footer", () => {
         widoczne: [imie(wlascicielka), wlascicielka.phone],
         adres: telHref(wlascicielka.phone),
       })),
-      { rodzaj: "E-mail", widoczne: [site.email], adres: `mailto:${site.email}` },
+      {
+        rodzaj: "E-mail",
+        widoczne: [site.email],
+        adres: `mailto:${site.email}`,
+      },
       {
         rodzaj: "Instagram",
         widoczne: [site.instagram],

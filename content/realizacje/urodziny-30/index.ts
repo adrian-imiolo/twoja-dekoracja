@@ -31,7 +31,8 @@ export const urodziny30: Realizacja = {
   category: "imprezy",
   place: DO_UZUPELNIENIA,
   date: DO_UZUPELNIENIA,
-  style: "Girlanda balonowa w czerwieni i złocie z neonowym napisem „Happy Birthday”",
+  style:
+    "Girlanda balonowa w czerwieni i złocie z neonowym napisem „Happy Birthday”",
   intro:
     "Girlanda z czerwonych i lustrzanych balonów z neonowym napisem „Happy Birthday” w klimatycznym, niebieskim świetle. Stonowana, klubowa oprawa na trzydzieste urodziny.",
   cover: photos[0],

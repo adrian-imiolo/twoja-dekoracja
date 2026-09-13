@@ -47,8 +47,8 @@ export default function NotFound() {
          * guess wrong, on the page where the visitor is already lost.
          */}
         <p className="mt-6 text-lg leading-relaxed text-cream-50/80">
-          Adres mógł się zmienić albo link jest już nieaktualny. Poniżej
-          czekają nasze realizacje - to dobre miejsce, żeby zacząć.
+          Adres mógł się zmienić albo link jest już nieaktualny. Poniżej czekają
+          nasze realizacje - to dobre miejsce, żeby zacząć.
         </p>
       </div>
 

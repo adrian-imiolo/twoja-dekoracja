@@ -123,8 +123,8 @@ export default function PolitykaPrywatnosciPage() {
 
         <Sekcja id="zakres" tytul="Jakie dane zbieramy">
           <p>
-            Wyłącznie to, co zostanie wpisane w formularz kontaktowy, i nic
-            poza tym:
+            Wyłącznie to, co zostanie wpisane w formularz kontaktowy, i nic poza
+            tym:
           </p>
           <ul className="ml-5 list-disc space-y-2">
             <li>imię,</li>
@@ -190,12 +190,11 @@ export default function PolitykaPrywatnosciPage() {
 
         <Sekcja id="okres" tytul="Jak długo je przechowujemy">
           <p>
-            Korespondencja z zapytaniem pozostaje na skrzynce pocztowej
-            pracowni przez 24 miesiące od ostatniego kontaktu, po czym jest
-            usuwana. Jeżeli z zapytania wyniknie współpraca, dane związane z
-            realizacją przechowujemy przez okres wymagany przepisami
-            podatkowymi - 5 lat, licząc od końca roku kalendarzowego, w którym
-            odbyło się przyjęcie.
+            Korespondencja z zapytaniem pozostaje na skrzynce pocztowej pracowni
+            przez 24 miesiące od ostatniego kontaktu, po czym jest usuwana.
+            Jeżeli z zapytania wyniknie współpraca, dane związane z realizacją
+            przechowujemy przez okres wymagany przepisami podatkowymi - 5 lat,
+            licząc od końca roku kalendarzowego, w którym odbyło się przyjęcie.
           </p>
         </Sekcja>
 
@@ -221,7 +220,9 @@ export default function PolitykaPrywatnosciPage() {
         <Sekcja id="usuniecie" tytul="Jak zażądać usunięcia danych">
           <p>
             Wystarczy jedna wiadomość na {site.email} albo telefon pod{" "}
-            {site.owners.map((wlascicielka) => wlascicielka.phone).join(" lub ")}{" "}
+            {site.owners
+              .map((wlascicielka) => wlascicielka.phone)
+              .join(" lub ")}{" "}
             z informacją, że dane mają zostać usunięte. Nie trzeba tego
             uzasadniać ani wypełniać żadnego wniosku.
           </p>

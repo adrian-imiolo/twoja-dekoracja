@@ -41,7 +41,8 @@ export const urodziny18: Realizacja = {
   category: "imprezy",
   place: DO_UZUPELNIENIA,
   date: DO_UZUPELNIENIA,
-  style: "Balonowa brama w bordowej czerwieni, czerni i kremie, w kamiennych piwnicznych wnętrzach",
+  style:
+    "Balonowa brama w bordowej czerwieni, czerni i kremie, w kamiennych piwnicznych wnętrzach",
   intro:
     "Balonowa brama w bordowej czerwieni, czerni i kremie w klimatycznych, kamiennych piwnicach. Mocna, klubowa stylistyka na osiemnaste urodziny.",
   cover: photos[0],

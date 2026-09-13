@@ -51,12 +51,12 @@ reads.
 
 ## When something is wrong
 
-| What | Caught by |
-| --- | --- |
-| Missing field, unknown category, empty gallery | compile error — `tsc`, and so also `next build` |
+| What                                                          | Caught by                                               |
+| ------------------------------------------------------------- | ------------------------------------------------------- |
+| Missing field, unknown category, empty gallery                | compile error — `tsc`, and so also `next build`         |
 | Duplicate slug, bad slug shape, blank prose, missing alt text | `assertRealizacjeValid`, thrown when the registry loads |
-| A folder you forgot to add to the registry | `registry.test.ts` |
-| The same photograph filed under two realizations | `registry.test.ts` |
+| A folder you forgot to add to the registry                    | `registry.test.ts`                                      |
+| The same photograph filed under two realizations              | `registry.test.ts`                                      |
 
 The thrown rules fail `next build`: `/realizacje/[slug]` imports the registry
 to generate its static params, so a malformed realization stops a deployment
