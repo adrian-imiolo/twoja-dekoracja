@@ -39,9 +39,9 @@ export function RealizationNav({ slug }: { slug: string }) {
           <NeighbourLink kierunek="poprzednia" realizacja={poprzednia} />
         ) : null}
         {/*
-         * Pinned to the right-hand column so the first realization's lone "next"
-         * still sits where "next" sits everywhere else, rather than sliding
-         * into the empty "previous" slot.
+         * Pinned to the right-hand column so the first realization's lone
+         * "next" still sits where "next" sits everywhere else, rather than
+         * sliding into the empty "previous" slot.
          */}
         {nastepna ? (
           <NeighbourLink kierunek="nastepna" realizacja={nastepna} />

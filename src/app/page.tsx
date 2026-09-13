@@ -95,8 +95,9 @@ export default function HomePage() {
 
       {/*
        * The band is sized by the copy standing in it, not by the photograph
-       * behind it, so the video layers in without moving anything. `svh` rather than `vh` so a phone's collapsing
-       * address bar does not leave the first screen taller than the screen.
+       * behind it, so the video layers in without moving anything. `svh` rather
+       * than `vh` so a phone's collapsing address bar does not leave the first
+       * screen taller than the screen.
        */}
       <section className="relative flex min-h-[92svh] items-end overflow-hidden">
         <HeroMedia />

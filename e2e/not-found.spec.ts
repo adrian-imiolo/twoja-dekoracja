@@ -6,9 +6,9 @@ import { expect, test } from "@playwright/test";
  * `smoke.spec.ts` against the same root layout. Two things here are neither.
  *
  * An unknown top-level address had no coverage at all. `realizacja.spec.ts`
- * watches the status of an unpublished slug (the other road to this page),
- * and nothing watched this one. A soft 404 is what that guards against: a 200
- * that looks like a 404 is reported by Google as a soft 404
+ * watches the status of an unpublished slug (the other road to this page), and
+ * nothing watched this one. A soft 404 is what that guards against: a 200 that
+ * looks like a 404 is reported by Google as a soft 404
  * (https://developers.google.com/search/docs/crawling-indexing/http-network-errors#soft-404-errors),
  * and nothing in the browser looks wrong.
  *

@@ -17,11 +17,11 @@ import kadrPortretowy from "./portret.jpg";
  * deployment can never be mistaken for the real thing.
  *
  * What replaces it is **one photograph of both owners together**, not two
- * separate portraits. The page names both of them under a single frame and
- * the copy beside it says "jesteśmy we dwie"; a picture of one of them under
- * that caption reads as the other not existing. It should also be a portrait:
- * the frame is tall, and a wide photograph put into it loses either the faces or the work behind them. Its
- * alt text is rewritten with it, naming both.
+ * separate portraits. The page names both of them under a single frame and the
+ * copy beside it says "jesteśmy we dwie"; a picture of one of them under that
+ * caption reads as the other not existing. It should also be a portrait: the
+ * frame is tall, and a wide photograph put into it loses either the faces or
+ * the work behind them. Its alt text is rewritten with it, naming both.
  */
 export const portret: Fotografia = {
   image: kadrPortretowy,

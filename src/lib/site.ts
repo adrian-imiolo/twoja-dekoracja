@@ -144,11 +144,11 @@ export interface Wlasciciel {
 /**
  * Who runs the business, in the order they are introduced.
  *
- * Two owners, which is why this module holds a list: the site is two people who both turn up at the venue, and a visitor
- * choosing who to call is choosing between named people rather than dialling
- * an office. Order is authored: it is the order both names appear in
- * everywhere they appear together, so the footer and the contact list cannot
- * disagree about who is named first.
+ * Two owners, which is why this module holds a list: the site is two people who
+ * both turn up at the venue, and a visitor choosing who to call is choosing
+ * between named people rather than dialling an office. Order is authored: it is
+ * the order both names appear in everywhere they appear together, so the footer
+ * and the contact list cannot disagree about who is named first.
  */
 const WLASCICIELKI: readonly Wlasciciel[] = [
   { name: "Agnieszka Imioło", phone: "+48 505 964 523" },
@@ -163,8 +163,8 @@ const WLASCICIELKI: readonly Wlasciciel[] = [
  * the privacy policy, where RODO obliges them. Everywhere else a given name
  * is warmer and is the whole of what is needed to pick a number.
  *
- * Splitting on the first space handles a Polish given name, and a name it would get wrong is a name
- * to write into `WLASCICIELKI` the way it should be read.
+ * Splitting on the first space handles a Polish given name, and a name it would
+ * get wrong is a name to write into `WLASCICIELKI` the way it should be read.
  */
 export function imie(wlasciciel: Wlasciciel): string {
   return wlasciciel.name.split(" ")[0];

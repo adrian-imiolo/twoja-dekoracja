@@ -4,15 +4,16 @@ import type { StaticImageData } from "next/image";
  * The shape of a realization: one completed event, stored as a folder of
  * photographs beside a module of this shape.
  *
- * The schema lives next to the content rather than in `src/` because the
- * folder is the unit of authoring: a new realization is a directory, its photographs
+ * The schema lives next to the content rather than in `src/` because the folder
+ * is the unit of authoring: a new realization is a directory, its photographs
  * and one module written against these types.
  */
 
 /**
  * The two kinds of work the business shows. The union is closed. Every
  * realization is shown in one unified grid with this as a small badge (too few
- * weddings so far to justify a section split), but a third category would still be a design decision, not a content one.
+ * weddings so far to justify a section split), but a third category would still
+ * be a design decision, not a content one.
  */
 export type Kategoria = "wesela" | "imprezy";
 
@@ -94,12 +95,13 @@ export interface Realizacja {
    */
   intro: string;
   /**
-   * The one photograph that represents the realization in listings and previews.
+   * The one photograph that represents the realization in listings and
+   * previews.
    *
    * Normally also a member of `photos` rather than a separate file, so the
-   * folder stays the single source of the realization's images. A detail page that
-   * renders the cover as a hero therefore decides for itself whether to repeat
-   * it in the gallery below.
+   * folder stays the single source of the realization's images. A detail page
+   * that renders the cover as a hero therefore decides for itself whether to
+   * repeat it in the gallery below.
    */
   cover: Fotografia;
   /**

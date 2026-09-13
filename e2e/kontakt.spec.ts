@@ -53,8 +53,8 @@ test("confirms an inquiry that went through, and stops asking for another", asyn
   await page.getByRole("button", { name: "Wyślij zapytanie" }).click();
 
   await expect(page.getByRole("status")).toContainText("Dziękujemy");
-  // The form is gone, not left under the message: a still-filled form under
-  // a confirmation is how the owner receives the same inquiry three times.
+  // The form is gone. A still-filled form under a confirmation is how the
+  // owner receives the same inquiry three times.
   await expect(
     page.getByRole("button", { name: "Wyślij zapytanie" }),
   ).toHaveCount(0);

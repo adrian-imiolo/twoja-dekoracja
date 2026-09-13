@@ -89,8 +89,8 @@ export function InquiryForm() {
 
     /*
      * Parsed here first so an obvious mistake is answered without a round
-     * trip. The route handler parses the same schema regardless, and that is
-     * the check that matters.
+     * trip, as a courtesy to the visitor. The route handler parses the same
+     * schema regardless, and its answer is the one that counts.
      */
     const wynik = zapytanieSchema.safeParse(pola);
     if (!wynik.success) {
@@ -211,8 +211,7 @@ export function InquiryForm() {
       </div>
 
       {/*
-       * Moved off-screen rather than hidden with `display: none`, because a
-       * form-filling script can skip fields that are not displayed. Kept out
+       * Moved off-screen rather than hidden with `display: none`. Kept out
        * of the tab order and out of the accessibility tree, so nobody filling
        * the form by keyboard or by screen reader ever meets it.
        */}
@@ -258,9 +257,9 @@ function Potwierdzenie() {
  * What a visitor is given when the message did not get out.
  *
  * A number to dial, so the inquiry still reaches its destination. This is the
- * one place on the site where a contact detail is load-bearing in the moment
- * it is read: the visitor has already written the message once and has just been told it
- * went nowhere, and the next thing they do is either call or leave.
+ * one place on the site where a contact detail is load-bearing in the moment it
+ * is read: the visitor has already written the message once and has just been
+ * told it went nowhere, and the next thing they do is either call or leave.
  *
  * Both numbers, named, for the same reason `ContactChannels` names them: a
  * visitor who has just hit a fault should not also have to guess which of two

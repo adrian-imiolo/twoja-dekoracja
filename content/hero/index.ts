@@ -14,9 +14,9 @@ import kadrTytulowy from "./poster.jpg";
  * The footage, once it exists.
  *
  * A path under `public/` rather than a static import: the build reads
- * dimensions out of an imported image, which is what makes the poster
- * shift-free, and it has no equivalent to read out of a video. Next has no
- * loader for one, so importing it would fail the build outright.
+ * dimensions out of an imported image to make the poster shift-free, and it has
+ * no equivalent to read out of a video. Next has no loader for one, so
+ * importing it would fail the build outright.
  *
  * The type travels with the source because a browser picks a `<source>` by
  * looking at it and never by fetching the file to find out.

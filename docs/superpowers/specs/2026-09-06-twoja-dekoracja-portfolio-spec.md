@@ -430,7 +430,7 @@ None of these block implementation. All of them block launch.
 **Six realizations is a thin archive, thinner than the nine planned for.** The
 layouts must hold up at that volume without looking sparse, and detail pages
 must hold up when a realization has only two photographs. `urodziny-18` and
-`urodziny-30` launch with exactly two: the gallery layout was already designed
+`urodziny-30` launch with two: the gallery layout was already designed
 for the sparse case, so they were not held back for more photographs that may
 not arrive. Design for the sparse case first; a layout that only works when
 full will look broken at launch.

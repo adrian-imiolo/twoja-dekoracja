@@ -121,11 +121,11 @@ describe("realization registry", () => {
   });
 
   /**
-   * Prev/next follow the array as authored, because the archive is read in
-   * that order and the band at the bottom of a realization is a way of reading
-   * on. The ends drop the missing direction instead of wrapping: "next" on the
-   * last realization leading back to the first reads as a loop with no exit, and
-   * a visitor cannot tell they have now seen everything.
+   * Prev/next follow the array as authored, because the archive is read in that
+   * order and the band at the bottom of a realization is a way of reading on.
+   * The ends drop the missing direction instead of wrapping: "next" on the last
+   * realization leading back to the first reads as a loop with no exit, and a
+   * visitor cannot tell they have now seen everything.
    */
   describe("neighbours", () => {
     it("gives the first realization a next but no previous", () => {

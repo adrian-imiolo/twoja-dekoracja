@@ -19,10 +19,11 @@ import {
 /**
  * Who the inquiry appears to be from.
  *
- * Resend will only send from a domain that has been verified in the account,
- * so this cannot be the visitor's own address; `Reply-To` carries that. The default is Resend's shared sender, which works from a fresh
- * account with nothing configured; the custom domain replaces it here once it
- * is verified, without touching anything else.
+ * Resend will only send from a domain that has been verified in the account, so
+ * this cannot be the visitor's own address; `Reply-To` carries that. The
+ * default is Resend's shared sender, which works from a fresh account with
+ * nothing configured; the custom domain replaces it here once it is verified,
+ * without touching anything else.
  */
 const NADAWCA_DOMYSLNY = "Twoja Dekoracja <onboarding@resend.dev>";
 

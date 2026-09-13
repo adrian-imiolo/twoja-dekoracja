@@ -9,11 +9,10 @@ import { realizacje } from "@content/realizacje";
  * whether "dekoracje weselne Szczecin" ever finds them.
  *
  * Where they work is `areaServed` and nothing else. There is no `address` and
- * there will not be one: the business is działalność nierejestrowana run out
- * of a home, so the only street address it has is a residential one, and
+ * there will not be one: the business is działalność nierejestrowana run out of
+ * a home, so the only street address it has is a residential one, and
  * publishing it would buy a map pin with the owners' home on it. The cost is
- * accepted: Google lists `address` as required for a local business rich
- * result
+ * accepted: Google lists `address` as required for a local business rich result
  * (https://developers.google.com/search/docs/appearance/structured-data/local-business),
  * so this block earns entity understanding and no card. See the design spec's
  * "Legal identity".
@@ -33,8 +32,8 @@ export function localBusinessSchema(): Record<string, unknown> {
     // A name for the entity, so a later block on another page can point at
     // this one instead of describing the business a second time.
     "@id": `${site.url}/#pracownia`,
-    // The brand, which is what a search result should say and what every page
-    // already carries.
+    // The brand: what a search result should say, and what every page already
+    // carries.
     name: site.name,
     url: site.url,
     description: site.description,
@@ -53,8 +52,8 @@ export function localBusinessSchema(): Record<string, unknown> {
      */
     telephone: site.owners.map((wlascicielka) => wlascicielka.phone),
     email: site.email,
-    // Every profile that is the same entity as this one, which is what makes a
-    // search engine treat the site and the socials as one business.
+    // Every profile that is the same entity as this one, so a search engine
+    // treats the site and the socials as one business.
     sameAs: [instagramHref(site.instagram), site.facebook],
     areaServed: site.serviceArea.map((miasto) => ({
       "@type": "City",

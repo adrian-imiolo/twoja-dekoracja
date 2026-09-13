@@ -29,9 +29,9 @@ export function generateStaticParams() {
 /**
  * What a search result and a pasted link show.
  *
- * The description is the authored introduction rather than a composition of
- * the realization's fields: it is written as the two sentences that describe
- * this realization, which is what a snippet needs, and a template assembled from
+ * The description is the authored introduction rather than a composition of the
+ * realization's fields: it is written as the two sentences that describe this
+ * realization, as a snippet needs, and a template assembled from
  * place, date and style would read as a machine listing at every one of them.
  *
  * The preview image is the realization's own cover photograph. A generated card

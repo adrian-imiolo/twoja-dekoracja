@@ -12,12 +12,12 @@ import zdjecie03 from "./03.jpg";
  *
  * One décor setup, photographed three times: the round balloon photo wall on
  * the lawn. The indoor reception this folder used to also carry belongs to a
- * different wedding and now lives only in `wesele-k-i-m`; the two were filed
- * as one realization by mistake, and the client confirmed they are not. A fourth
+ * different wedding and now lives only in `wesele-k-i-m`; the two were filed as
+ * one realization by mistake, and the client confirmed they are not. A fourth
  * garden frame went at the same time, withdrawn by the client as too near a
  * repeat of the first. The title names the garden rather than the couple
- * because nothing in these frames identifies them, and "Wesele" alone no
- * longer tells the two apart.
+ * because nothing in these frames identifies them, and "Wesele" alone no longer
+ * tells the two apart.
  */
 const photos: readonly [Fotografia, ...Fotografia[]] = [
   {

@@ -234,7 +234,8 @@ test("describes the business to a search engine without giving away an address",
   expect(firma["@type"]).toBe("LocalBusiness");
   expect(firma).not.toHaveProperty("address");
 
-  // The service area answers "dekoracje weselne Szczecin" in the absence of a street the business could name.
+  // The service area answers "dekoracje weselne Szczecin" in the absence of a
+  // street the business could name.
   expect(
     firma.areaServed.map((miasto: { name: string }) => miasto.name),
   ).toContain("Szczecin");

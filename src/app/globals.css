@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 /*
- * Brand tokens from docs/superpowers/specs/2026-09-06-twoja-dekoracja-design.md.
- * The ground is the logo's own plum ink at page scale, so photographs stay the
- * brightest thing on screen.
+ * Brand tokens from
+ * docs/superpowers/specs/2026-09-06-twoja-dekoracja-design.md. The ground is
+ * the logo's own plum ink at page scale, so photographs stay the brightest
+ * thing on screen.
  *
  * `--color-*: initial` clears Tailwind's default palette rather than adding to
  * it. The design spec's guard rail ("no pure black or cold grey anywhere")

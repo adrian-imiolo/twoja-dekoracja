@@ -6,9 +6,10 @@ import { realizacje } from "@content/realizacje";
 /**
  * Every address the site publishes, handed to a search engine as a list.
  *
- * The archive's half is generated from the registry rather than listed,
- * because a hand-maintained list goes stale when a realization is added: nothing says its page is missing from here, and the
- * one new page nobody links to yet is the one that never gets crawled.
+ * The archive's half is generated from the registry rather than listed, because
+ * a hand-maintained list goes stale when a realization is added: nothing says
+ * its page is missing from here, and the one new page nobody links to yet is
+ * the one that never gets crawled.
  *
  * The static half cannot be generated: those routes are files, and the
  * framework offers no enumeration of them. It is a written list, and what
@@ -19,10 +20,10 @@ import { realizacje } from "@content/realizacje";
  * No `lastModified`, `changeFrequency` or `priority`. Google ignores the last
  * two outright
  * (https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap),
- * and the first would have to be invented: nothing in the
- * content carries a modification date, and stamping the build time on every
- * entry tells a crawler the whole site changed every deploy, which is both
- * false and the fastest way to have the field distrusted.
+ * and the first would have to be invented: nothing in the content carries a
+ * modification date, and stamping the build time on every entry tells a crawler
+ * the whole site changed every deploy, which is both false and the fastest way
+ * to have the field distrusted.
  */
 
 /**

@@ -11,9 +11,9 @@ import { resolveInquiryMailer } from "@/lib/zapytanie/resend-mailer";
  * This is the whole of "held in process memory": one map per running instance,
  * for as long as that instance is warm. A deployment that scales out gives a
  * sender one allowance per instance they reach, and a redeploy forgets
- * everyone. Both were accepted when this control was chosen over a firewall rule
- * or a data store, on the grounds that a flood still loses most of its volume
- * and no genuine visitor ever meets the ceiling (ADR 0001).
+ * everyone. Both were accepted when this control was chosen over a firewall
+ * rule or a data store, on the grounds that a flood still loses most of its
+ * volume and no genuine visitor ever meets the ceiling (ADR 0001).
  */
 const limit = limitZapytan();
 

@@ -59,7 +59,7 @@ export function IkonaMaila() {
         stroke="currentColor"
         strokeWidth="1.6"
       />
-      {/* The flap, which is what stops the rectangle reading as a photograph. */}
+      {/* The flap, so the rectangle does not read as a photograph. */}
       <path
         d="m3.5 7 8.5 6 8.5-6"
         fill="none"

@@ -193,7 +193,7 @@ export async function handleZapytanie(
    * the owner's inbox, not requests at the endpoint. A visitor who mistypes
    * their number five times is trying to reach someone, and a limiter that
    * counted those attempts would go on to swallow the corrected sixth, the
-   * only submission of the six worth having.
+   * only one of the six carrying a number the owner can call back.
    */
   const kto = nadawca(request);
   if (kto !== null && !limit.przyjmij(kto)) {

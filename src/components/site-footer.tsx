@@ -25,7 +25,7 @@ const ROK = new Date().getFullYear();
  * No registration numbers, because none exist: the business is działalność
  * nierejestrowana, with no NIP and no REGON to print. What stands in their
  * place is the owners' given names, the tagline and the region they work in,
- * which is what a visitor checks for at the bottom of a page. Surnames appear
+ * the things a visitor checks for at the bottom of a page. Surnames appear
  * on one page only (the privacy policy, where RODO obliges them), and the
  * given names arrive here through `ContactChannels`, labelling
  * each number with whose it is.
@@ -42,12 +42,12 @@ export function SiteFooter() {
     <footer className="mt-24 border-t border-plum-800">
       <div className="page-shell pt-10 pb-6 sm:pt-12">
         {/*
-         * One column on a phone; the identity across the top with the two
-         * link columns beneath it from a tablet up; and from a laptop, the
-         * identity on the left with both link columns gathered at the right
-         * edge. Sized to their content and pushed to the edge, they leave the empty width on the inside of the
-         * row, where it reads as room around the wordmark rather than as a
-         * column somebody forgot to fill.
+         * One column on a phone; the identity across the top with the two link
+         * columns beneath it from a tablet up; and from a laptop, the identity
+         * on the left with both link columns gathered at the right edge. Sized
+         * to their content and pushed to the edge, they leave the empty width
+         * on the inside of the row, where it reads as room around the wordmark
+         * rather than as a column somebody forgot to fill.
          *
          * Collapsing rather than letting columns wrap is what keeps a footer
          * full of links from turning into a ragged block: everything starts

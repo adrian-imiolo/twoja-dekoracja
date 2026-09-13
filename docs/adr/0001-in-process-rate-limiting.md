@@ -6,8 +6,7 @@ thousand senders remembered, all of it lost when the instance is recycled. Both
 specs asked for this ("per-IP rate limiting held in process memory",
 `docs/superpowers/specs/2026-09-06-twoja-dekoracja-portfolio-spec.md:246`), and
 it was reaffirmed when the alternatives were put to the owner while picking up
-issue #8. It is written down because the code looks broken to anyone who knows
-how serverless works.
+issue #8.
 
 ## Considered options
 
@@ -15,7 +14,7 @@ how serverless works.
 counts in one place, applies to every instance, and rejects a flood before it
 reaches the function. Rejected because it lives in the Vercel dashboard rather
 than in this repository, cannot be covered by the test suite, and needs a paid
-plan. Three costs to protect one person's inbox on a nine-page portfolio.
+plan, three costs to protect one person's inbox on a nine-page portfolio.
 
 **Vercel BotID.** Rejected for the same reason, plus it answers a different
 question: it decides whether a caller is a bot, where the risk here is a

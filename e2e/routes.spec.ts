@@ -12,9 +12,9 @@ import { przejdzCalyServis, TRASY_STALE } from "./crawl";
  * or a link that points at an address the site does not serve, is a hole a
  * visitor falls into, and neither shows up in a build or a type check.
  *
- * The routes are crawled rather than listed, so the check is over what the
- * site offers rather than over a list that has to be remembered. A
- * hand-maintained list would go stale when a page is added. `TRASY_STALE` is the floor beneath
+ * The routes are crawled rather than listed, so the check is over what the site
+ * offers rather than over a list that has to be remembered. A hand-maintained
+ * list would go stale when a page is added. `TRASY_STALE` is the floor beneath
  * the crawl: it names the routes the site must offer, so a navigation that
  * quietly stops linking somewhere fails here rather than passing on an empty
  * crawl.
@@ -121,7 +121,8 @@ test("keeps surnames off every page but the privacy policy", async ({
 
     for (const nazwisko of nazwiska) {
       if (trasa === "/polityka-prywatnosci") {
-        // RODO obliges the controller to be named, and this is where it is done.
+        // RODO obliges the controller to be named, and this is where it is
+        // done.
         expect(tresc).toContain(nazwisko);
       } else {
         expect(tresc, `${nazwisko} leaked into ${trasa}`).not.toContain(
