@@ -9,10 +9,8 @@ import zdjecie04 from "./04.jpg";
 import zdjecie05 from "./05.jpg";
 
 /*
- * Real event. `place` and `date` ship as `DO_UZUPEŁNIENIA` — the client has
- * the photographs but hasn't sent venue and date yet — so both are rendered
- * conditionally rather than shown as literal placeholder text; see
- * `RealizationCard` and `/realizacje/[slug]`.
+ * Real event. `place` and `date` are still `DO_UZUPELNIENIA`; see
+ * `miejsceITermin` in `src/lib/site.ts` for how that renders.
  *
  * "Poli" is the child's name as printed on the client's own backdrop signage.
  */

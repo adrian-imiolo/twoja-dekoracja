@@ -3,14 +3,14 @@ import type { Fotografia, Realizacja } from "./types";
 /**
  * Lowercase, ASCII, single hyphens between words. The slug is both the URL
  * segment under `/realizacje` and the folder name on disk, so anything that
- * would need escaping in one or renaming in the other is rejected outright —
+ * would need escaping in one or renaming in the other is rejected outright,
  * including the Polish diacritics that appear everywhere else in this content.
  */
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /**
  * Prose a visitor reads. Every one of these appears on the realization page,
- * so an empty string is a hole in the page rather than a missing nicety.
+ * so an empty string leaves a hole in the page.
  */
 const REQUIRED_PROSE = ["title", "place", "date", "style", "intro"] as const;
 
@@ -18,8 +18,8 @@ const REQUIRED_PROSE = ["title", "place", "date", "style", "intro"] as const;
  * The rules TypeScript cannot express.
  *
  * Only those rules belong here. A missing field, an unknown category and an
- * empty gallery are already compile errors — `Kategoria` is a closed union and
- * `photos` is a non-empty tuple — so re-checking them at runtime would add a
+ * empty gallery are already compile errors (`Kategoria` is a closed union and
+ * `photos` is a non-empty tuple), so re-checking them at runtime would add a
  * branch nothing but its own test could reach. What the type system cannot see
  * is a slug duplicated across two separately authored folders, a slug that
  * would not survive being a URL, prose left blank, or a photograph with no

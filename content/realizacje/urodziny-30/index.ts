@@ -6,13 +6,11 @@ import zdjecie01 from "./01.jpg";
 import zdjecie02 from "./02.jpg";
 
 /*
- * Real event. `place` and `date` ship as `DO_UZUPEŁNIENIA` — the client has
- * the photographs but hasn't sent venue and date yet — so both are rendered
- * conditionally rather than shown as literal placeholder text; see
- * `RealizationCard` and `/realizacje/[slug]`.
+ * Real event. `place` and `date` are still `DO_UZUPELNIENIA`; see
+ * `miejsceITermin` in `src/lib/site.ts` for how that renders.
  *
- * Only two photographs — thinner than most realizations, launched anyway
- * rather than held back; the gallery layout is built for the sparse case.
+ * Only two photographs. The portfolio spec's "Risks" section says why it
+ * launched with two.
  */
 const photos: readonly [Fotografia, ...Fotografia[]] = [
   {

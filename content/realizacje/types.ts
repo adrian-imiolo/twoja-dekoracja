@@ -1,23 +1,22 @@
 import type { StaticImageData } from "next/image";
 
 /**
- * The shape of a realization — one completed event, stored as a folder of
+ * The shape of a realization: one completed event, stored as a folder of
  * photographs beside a module of this shape.
  *
  * The schema lives next to the content rather than in `src/` because the
- * folder is the unit of authoring: a new event is a directory, its photographs
+ * folder is the unit of authoring: a new realization is a directory, its photographs
  * and one module written against these types.
  */
 
 /**
- * The two kinds of work the business shows. The union is closed on purpose —
- * every realization is shown in one unified grid with this as a small badge
- * rather than a hard section split (too few weddings so far to justify one),
- * but a third category would still be a design decision, not a content one.
+ * The two kinds of work the business shows. The union is closed. Every
+ * realization is shown in one unified grid with this as a small badge (too few
+ * weddings so far to justify a section split), but a third category would still be a design decision, not a content one.
  */
 export type Kategoria = "wesela" | "imprezy";
 
-/** What a category reads as on a card — singular, since a badge names one event. */
+/** What a category reads as on a card. Singular, since a badge names one realization. */
 export const KATEGORIA_LABEL: Record<Kategoria, string> = {
   wesela: "Wesele",
   imprezy: "Impreza",
@@ -27,15 +26,15 @@ export const KATEGORIA_LABEL: Record<Kategoria, string> = {
  * One photograph and the sentence a screen reader hears in its place.
  *
  * Alt text lives on the photograph rather than being derived from the
- * realization's title, because templated alt text ("Wesele Anny i Piotra —
+ * realization's title, because templated alt text ("Wesele Anny i Piotra -
  * zdjęcie 3") describes nothing. Pairing the two here makes the description a
  * required part of adding a photograph rather than a later pass that never
  * happens.
  */
 export interface Fotografia {
   /**
-   * Statically imported, never a path string — the import is what gives the
-   * build intrinsic dimensions. See `README.md` for why that matters.
+   * Statically imported, never a path string. The portfolio spec's "Content
+   * model" section records why.
    */
   image: StaticImageData;
   /** Descriptive Polish, written for this photograph. */
@@ -44,12 +43,12 @@ export interface Fotografia {
    * A CSS `object-position` value, for the one place a photograph is cropped
    * rather than shown whole: the card's `aspect-4/3` cover in a listing (see
    * `RealizationCard`). Absent unless the default centre crop cuts into the
-   * subject — most photographs never need it. The full-shape gallery on a
+   * subject; most photographs never need it. The full-shape gallery on a
    * realization's own page ignores this; nothing there is ever cropped.
    *
    * Most cover photographs are portrait, shot for a phone. Forced into the
    * landscape `aspect-4/3` frame, `object-fit: cover` is always width-bound
-   * — it must show 100% of the image's width — so this can only pan the crop
+   * (it must show 100% of the image's width), so this can only pan the crop
    * vertically. It cannot crop in on a subject that reads small side to
    * side; that is what `zoom` is for.
    */
@@ -57,7 +56,7 @@ export interface Fotografia {
   /**
    * A magnification factor (e.g. `1.5`) applied via CSS `transform: scale()`
    * on top of the `position` crop, for a cover whose subject still reads
-   * small in the frame after panning — typically a decoration photographed
+   * small in the frame after panning, typically a decoration photographed
    * from far enough back that lawn, water or a storefront fills the sides.
    * Absent unless the subject needs it; most covers are already tight
    * enough that `position` alone is sufficient.
@@ -65,7 +64,7 @@ export interface Fotografia {
   zoom?: number;
   /**
    * Where `zoom` magnifies from, as a CSS `transform-origin` value.
-   * Defaults to `"50% 50%"` when `zoom` is set without it — correct
+   * Defaults to `"50% 50%"` when `zoom` is set without it, which is correct
    * whenever `position` already centres the subject in the panned crop.
    * Set explicitly only when the subject sits off-centre horizontally
    * (`position`'s own horizontal component is a no-op on these width-bound
@@ -82,7 +81,7 @@ export interface Realizacja {
   category: Kategoria;
   /** "Pałac Krąg" */
   place: string;
-  /** Human-readable and deliberately imprecise: "Czerwiec 2026". */
+  /** Human-readable and imprecise: "Czerwiec 2026". */
   date: string;
   /** "Pudrowy róż, biel i eukaliptus" */
   style: string;
@@ -90,15 +89,15 @@ export interface Realizacja {
    * Two sentences at most. The photographs carry the page.
    *
    * This doubles as the page's meta description, so it is also the snippet
-   * Google shows under the result — keep it under about 160 characters or the
+   * Google shows under the result. Keep it under about 160 characters or the
    * search listing ends mid-thought.
    */
   intro: string;
   /**
-   * The one photograph that represents the event in listings and previews.
+   * The one photograph that represents the realization in listings and previews.
    *
    * Normally also a member of `photos` rather than a separate file, so the
-   * folder stays the single source of the event's images. A detail page that
+   * folder stays the single source of the realization's images. A detail page that
    * renders the cover as a hero therefore decides for itself whether to repeat
    * it in the gallery below.
    */

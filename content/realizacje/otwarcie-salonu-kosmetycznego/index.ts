@@ -8,13 +8,11 @@ import zdjecie03 from "./03.jpg";
 import zdjecie04 from "./04.jpg";
 
 /*
- * Real event. `place` and `date` ship as `DO_UZUPEŁNIENIA` — the client has
- * the photographs but hasn't sent venue and date yet — so both are rendered
- * conditionally rather than shown as literal placeholder text; see
- * `RealizationCard` and `/realizacje/[slug]`.
+ * Real event. `place` and `date` are still `DO_UZUPELNIENIA`; see
+ * `miejsceITermin` in `src/lib/site.ts` for how that renders.
  *
  * The salon's own name and branding are visible in the source photographs but
- * deliberately left out of the copy — this describes the decoration, not the
+ * left out of the copy, which describes the decoration. The salon is the
  * client's client.
  */
 const photos: readonly [Fotografia, ...Fotografia[]] = [

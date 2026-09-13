@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 import { findRealizacja, realizacje, sasiednieRealizacje } from "./index";
 
 /**
- * Static assertions over the published content — closer to a build-time check
+ * Static assertions over the published content, closer to a build-time check
  * than a test. `content/realizacje/integrity.test.ts` proves the rules
  * themselves reject bad data; these prove the real registry obeys them.
  *
@@ -26,7 +26,7 @@ import { findRealizacja, realizacje, sasiednieRealizacje } from "./index";
  */
 const KATEGORIE = ["wesela", "imprezy"];
 
-/** This directory — one subdirectory per realization, plus shared modules. */
+/** This directory: one subdirectory per realization, plus shared modules. */
 const CONTENT_DIR = fileURLToPath(new URL(".", import.meta.url));
 
 function realizationFolders(): string[] {
@@ -85,8 +85,8 @@ describe("realization registry", () => {
    * its contents, so one photograph filed as `wesele/05.jpg` and again as
    * `wesele-k-i-m/01.jpg` yields two different `src` values and reads as two
    * photographs to every check that goes through the registry. Only the bytes
-   * disagree — and a visitor who meets the same head table twice under two
-   * titles is being shown one event sold as two.
+   * disagree, and a visitor who meets the same head table twice under two
+   * titles is being shown one realization as two.
    */
   it("uses no photograph twice", () => {
     const byContents = new Map<string, string[]>();
@@ -94,7 +94,7 @@ describe("realization registry", () => {
     for (const folder of realizationFolders()) {
       for (const plik of readdirSync(join(CONTENT_DIR, folder))) {
         // Matched rather than assumed to be `.jpg`: a format this missed
-        // would be skipped silently, which is the one failure worth avoiding.
+        // would be skipped silently.
         if (!/\.(jpe?g|png|webp|avif)$/i.test(plik)) continue;
 
         const fingerprint = createHash("sha256")
@@ -122,9 +122,9 @@ describe("realization registry", () => {
 
   /**
    * Prev/next follow the array as authored, because the archive is read in
-   * that order and the band at the bottom of an event is a way of reading on.
-   * The ends drop the missing direction rather than wrapping: "next" on the
-   * last event leading back to the first reads as a loop with no exit, and
+   * that order and the band at the bottom of a realization is a way of reading
+   * on. The ends drop the missing direction instead of wrapping: "next" on the
+   * last realization leading back to the first reads as a loop with no exit, and
    * a visitor cannot tell they have now seen everything.
    */
   describe("neighbours", () => {

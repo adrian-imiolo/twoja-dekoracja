@@ -7,15 +7,13 @@ import zdjecie02 from "./02.jpg";
 import zdjecie03 from "./03.jpg";
 
 /*
- * Real event. `place` and `date` ship as `DO_UZUPEŁNIENIA` — the client has
- * the photographs but hasn't sent venue and date yet — so both are rendered
- * conditionally rather than shown as literal placeholder text; see
- * `RealizationCard` and `/realizacje/[slug]`.
+ * Real event. `place` and `date` are still `DO_UZUPELNIENIA`; see
+ * `miejsceITermin` in `src/lib/site.ts` for how that renders.
  *
  * One décor setup, photographed three times: the round balloon photo wall on
  * the lawn. The indoor reception this folder used to also carry belongs to a
- * different wedding and now lives only in `wesele-k-i-m` — the two were filed
- * as one event by mistake, and the client confirmed they are not. A fourth
+ * different wedding and now lives only in `wesele-k-i-m`; the two were filed
+ * as one realization by mistake, and the client confirmed they are not. A fourth
  * garden frame went at the same time, withdrawn by the client as too near a
  * repeat of the first. The title names the garden rather than the couple
  * because nothing in these frames identifies them, and "Wesele" alone no

@@ -4,7 +4,7 @@ import { site } from "@/lib/site";
  * The questions a visitor asks before they are willing to write, and the
  * answers.
  *
- * Content, not layout — the same reason `content/hero` exists. Two pages show
+ * Kept in `content/` for the same reason as `content/hero`. Two pages show
  * these: `/faq` shows all of them, and the home page shows three as the last
  * thing before the contact band. They are held here rather than on either page
  * because the two must not answer the same question differently; a visitor who
@@ -15,11 +15,11 @@ import { site } from "@/lib/site";
  * The service area in an answer here and the service area in the footer are
  * one fact, and a visitor who spots them disagreeing believes neither.
  *
- * PLACEHOLDER COPY. The questions are the ones the design spec names — price,
+ * PLACEHOLDER COPY. The questions are the ones the design spec names (price,
  * lead time, service area, setup and takedown, and what a first conversation
- * looks like — and the answers are plausible rather than confirmed. They are
- * deliberately non-committal about anything the business would be held to: no
- * figures, no fixed lead time, no promise about travel distance. The client
+ * looks like), and the answers are plausible but unconfirmed. They commit to
+ * nothing the business would be held to: no figures, no fixed lead time, no
+ * promise about travel distance. The client
  * confirms or rewrites every one of them before launch.
  *
  * Two things are not placeholder and must survive any rewrite. Nothing here
@@ -31,10 +31,9 @@ import { site } from "@/lib/site";
 /**
  * One question, with the answer visible beside it.
  *
- * Never a question on its own. A bare list of questions is what a visitor
- * scrolls past and what Google reads as nothing — the answer is the whole
- * value of the page, and `FAQPage` structured data has nowhere to put a
- * question without one.
+ * Never a question on its own. A visitor scrolls past a bare list of
+ * questions, and `FAQPage` structured data has nowhere to put a question
+ * without its answer.
  */
 export interface Pytanie {
   /**
@@ -45,7 +44,7 @@ export interface Pytanie {
    */
   id: string;
   pytanie: string;
-  /** One paragraph. Two if the question genuinely has two halves. */
+  /** One paragraph. Two if the question has two halves. */
   odpowiedz: string;
 }
 
@@ -123,7 +122,7 @@ export const pytania: readonly Pytanie[] = [
  * their place where it sits.
  *
  * An unknown id throws rather than being skipped, because the failure it
- * guards against is silent — a question renamed here would quietly leave a
+ * guards against is silent. A question renamed here would quietly leave a
  * hole in another page, and nothing about the rendered result would look
  * wrong. The registry's integrity checks fail loudly for the same reason.
  */

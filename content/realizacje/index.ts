@@ -14,9 +14,9 @@ export type { Fotografia, Kategoria, Realizacja } from "./types";
 /**
  * Every realization the site publishes, in the order it is shown.
  *
- * The order is authored, not sorted: neither alphabetical nor date-derived, so
- * the strongest work leads regardless of when it happened or what the couple
- * were called. Adding an event is one import and one line here.
+ * The order is authored by hand, so the strongest work leads regardless of
+ * when it happened or what the couple were called. Adding a realization is one
+ * import and one line here.
  */
 export const realizacje: readonly Realizacja[] = [
   wesele,
@@ -48,7 +48,7 @@ export function findRealizacja(slug: string): Realizacja | undefined {
  * Lives here rather than in the page because the registry owns the order: a
  * page that reached into the array to find its neighbours would be a second
  * place that knows how the archive is sequenced. Either side is `undefined`
- * at the ends — no wrapping, so the last event has no "next" and a visitor
+ * at the ends. Nothing wraps, so the last realization has no "next" and a visitor
  * can tell they have seen everything.
  */
 export function sasiednieRealizacje(slug: string): {
