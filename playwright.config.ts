@@ -23,6 +23,23 @@ export default defineConfig({
   use: {
     baseURL,
     trace: "on-first-retry",
+    /*
+     * A navigation that is going nowhere should say so in seconds.
+     *
+     * Playwright leaves this unbounded, so a stuck navigation is caught only
+     * by the test's own budget — and a walk of the whole site gives itself
+     * three minutes. That is what turned one image request the browser had
+     * quietly abandoned into a 29-minute red build: three widths, three
+     * attempts each, every one spending the full 180 seconds and then
+     * reporting a timeout that named the budget rather than the address it
+     * had been waiting on.
+     *
+     * Thirty seconds is far longer than a page here has ever needed — the
+     * whole suite finishes inside ninety with a cold image cache — and short
+     * enough that the next navigation to hang fails while the run is still
+     * worth reading, pointing at the request instead of the clock.
+     */
+    navigationTimeout: 30_000,
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
