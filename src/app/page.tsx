@@ -17,8 +17,8 @@ import { realizacje } from "@content/realizacje";
 /**
  * The page a stranger from Google lands on.
  *
- * It has seconds to answer three questions — what this business does, where it
- * does it, and whether the work is any good — and then to hand the visitor on
+ * It has seconds to answer three questions (what this business does, where it
+ * does it, and whether the work is any good) and then to hand the visitor on
  * to the work itself. Everything below is in that order: a photograph, a
  * sentence, the work, the questions people ask before writing, and a way to
  * write.
@@ -33,8 +33,7 @@ import { realizacje } from "@content/realizacje";
 const WYBRANE = 4;
 
 /**
- * The grid "Wybrane realizacje" is shown in, and how wide a card in it
- * actually gets.
+ * The grid "Wybrane realizacje" is shown in, and how wide a card in it gets.
  *
  * The class list and the `sizes` string are one decision and are kept in one
  * place for the reason `/realizacje` gives for the same pairing: `next/image`
@@ -54,17 +53,16 @@ const SIATKA = {
  *
  * A teaser that withholds its answers sends a hesitant visitor away to look
  * for them, so these three are answered in full on the page and `/faq` is
- * offered underneath for the rest. A question with its answer visible is also
- * what Google reads, and a list of bare questions is not.
+ * offered underneath for the rest.
  *
- * Which three, and why these: they are the ones a visitor is most likely to
- * leave over rather than ask about. Where the business works decides whether
+ * These three are the ones a visitor is most likely to leave over rather than
+ * ask about. Where the business works decides whether
  * the rest of the page is even relevant, the lead time decides whether they
  * are already too late, and setup and takedown is the thing people assume they
  * will be left holding.
  *
  * Named rather than sliced off the front of the FAQ, so `/faq` stays free to
- * order itself for someone reading the whole page — it leads with price, which
+ * order itself for someone reading the whole page. It leads with price, which
  * is the wrong thing to end the home page on.
  */
 const PYTANIA = wybranePytania("obszar", "termin", "montaz");
@@ -97,8 +95,7 @@ export default function HomePage() {
 
       {/*
        * The band is sized by the copy standing in it, not by the photograph
-       * behind it — which is what lets the eventual video drop in without
-       * moving anything. `svh` rather than `vh` so a phone's collapsing
+       * behind it, so the video layers in without moving anything. `svh` rather than `vh` so a phone's collapsing
        * address bar does not leave the first screen taller than the screen.
        */}
       <section className="relative flex min-h-[92svh] items-end overflow-hidden">
@@ -134,7 +131,7 @@ export default function HomePage() {
             Kim jesteśmy
           </p>
           {/*
-           * PLACEHOLDER COPY — describes the service in the terms the design
+           * PLACEHOLDER COPY. Describes the service in the terms the design
            * spec assumes, and says nothing about the person behind it, because
            * the site does not know their name yet. Rewritten with the client
            * before launch, alongside `/o-nas`, which this section now hands
@@ -179,7 +176,7 @@ export default function HomePage() {
          * sample and the archive is the work, so this is the hand-off the page
          * is built to make, and as a caption under the last card it was
          * competing with the next section's heading and losing. The FAQ
-         * teaser's link below stays quiet for the other half of that reason —
+         * teaser's link below stays quiet for the other half of that reason:
          * two bordered buttons on one screen share the attention this one
          * needs all of.
          *
@@ -243,8 +240,8 @@ export default function HomePage() {
           </p>
 
           {/*
-           * Wrapping, because this band carries five channels — two named
-           * phones, an address, and two profiles — and a single row of them
+           * Wrapping, because this band carries five channels (two named
+           * phones, an address, and two profiles), and a single row of them
            * would either squeeze the email past legibility or push off the
            * side of a narrow laptop.
            */}

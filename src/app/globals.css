@@ -6,7 +6,7 @@
  * brightest thing on screen.
  *
  * `--color-*: initial` clears Tailwind's default palette rather than adding to
- * it. The design spec's guard rail — "no pure black or cold grey anywhere" —
+ * it. The design spec's guard rail ("no pure black or cold grey anywhere")
  * is then enforced by the build instead of by memory: `bg-black` and
  * `text-gray-500` stop resolving to a colour at all.
  */

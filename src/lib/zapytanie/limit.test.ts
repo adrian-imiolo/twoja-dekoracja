@@ -84,11 +84,10 @@ describe("limitZapytan", () => {
     // letting either sender back in would itself evict the other.
     //
     // The flood bought nobody a reset. A limiter that wiped itself under
-    // pressure would hand exactly this sender their whole count back.
+    // pressure would hand this sender their whole count back.
     expect(limit.przyjmij(NADAWCA)).toBe(false);
-    // The sender heard from longest ago was dropped to bound the memory —
-    // that is the price, and it is paid by the quietest sender rather than
-    // by everyone at once.
+    // The sender heard from longest ago was dropped to bound the memory. The
+    // quietest sender pays for that, instead of everyone at once.
     expect(limit.przyjmij(DAWNY)).toBe(true);
   });
 });

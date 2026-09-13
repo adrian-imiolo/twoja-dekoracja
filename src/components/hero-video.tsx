@@ -8,7 +8,7 @@ import type { HeroVideoSource } from "@content/hero";
  * How the video finds the poster it is waiting for.
  *
  * A DOM id rather than a ref, because the poster is rendered on the server and
- * this is not — there is no ref to hand across that boundary, and making the
+ * this is not. There is no ref to hand across that boundary, and making the
  * poster a client component to get one would put JavaScript in front of the
  * page's largest contentful paint to save the video some coupling.
  */
@@ -19,22 +19,22 @@ export const HERO_POSTER_ID = "hero-poster";
  *
  * Mounted only when `content/hero` carries a video. That file is the one place
  * that decides; this component assumes no answer and is correct either way,
- * which is what keeps adding or withdrawing footage a content edit.
+ * so adding or withdrawing footage stays a content edit.
  *
- * Two rules shape everything below, both from the design spec:
+ * Two rules from the design spec's "Hero video" section shape everything
+ * below.
  *
- * **The video must never become the largest contentful paint.** The site's
- * whole acquisition channel is search, and the metric search grades this page
- * on is how fast its first screen appears. So nothing here is rendered — and
- * therefore nothing is requested — until the poster has painted. A video that
+ * **The video must never become the largest contentful paint.** So nothing
+ * here is rendered, and therefore nothing is requested, until the poster has
+ * painted. A video that
  * started downloading during the initial page load would compete with the
  * poster for the connection and make the number worse than it is with no video
  * at all.
  *
  * **A visitor who asked for less motion gets the poster and nothing else.**
- * Not a paused video, not a video that loads and sits still: no request at
- * all, because the point of the preference is not to be shown moving imagery
- * and there is no reason to spend their data on it either.
+ * The video is never requested for them, because the preference asks not to
+ * be shown moving imagery and there is no reason to spend their data on it
+ * either.
  */
 export function HeroVideo({ video }: { video: HeroVideoSource }) {
   const [readyToLoad, setReadyToLoad] = useState(false);
@@ -51,8 +51,8 @@ export function HeroVideo({ video }: { video: HeroVideoSource }) {
      * The poster itself is the signal, rather than the window's `load` event.
      * `load` looks like the simpler gate and is wrong on the second visit: the
      * site's own header links back to `/`, and after that client-side
-     * navigation `readyState` is already "complete" — left over from the
-     * document the visitor arrived on — so a `load`-based gate would open
+     * navigation `readyState` is already "complete" (left over from the
+     * document the visitor arrived on), so a `load`-based gate would open
      * immediately and let the video race the poster it is supposed to be
      * waiting for. Asking the poster holds on both paths.
      */
@@ -62,7 +62,7 @@ export function HeroVideo({ video }: { video: HeroVideoSource }) {
     let frame = 0;
 
     /*
-     * Two frames, not one. A callback scheduled for the next frame runs
+     * Two frames. A callback scheduled for the next frame runs
      * *before* that frame is painted, so arming there would put the video's
      * request in the same frame as the poster's first paint rather than after
      * it. The second frame is the one that means the poster is on screen.
@@ -74,7 +74,7 @@ export function HeroVideo({ video }: { video: HeroVideoSource }) {
     }
 
     /*
-     * `complete` covers both outcomes — the poster arrived, or it failed and
+     * `complete` covers both outcomes: the poster arrived, or it failed and
      * the browser has stopped spending a connection on it. Either way the
      * video is no longer competing with anything, and in the second case it is
      * the only thing left to show.
@@ -99,9 +99,9 @@ export function HeroVideo({ video }: { video: HeroVideoSource }) {
     <video
       /*
        * `preload="none"` states the rule the element is under: this video is
-       * never fetched merely for existing. `autoPlay` is what then starts the
-       * fetch — and it is safe here precisely because the element does not
-       * exist until the effect above has decided it may.
+       * never fetched for existing. `autoPlay` then starts the fetch, which
+       * is safe here because the element does not exist until the effect
+       * above has decided it may.
        *
        * `muted` is what makes autoplay permitted at all; `playsInline` is what
        * stops iOS taking the video fullscreen the moment it plays.
@@ -112,7 +112,7 @@ export function HeroVideo({ video }: { video: HeroVideoSource }) {
       loop
       playsInline
       /*
-       * Held transparent until there is actually a frame to show. A video
+       * Held transparent until there is a frame to show. A video
        * element with nothing decoded and no `poster` attribute of its own
        * paints as a solid block in some browsers, which would flash over the
        * photograph in the seconds between mounting and playing. Fading in from

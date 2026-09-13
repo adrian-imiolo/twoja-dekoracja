@@ -33,7 +33,7 @@ export function IkonaTelefonu() {
       {/*
        * The handset, drawn as a stroke rather than filled: at 1em against
        * body text a solid receiver reads as a blob, and the outline keeps the
-       * silhouette legible at the size this is actually used.
+       * silhouette legible at the size this is used.
        */}
       <path
         d="M6.5 3h3l1.5 4.5-2 1.5a12 12 0 0 0 6 6l1.5-2 4.5 1.5v3a2 2 0 0 1-2.2 2A17.5 17.5 0 0 1 4.5 5.2 2 2 0 0 1 6.5 3Z"

@@ -8,13 +8,13 @@ import { realizacje } from "@content/realizacje";
  * Every address the site does not publish.
  *
  * Two roads lead here and both matter: a mistyped address, and a shared link
- * to a realization that has since been renamed — `/realizacje/[slug]` is
+ * to a realization that has since been renamed. `/realizacje/[slug]` is
  * closed with `dynamicParams = false`, so a stale link is how a stranger most
  * often meets this page. Sending that stranger back to the home page to start
  * again is a dead end, so the page offers the work itself instead.
  *
- * Rendered inside the root layout, which is what keeps the header, the footer
- * and the plum ground — a 404 stripped of them reads as a broken deployment
+ * Rendered inside the root layout, so it keeps the header, the footer and the
+ * plum ground. A 404 stripped of them reads as a broken deployment
  * rather than a wrong turn.
  */
 
@@ -67,7 +67,7 @@ export default function NotFound() {
                * venue, rather than joining the two fields here. This page
                * composed them itself and so published a literal
                * `[DO UZUPEŁNIENIA] · [DO UZUPEŁNIENIA]` for every realization
-               * whose venue has not been looked up yet — on the one page a
+               * whose venue has not been looked up yet, on the one page a
                * visitor reaches already suspecting the site is broken.
                */}
               {miejsceITermin(realizacja) ? (

@@ -8,19 +8,17 @@ import { site } from "@/lib/site";
 /**
  * The page the whole site funnels into.
  *
- * The form is the point, and the channels beside it are not a fallback for it:
- * a good share of the people who decide to get in touch would rather call or
+ * The form and the channels beside it carry equal weight: a good share of the people who decide to get in touch would rather call or
  * send an Instagram message than fill anything in, and a page that only offers
  * a form loses them silently. Both are above the fold on a phone for that
- * reason.
+ * reason. The channels are the shared `ContactChannels` list.
  */
 
 const OPIS =
   "Napisz do nas - powiedz, co planujecie i kiedy, a odpiszemy, czy termin jest wolny.";
 
 /**
- * What a search result shows, which the page's own lead deliberately does not
- * repeat: someone reading the page is already here and knows what the business
+ * What a search result shows, which the page's own lead does not repeat: someone reading the page is already here and knows what the business
  * does, and someone reading the result does not.
  */
 const META_OPIS = `Zapytaj o dekoracje weselne i okolicznościowe w ${site.cityLocative}. ${OPIS}`;
@@ -47,12 +45,11 @@ export default function KontaktPage() {
 
       {/*
        * The channels lead on a phone, where they sit above the form, and sit
-       * beside it from the width at which both fit — the visitor who came to
+       * beside it from the width at which both fit. The visitor who came to
        * call should not have to scroll past five inputs to find the number.
        *
        * The side column is as wide as the e-mail address at the size the
-       * channels set it, with a little to spare: narrower, and at exactly
-       * 1024px the address breaks over two lines on the one page whose job
+       * channels set it, with a little to spare: narrower, and at 1024px the address breaks over two lines on the one page whose job
        * is to be copied down.
        */}
       <div className="mt-16 grid gap-16 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-24">

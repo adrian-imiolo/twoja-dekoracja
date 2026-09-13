@@ -5,8 +5,8 @@ import { z } from "zod";
  *
  * The whole schema lives here rather than beside the route handler because the
  * browser validates against this exact object too. One definition means a rule
- * the server enforces cannot go missing from the form, and — the part that
- * actually bites — the message the visitor reads under a field is the message
+ * the server enforces cannot go missing from the form, and the message the
+ * visitor reads under a field is the message
  * the server would have produced, so a form that looks satisfied can never be
  * rejected on submit with different wording.
  *
@@ -69,8 +69,8 @@ export function etykietaTypu(typ: TypWydarzenia): string {
  * inquiry feel like an application form, and asking for an email specifically
  * turns away the visitor who only ever uses their phone.
  *
- * The shapes below are deliberately generous. Their job is to catch the
- * typo — a missing "@", six digits instead of nine — not to decide whether an
+ * The shapes below are generous. Their job is to catch the typo (a missing
+ * "@", six digits instead of nine), not to decide whether an
  * address exists, which no regular expression can do and which the reply
  * itself will settle within the hour.
  */
@@ -118,8 +118,8 @@ export const zapytanieSchema = z.object({
   }),
 
   /*
-   * Free text rather than a date picker, and the reason is in the label: the
-   * date is approximate. A picker would demand a day from someone who has
+   * Free text rather than a date picker, because the label says the date is
+   * approximate. A picker would demand a day from someone who has
    * settled on "lato 2027" and turn a two-minute inquiry into a decision they
    * came here to ask about.
    *

@@ -11,7 +11,7 @@ import { site } from "@/lib/site";
  * and puts an endpoint the site would rather not advertise into the index.
  *
  * The sitemap is named absolutely because that is what the robots.txt format
- * requires — a relative path there is ignored rather than resolved.
+ * requires; a relative path there is ignored rather than resolved.
  */
 export default function robots(): MetadataRoute.Robots {
   return {

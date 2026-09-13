@@ -22,8 +22,8 @@ const jost = Jost({
   display: "swap",
 });
 
-// The wordmark only — matches the client's own logo (see
-// `docs/superpowers/specs`), which is deliberately not `--font-display`: that
+// The wordmark only. It matches the client's own logo (see
+// `docs/superpowers/specs`), which is why it is not `--font-display`: that
 // one is Marcellus, set for every heading on the site. Glass Antiqua ships one
 // weight, 400.
 const glassAntiqua = Glass_Antiqua({
@@ -34,8 +34,8 @@ const glassAntiqua = Glass_Antiqua({
 });
 
 export const metadata: Metadata = {
-  // Every relative URL in a page's metadata — canonicals and preview images
-  // most of all — is resolved against this.
+  // Every relative URL in a page's metadata, canonicals and preview images
+  // most of all, is resolved against this.
   metadataBase: new URL(site.url),
   title: {
     default: `${site.name} - dekoracje weselne i okolicznościowe w ${site.cityLocative}`,

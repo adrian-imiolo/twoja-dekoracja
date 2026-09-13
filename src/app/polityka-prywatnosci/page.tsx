@@ -9,30 +9,30 @@ import { site } from "@/lib/site";
  *
  * Nothing here is a placeholder any more, and the draft notice that used to
  * stand at the top is gone with them. The owners have read the document and
- * the facts it was waiting on — who they are, where a request reaches them,
- * how long an inquiry is kept — are written out below.
+ * the facts it was waiting on (who they are, where a request reaches them,
+ * how long an inquiry is kept) are written out below.
  *
- * What is written out is what the code actually does, taken from
+ * What is written out is what the code does, taken from
  * `src/lib/zapytanie`: the five fields the form collects, the mailer that
  * carries them, and the host that serves the page. Those must be corrected
- * here if the form or the delivery path changes — a privacy policy that
+ * here if the form or the delivery path changes. A privacy policy that
  * describes a different system than the one running is worse than a short
  * one, because it is a statement of fact the business has published about
  * itself.
  *
- * Two decisions worth not re-litigating by accident. There is no postal
+ * Two decisions were settled on purpose. There is no postal
  * address: art. 13 ust. 1 lit. a RODO asks for contact details good enough to
  * exercise a right, and the only address this business has is the flat it is
  * run from, beside names and faces the site already publishes. And the
- * retention periods — 24 months for correspondence, 5 tax years for a booking
- * — are the owners' stated practice, not a default to be quietly widened.
+ * retention periods (24 months for correspondence, 5 tax years for a booking)
+ * are the owners' stated practice, and must not be quietly widened.
  *
  * None of this has been through a lawyer, and none of it is legal advice.
  *
- * The controllers are people, not a company. The business is działalność
- * nierejestrowana: it has no NIP, no REGON and no legal entity to name, and
- * RODO does not care — a controller is whoever decides what happens to the
- * data, which here is simply the two individuals running the business.
+ * The controllers are people. The business is działalność nierejestrowana:
+ * it has no NIP, no REGON and no legal entity to name, and RODO does not care.
+ * A controller is whoever decides what happens to the data, which here is the
+ * two individuals running the business.
  */
 
 /**
@@ -104,7 +104,7 @@ export default function PolitykaPrywatnosciPage() {
             ani REGON - nie zostały nadane.
           </p>
           {/*
-           * An e-mail address and two numbers, and deliberately no postal one.
+           * An e-mail address and two numbers, and no postal one.
            * Art. 13 ust. 1 lit. a RODO asks for contact details sufficient to
            * exercise a right, which these are; it does not ask for an address.
            * The only address this business has is the flat it is run from, and

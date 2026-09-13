@@ -21,8 +21,8 @@ interface OgImage {
  * A photograph as a link preview.
  *
  * The dimensions travel with the URL because a preview card is laid out by
- * whoever renders it, from the metadata alone — they have the image but not
- * the page, so an image whose shape they have to discover renders as a
+ * whoever renders it, from the metadata alone. The renderer has the image but
+ * not the page, so an image whose shape they have to discover renders as a
  * reflowing placeholder or not at all.
  */
 export function asOgImage(fotografia: Fotografia): OgImage {
@@ -42,9 +42,9 @@ export function asOgImage(fotografia: Fotografia): OgImage {
  * would be the obvious alternative and is the wrong one: the link is asking
  * someone to judge decorations, and a logo shows them none.
  *
- * `slice` rather than an index because the registry is only typed as a list —
- * an empty archive yields a preview with no image rather than a crash, which
- * is the right failure for a site whose content is authored by hand.
+ * `slice` rather than an index because the registry is only typed as a list:
+ * an empty archive yields a preview with no image instead of a crash, the
+ * right failure for a site whose content is authored by hand.
  */
 function domyslnyPodglad(): OgImage[] {
   return realizacje
@@ -55,11 +55,11 @@ function domyslnyPodglad(): OgImage[] {
 /**
  * How every page describes itself to whoever it is pasted in front of.
  *
- * One helper rather than the same six keys written out on each page. That is
- * not only about repetition: `type`, `locale` and `siteName` are the same
- * answer everywhere by definition, and a page that quietly disagrees about one
- * of them is a defect nothing on the site would show — the page renders
- * perfectly and only the shared link is wrong.
+ * One helper instead of the same six keys written out on each page, because
+ * `type`, `locale` and `siteName` are the same answer everywhere by
+ * definition, and a page that quietly disagrees about one of them is a defect
+ * nothing on the site would show: the page renders perfectly and only the
+ * shared link is wrong.
  *
  * Every page gets an image, including the ones with nothing of their own to
  * show. A preview with a title and no image is a grey rectangle in a chat
@@ -70,7 +70,7 @@ function domyslnyPodglad(): OgImage[] {
  *
  * The canonical comes back with them because it is the same path, and a page
  * that writes its own address twice is a page that can disagree with itself
- * about where it lives — in metadata, where nothing rendered would show it.
+ * about where it lives, in metadata, where nothing rendered would show it.
  */
 export function sharePreview(strona: {
   /** The page's own path, e.g. `/kontakt`. */

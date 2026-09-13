@@ -12,7 +12,7 @@ import {
  * being Resend.
  *
  * Nothing above this file knows that Resend exists, and nothing in it decides
- * what an inquiry says — this only answers "who takes the mail, and where does
+ * what an inquiry says. It only answers "who takes the mail, and where does
  * it go".
  */
 
@@ -20,8 +20,7 @@ import {
  * Who the inquiry appears to be from.
  *
  * Resend will only send from a domain that has been verified in the account,
- * so this cannot simply be the visitor's own address — that is what `Reply-To`
- * is for. The default is Resend's shared sender, which works from a fresh
+ * so this cannot be the visitor's own address; `Reply-To` carries that. The default is Resend's shared sender, which works from a fresh
  * account with nothing configured; the custom domain replaces it here once it
  * is verified, without touching anything else.
  */
@@ -30,8 +29,8 @@ const NADAWCA_DOMYSLNY = "Twoja Dekoracja <onboarding@resend.dev>";
 /**
  * Where an inquiry goes when the environment has not said.
  *
- * Only ever reached outside a deployment — see `resolveInquiryMailer` — where
- * nothing is actually sent and the address exists so the composed email has
+ * Only ever reached outside a deployment (see `resolveInquiryMailer`), where
+ * nothing is sent and the address exists so the composed email has
  * something to be addressed to.
  */
 const ODBIORCA_ZASTEPCZY = "kontakt@localhost";
@@ -44,8 +43,8 @@ const ODBIORCA_ZASTEPCZY = "kontakt@localhost";
  * network to do it. Reporting success is correct there: the inquiry did reach
  * everything this application is responsible for.
  *
- * It is emphatically not correct in production, which is why reaching for it
- * is a build error there rather than a quiet fallback — see below.
+ * It is wrong in production, so reaching for it there is an error instead of
+ * a quiet fallback; see below.
  */
 const transportDoKonsoli: Transport = async (email: InquiryEmail) => {
   console.info(
@@ -74,34 +73,33 @@ function transportPrzezResend(apiKey: string): Transport {
     /*
      * Resend reports a refused send in the result rather than by throwing, so
      * a handler that only caught exceptions would confirm to the visitor that
-     * their inquiry was sent while the owner's inbox stayed empty — the one
-     * failure this site cannot afford. Rethrown so the port sees a failure.
+     * their inquiry was sent while the owner's inbox stayed empty. Rethrown so
+     * the port sees a failure.
      */
     if (error) throw new Error(`${error.name}: ${error.message}`);
   };
 }
 
 /**
- * The mailer this deployment actually has.
+ * The mailer this deployment has.
  *
  * Resolved per request rather than at module load so that a missing key is a
  * fault reported by the submission that needed it, not a page that fails to
  * render.
  *
  * A misconfiguration that is harmless locally is catastrophic in a deployment,
- * and it is invisible from the outside — the form would keep saying "wysłane"
+ * and it is invisible from the outside: the form would keep saying "wysłane"
  * to every visitor while no inquiry ever arrived. So in a deployment it throws
- * and the visitor is shown the delivery failure with the phone number, which
- * is a bad day rather than a silent one.
+ * and the visitor is shown the delivery failure with the phone number.
  *
  * This is the second line of defence. The first is in `next.config.ts`, which
- * refuses to build production without the configuration at all — by the time
+ * refuses to build production without the configuration at all. By the time
  * this throws, somebody has already tried to get in touch and failed.
  *
  * "In a deployment" means `process.env.VERCEL`, which is where the README says
  * this site is hosted. On any other production host the check would not fire
- * and inquiries would be written to a log while the form reported success —
- * worth knowing before this moves.
+ * and inquiries would be written to a log while the form reported success.
+ * Change this check before moving the site to another host.
  */
 export function resolveInquiryMailer(): InquiryMailer {
   const apiKey = process.env.RESEND_API_KEY;

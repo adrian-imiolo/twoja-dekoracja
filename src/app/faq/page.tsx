@@ -9,13 +9,11 @@ import { pytania } from "@content/faq";
 
 /**
  * The page that answers the questions a visitor would otherwise have to make
- * contact to ask — which is the point: the hesitant ones never do, they leave.
+ * contact to ask. The hesitant ones never ask; they leave.
  *
  * Every answer is visible on load. No accordion, no "read more". A question
  * whose answer is hidden behind a click is not an answer to someone scanning
- * the page in ten seconds, and `FAQPage` structured data describes what is on
- * the page rather than what a click would reveal — Google has been explicit
- * that content hidden behind an interaction is worth less to it.
+ * the page in ten seconds.
  *
  * The questions themselves live in `content/faq` because the home page shows
  * three of them and the two pages must not disagree.
@@ -69,7 +67,7 @@ export default function FaqPage() {
       {/*
        * A description list rather than a stack of headings: the pairing is the
        * content, and it is what a screen reader announces as a pair. Each entry
-       * carries the question's id so a single answer can be linked directly —
+       * carries the question's id so a single answer can be linked directly;
        * the owner sends "here's how the rezerwacja works" far more often than
        * they send the whole page.
        */}
@@ -92,9 +90,8 @@ export default function FaqPage() {
 
       {/*
        * The page exists to remove reasons not to write, so it ends by asking
-       * for exactly that. A visitor who has read this far and still has a
-       * question has one the page could not answer, which is the moment the
-       * form is worth the most.
+       * for that. A visitor who has read this far and still has a question
+       * has one the page could not answer, and the form is the way to ask it.
        */}
       <CalloutPanel
         as="section"

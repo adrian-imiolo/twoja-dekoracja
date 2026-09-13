@@ -12,30 +12,26 @@ import { site } from "@/lib/site";
  * Fixed when the site is built, which is when every one of its pages is
  * rendered. A site that gains a realization or two a year is rebuilt at least
  * that often, so the year keeps up without a line of script to move it at
- * midnight — and a build that has not happened this year is a site nobody
- * has touched this year, which is the honest thing for the line to say.
+ * midnight.
  */
 const ROK = new Date().getFullYear();
 
 /**
  * The last thing on every page, and the second real way out of it: who this
  * business is, where else on the site to go, and every way of reaching them
- * as a link that works — including the one RODO requires to be reachable from
+ * as a link that works, including the one RODO requires to be reachable from
  * anywhere.
  *
- * No registration numbers, because none exist — the business is działalność
+ * No registration numbers, because none exist: the business is działalność
  * nierejestrowana, with no NIP and no REGON to print. What stands in their
  * place is the owners' given names, the tagline and the region they work in,
- * which is what a visitor is actually checking for at the bottom of a page.
- * Surnames appear on one page only — the privacy policy, where RODO obliges
- * them — and the given names arrive here through `ContactChannels`, labelling
+ * which is what a visitor checks for at the bottom of a page. Surnames appear
+ * on one page only (the privacy policy, where RODO obliges them), and the
+ * given names arrive here through `ContactChannels`, labelling
  * each number with whose it is.
  *
  * The channels are `ContactChannels` outright rather than a footer-sized copy
- * of them. A visitor who reaches the bottom of a page on a phone and wants to
- * call has to find the same number, under the same name, opening the same way
- * as the closing band and `/kontakt` — and one list rendered three times is
- * the only way that stays true. It is also what puts Facebook here: a numeric
+ * of them; that component says why. It also puts Facebook here: a numeric
  * profile id is nothing to print as text, but it is a perfectly good address
  * to link. What the footer asks for is the compact arrangement: a row per
  * channel, so the column is as tall as the site's navigation beside it rather
@@ -49,8 +45,7 @@ export function SiteFooter() {
          * One column on a phone; the identity across the top with the two
          * link columns beneath it from a tablet up; and from a laptop, the
          * identity on the left with both link columns gathered at the right
-         * edge. Gathering them is the point: sized to their content and
-         * pushed to the edge, they leave the empty width on the inside of the
+         * edge. Sized to their content and pushed to the edge, they leave the empty width on the inside of the
          * row, where it reads as room around the wordmark rather than as a
          * column somebody forgot to fill.
          *
@@ -89,8 +84,7 @@ export function SiteFooter() {
           {/*
            * Both headings take the badge's height and centre in it, so that
            * across the row they sit on the wordmark's line rather than a
-           * little above it — the one alignment a reader notices without
-           * being able to say what is off.
+           * little above it.
            */}
           <nav aria-label="Na stronie">
             <h2 className="font-display text-lg leading-10 text-blush-200">
@@ -98,10 +92,10 @@ export function SiteFooter() {
             </h2>
             {/*
              * Each link its own row, because on a phone this column is a
-             * stack of tap targets rather than a line of text — a row of
+             * stack of tap targets rather than a line of text. A row of
              * them would be the header's nav again, and the header's nav is
              * one scroll away. The link brings its own 36px target; the
-             * row's padding is exactly what lets two neighbouring targets
+             * row's padding lets two neighbouring targets
              * meet without overlapping, and stretches each across the column.
              */}
             <ul className="mt-1">
@@ -127,7 +121,7 @@ export function SiteFooter() {
          * The strip that says the page is over: the smallest print on it, set
          * off by a rule. The privacy policy lives here rather than among the
          * site's pages, because it belongs to every page and interests almost
-         * nobody until it interests them very much — and the bottom of the
+         * nobody until it interests them very much, and the bottom of the
          * footer is where a visitor looking for it already knows to look, on
          * every page including the form they are about to submit. Beside the
          * copyright line it is also out of the navigation, which then lists

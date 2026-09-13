@@ -15,13 +15,13 @@ import { DO_UZUPELNIENIA, instagramHref, site } from "./site";
  *
  * The same silence is why both owners are asserted rather than taken on trust.
  * A block naming one of the pair, or carrying one of the two numbers, looks
- * exactly like a correct one from the rendered page — the only place the
- * omission is visible is here.
+ * like a correct one from the rendered page, and this test is the only place
+ * the omission is visible.
  *
  * Nothing here asserts the photograph. Vitest hands a `.jpg` import back as a
  * bare string rather than the object the build produces, so every image in
- * this module resolves to `/undefined` under test — an assertion about it
- * would pass against garbage, which is worse than not making one.
+ * this module resolves to `/undefined` under test, and an assertion about it
+ * would pass against garbage.
  * `e2e/home.spec.ts` asks the rendered page instead.
  */
 

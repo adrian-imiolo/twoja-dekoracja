@@ -14,9 +14,10 @@ import { imie, instagramHref, site, telHref } from "@/lib/site";
  * Shared by the home page's closing band, by `/kontakt` and by the footer of
  * every page, because a visitor who has decided to call must not find a
  * different number depending on which page they decided it on. Only the
- * arrangement differs between the three, which is why the list's classes are
- * the caller's business — and why the footer's one-line rows are a switch
- * here rather than a second list of channels kept in step with this one.
+ * arrangement differs between the three, so the list's classes are the
+ * caller's business, and the footer's one-line rows are a switch here rather
+ * than a second list of channels kept in step with this one. The footer,
+ * `/kontakt` and the e2e suite point here for this reason.
  */
 
 /**
@@ -26,15 +27,15 @@ import { imie, instagramHref, site, telHref } from "@/lib/site";
  * The address is held beside the value rather than derived from it at render,
  * because the two are not always the same string. A phone number is its own
  * label and `tel:` is a transformation of it; the Facebook profile has no
- * readable form at all — its address is `profile.php?id=61561290465565`, which
+ * readable form at all: its address is `profile.php?id=61561290465565`, which
  * is not something to print at somebody. Separating the two lets a channel be
- * named in Polish and addressed in whatever shape the service actually uses.
+ * named in Polish and addressed in whatever shape the service uses.
  */
 interface Kanal {
   /*
    * What kind of way in this is, as a visitor names it: "Telefon", "E-mail",
    * or the service a profile is on. Held apart from whose it is because the
-   * two layouts below need them separately — the full one prints both as a
+   * two layouts below need them separately: the full one prints both as a
    * label, the compact one reads the kind to a screen reader and shows only
    * the name.
    */
@@ -42,17 +43,17 @@ interface Kanal {
   /*
    * Whose, where more than one person offers the same kind of channel. Only
    * the phones carry one: the site is two people who each answer their own
-   * number, and a number without a name reads as a switchboard — which is
-   * precisely what `/o-nas` spends a screen establishing this is not.
+   * number. `Wlasciciel` in `src/lib/site.ts` says why a bare number is
+   * wrong.
    */
   kto?: string;
   wartosc: string;
   adres: string;
   /*
-   * Decoration over the label, not a replacement for it. Two of these are
-   * brand marks a visitor recognises before they read anything, which is the
-   * whole reason they are here — but a mark alone would leave the channel
-   * unnamed for anyone who does not recognise it, so the text stays.
+   * Decoration over the label. Two of these are brand marks a visitor
+   * recognises before they read anything, which is why they are here, but a
+   * mark alone would leave the channel unnamed for anyone who does not
+   * recognise it, so the text stays.
    */
   ikona: ReactNode;
   /*
@@ -64,14 +65,14 @@ interface Kanal {
    * for one of those is a blank tab left sitting on the visitor's desktop.
    *
    * It lives beside the channel rather than at the call site so that every
-   * place offering these — the home page's closing band, `/kontakt` and the
-   * footer — reads one decision instead of each repeating a rule of its own.
+   * place offering these (the home page's closing band, `/kontakt` and the
+   * footer) reads one decision instead of each repeating a rule of its own.
    */
   zewnetrzny: boolean;
 }
 
 /**
- * The channel's name in full — "Telefon - Agnieszka", "E-mail" — for the
+ * The channel's name in full ("Telefon - Agnieszka", "E-mail") for the
  * layout that sets it on a line of its own above the link.
  */
 function etykieta(kanal: Kanal): string {
@@ -88,7 +89,7 @@ function etykieta(kanal: Kanal): string {
  *
  * Both names come from `site.owners` rather than being written out here, so
  * the order a visitor meets the two of them is the same order the footer and
- * `/o-nas` introduce them in — set once, in one place.
+ * `/o-nas` introduce them in.
  */
 const KANALY: readonly Kanal[] = [
   ...site.owners.map((wlascicielka) => ({
@@ -131,7 +132,7 @@ const KANALY: readonly Kanal[] = [
 
 /**
  * Where an e-mail address may break if it has to: before the "@", so the two
- * halves a reader knows — the name and the provider — stay whole. Without a
+ * halves a reader knows (the name and the provider) stay whole. Without a
  * break opportunity of its own, the address is broken wherever the line runs
  * out, which on a 320px phone in the closing band is "@g / mail.com". The
  * Instagram handle starts with "@" and has nothing before it to break after.
@@ -154,7 +155,7 @@ const ODNOSNIK =
 
 /*
  * Padded above and below rather than only spaced from the label, so the thing
- * a thumb lands on is 36px tall — a line of text plus enough padding to make
+ * a thumb lands on is 36px tall: a line of text plus enough padding to make
  * that up at either size, since the text is a step smaller on a phone and the
  * padding grows by the same amount to keep the target where it was.
  */
@@ -175,7 +176,7 @@ export function ContactChannels({
   /*
    * One line per channel instead of a label over each link. The kind is read
    * to a screen reader only; a phone shows whose it is inline before the
-   * number; the rest are what they look like — an address, a handle, a name
+   * number; the rest are what they look like: an address, a handle, a name
    * beside the mark of the service it is on. Five labelled rows were the
    * tallest thing on every page of the site once they reached the footer,
    * and a label reading "E-mail" over an e-mail address was telling a sighted
@@ -226,8 +227,8 @@ export function ContactChannels({
             {/*
              * The e-mail address is the longest thing on the site with no
              * space in it, and a flex item will not shrink below its content.
-             * Left alone it sets the width of every column it sits in — the
-             * footer's, `/kontakt`'s, the closing band's — and on a 320px
+             * Left alone it sets the width of every column it sits in (the
+             * footer's, `/kontakt`'s, the closing band's), and on a 320px
              * phone pushes each of them past the screen. `overflow-wrap:
              * anywhere` lets it break mid-word only where nothing else fits,
              * and `min-w-0` lets the flex item give up the width. A size down
@@ -239,7 +240,7 @@ export function ContactChannels({
             </span>
             {/*
              * A link that swaps the tab out from under someone has to say so
-             * before it is followed — WCAG 3.2.5. A sighted visitor reads
+             * before it is followed (WCAG 3.2.5). A sighted visitor reads
              * that from the brand mark; a screen reader is told in words.
              */}
             {kanal.zewnetrzny && (

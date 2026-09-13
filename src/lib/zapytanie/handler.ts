@@ -13,9 +13,9 @@ import type { InquiryMailer } from "@/lib/zapytanie/mailer";
  * driven directly.
  *
  * The route file's job is to decide which mailer is real; this file's job is
- * what happens to a submission. Splitting them is what lets the delivery flow
- * be tested with a recorder behind the port instead of by sending mail — the
- * whole reason the port exists.
+ * what happens to a submission. Splitting them lets the delivery flow be
+ * tested with a recorder behind the port instead of by sending mail, and that
+ * test is why the port exists.
  */
 
 /**
@@ -23,8 +23,8 @@ import type { InquiryMailer } from "@/lib/zapytanie/mailer";
  *
  * Three outcomes rather than a bare status code, because the form says
  * something different for each: a confirmation, errors under the fields, or an
- * apology carrying the phone number. A fourth state — nothing happened — is
- * the one thing this must never produce.
+ * apology carrying the phone number. This must never produce a fourth state
+ * in which nothing happened.
  */
 export type OdpowiedzNaZapytanie =
   | { status: "wyslane" }
@@ -35,10 +35,10 @@ export type OdpowiedzNaZapytanie =
  * How long a person needs before a filled-in form can be genuine.
  *
  * Five fields, one of them prose. Nobody does that in three seconds; a script
- * posting a canned payload does it in none. This is a speed bump rather than a
- * defence — the timestamp comes from the browser and could be forged by anyone
- * who looked — and it is priced accordingly: no state, no service, no cost to
- * the visitor who is actually typing.
+ * posting a canned payload does it in none. The timestamp comes from the
+ * browser and could be forged by anyone who looked, so this is only a speed
+ * bump, and it costs as little: no state, no service, and nothing for the
+ * visitor who is typing.
  *
  * Exported because the end-to-end suite has to wait it out: Playwright fills
  * the form faster than any person, and a test that did not know this number
@@ -50,7 +50,7 @@ export const MINIMALNY_CZAS_MS = 3_000;
  * The two things a submission carries that the visitor never typed.
  *
  * Kept beside the inquiry rather than inside `zapytanieSchema`, because they
- * are not part of what the visitor tells us — the payload is the five fields
+ * are not part of what the visitor tells us; the payload is the five fields
  * and nothing more. Typed and exported all the same, so the names the form
  * sends and the names this file reads are one decision: the schema's own
  * promise, that a rule here cannot go missing from the form, would otherwise
@@ -62,7 +62,7 @@ export const sygnalyAntybotSchema = z.object({
    *
    * Required: a submission without it cannot be measured against the time
    * threshold, and letting it through unmeasured is how the threshold is
-   * bypassed by simply not sending the field.
+   * bypassed by not sending the field.
    */
   otwarto: z.number().finite(),
   /**
@@ -70,8 +70,8 @@ export const sygnalyAntybotSchema = z.object({
    *
    * Optional, unlike `otwarto`, because absence is not evidence: the trap
    * catches what is *in* it. Demanding it would mean that a form which one day
-   * stops rendering the trap silently swallows every genuine inquiry — the
-   * failure this site can least afford, traded for nothing.
+   * stops rendering the trap silently swallows every genuine inquiry, and
+   * catches no extra scripts in exchange.
    */
   witryna: z.string().default(""),
 });
@@ -88,7 +88,7 @@ function odpowiedz(status: number, tresc: OdpowiedzNaZapytanie): Response {
  * The two abuse controls that drop a submission answer in the same words a
  * delivered inquiry gets, so that a script cannot learn from the reply which
  * one caught it. That makes these the only paths that say "wysłane" with
- * nothing sent, and the log line is the owner's sole way of finding out — so
+ * nothing sent, and the log line is the owner's sole way of finding out. So
  * discarding and logging are one function rather than two statements a third
  * control could one day half-copy.
  *
@@ -117,8 +117,8 @@ export function odpowiedzNiedostarczone(): Response {
  *
  * Both signals are checked together because they answer the same question and
  * get the same treatment: the submission is dropped and the sender is told it
- * went through. Saying otherwise would tell whoever is probing exactly which
- * field gives them away.
+ * went through. Saying otherwise would tell whoever is probing which field
+ * gives them away.
  */
 function wyslaneMaszynowo(payload: Record<string, unknown>): boolean {
   const sygnaly = sygnalyAntybotSchema.safeParse(payload);
@@ -134,16 +134,15 @@ function wyslaneMaszynowo(payload: Record<string, unknown>): boolean {
 /**
  * Who sent this, as far as the platform is willing to say.
  *
- * `x-real-ip` and nothing else. Vercel sets it to the address that actually
- * connected; `x-forwarded-for` is a chain whose left-hand entries the client
- * writes, so falling back to it would meter exactly the senders who can
- * rotate it at will — protection that reads as protection and is not.
+ * `x-real-ip` and nothing else. Vercel sets it to the address that connected;
+ * `x-forwarded-for` is a chain whose left-hand entries the client writes, so
+ * falling back to it would meter a value any sender can rotate at will.
  *
  * Null rather than a stand-in when the header is absent, matching the
  * honeypot's rule that absence is not evidence: one shared allowance for every
  * unnamed visitor would silence the site the moment a proxy stopped setting
- * the header. The cost is stated plainly — a deployment that does not set it
- * has no rate limit at all.
+ * the header. A deployment that does not set it therefore has no rate limit
+ * at all (ADR 0001).
  */
 function nadawca(request: Request): string | null {
   return request.headers.get("x-real-ip")?.trim() || null;
@@ -174,8 +173,8 @@ export async function handleZapytanie(
   if (!payload) return odpowiedz(400, { status: "niepoprawne", bledy: {} });
 
   /*
-   * A person who happened to trip this — an autofilled hidden field, a clock
-   * that disagrees — gets a confirmation for an inquiry nobody will ever read.
+   * A person who happened to trip this (an autofilled hidden field, a clock
+   * that disagrees) gets a confirmation for an inquiry nobody will ever read.
    */
   if (wyslaneMaszynowo(payload)) {
     return odrzucCicho("Zgłoszenie odrzucone jako maszynowe.");
@@ -190,12 +189,11 @@ export async function handleZapytanie(
   }
 
   /*
-   * Counted here rather than at the door, and the difference matters: what is
-   * being rationed is inquiries in the owner's inbox, not requests at the
-   * endpoint. A visitor who mistypes their number five times is trying to
-   * reach someone, and a limiter that counted those attempts would go on to
-   * swallow the corrected sixth — the one submission of the six that was
-   * worth having.
+   * Counted after validation, because what is being rationed is inquiries in
+   * the owner's inbox, not requests at the endpoint. A visitor who mistypes
+   * their number five times is trying to reach someone, and a limiter that
+   * counted those attempts would go on to swallow the corrected sixth, the
+   * only submission of the six worth having.
    */
   const kto = nadawca(request);
   if (kto !== null && !limit.przyjmij(kto)) {

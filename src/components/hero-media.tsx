@@ -6,17 +6,15 @@ import { hero } from "@content/hero";
 /**
  * The picture behind the home page's first screen.
  *
- * Built poster-first, which is an architectural decision and not a way of
- * coping without footage. The still is the hero element and the page's
- * largest-contentful-paint candidate; a video, when one exists, is a layer over
- * it. That ordering is what makes the client's footage a content change: the
- * frame, its height and everything sitting on top of it are already final, so
- * the video arrives into a hole that is exactly its own shape and the layout
- * does not move.
+ * Built poster-first; the design spec's "Hero video" section records why.
+ * The still is the hero element and the page's largest-contentful-paint
+ * candidate, and a video, when one exists, is a layer over it. The frame, its
+ * height and everything sitting on top of it are already final, so the video
+ * arrives into a hole of its own shape and the layout does not move.
  *
  * The layer is held transparent until it has frames to show, and the poster
  * stays in the DOM underneath rather than being handed to the video as its
- * `poster` attribute — that would fetch the same photograph a second time,
+ * `poster` attribute, which would fetch the same photograph a second time,
  * unoptimised and at full size. A video that fails to load therefore degrades
  * to the still, silently and correctly.
  *
@@ -50,7 +48,7 @@ export function HeroMedia() {
 
       {/*
        * Photographs of decorated rooms are bright and busy, and white type
-       * over one is unreadable in exactly the places the decoration is
+       * over one is unreadable in the places the decoration is
        * prettiest. The scrim is heaviest where the copy sits and clears
        * towards the top, so the picture is still a picture.
        */}

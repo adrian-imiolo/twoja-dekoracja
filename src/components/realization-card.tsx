@@ -7,7 +7,7 @@ import { KATEGORIA_LABEL, type Realizacja } from "@content/realizacje";
 /**
  * One realization as it appears in a listing.
  *
- * The whole card is the link rather than the title alone — on a phone the
+ * The whole card is the link rather than the title alone. On a phone the
  * photograph is the thing a visitor aims at, and a card whose only target is a
  * line of text reads as broken to the thumb.
  *
@@ -15,7 +15,7 @@ import { KATEGORIA_LABEL, type Realizacja } from "@content/realizacje";
  * gallery, which follows each photograph's own shape. A listing is a
  * comparison: portrait and landscape covers set side by side at their true
  * proportions make a ragged grid, and the eye reads the raggedness as a
- * difference between the events rather than between their photographs.
+ * difference between the realizations rather than between their photographs.
  */
 export function RealizationCard({
   realizacja,
@@ -23,7 +23,7 @@ export function RealizationCard({
 }: {
   realizacja: Realizacja;
   /**
-   * How wide the card will actually be rendered, in `next/image` terms. It
+   * How wide the card will be rendered, in `next/image` terms. It
    * comes from whoever laid out the listing, because only they know how many
    * columns the card is sharing a row with.
    */

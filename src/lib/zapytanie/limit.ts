@@ -3,15 +3,14 @@
  *
  * The honeypot and the time threshold ask whether *this* submission came from
  * a person. Neither has anything to say about a script that fills the form
- * plausibly and then does it four hundred times, which is the failure this
- * guards: not a bad submission, but a good one repeated until the owner stops
- * reading their inbox.
+ * plausibly and then does it four hundred times. This guards against that: a
+ * good submission repeated until the owner stops reading their inbox.
  *
- * Held in process memory, as the spec asks. That is a real limit and worth
- * saying plainly: a serverless deployment runs several instances, and a sender
- * whose requests land on two of them gets two allowances. It still costs a
- * flood most of its volume, needs no data store, no service and no money, and
- * the thing it protects — one owner's inbox — is not worth more than that.
+ * Held in process memory, as the spec asks; ADR 0001 records why. A serverless
+ * deployment runs several instances, and a sender whose requests land on two
+ * of them gets two allowances. It still costs a flood most of its volume and
+ * needs no data store, service or money, which is in proportion to one owner's
+ * inbox.
  */
 
 /**
@@ -30,22 +29,21 @@ export const OKNO_MS = 60 * 60 * 1000;
  * How many senders are remembered at once.
  *
  * A flood from many addresses would otherwise grow this map for as long as the
- * instance lives, and a contact form that has run out of memory is exactly the
- * silent failure this site cannot ship. Past this many, the sender heard from
- * least recently is forgotten.
+ * instance lives, and a contact form that has run out of memory fails without
+ * telling anyone. Past this many, the sender heard from least recently is
+ * forgotten.
  *
- * Least-recently-heard rather than a wipe, and the difference is the whole
- * point: emptying the map under pressure would let anyone with ten thousand
- * addresses clear their own count by spending them, which is a limiter that
- * rewards the one thing it exists to stop.
+ * Least-recently-heard rather than a wipe: emptying the map under pressure
+ * would let anyone with ten thousand addresses clear their own count by
+ * spending them.
  */
 export const MAKSIMUM_NADAWCOW = 10_000;
 
 /**
- * The port: whether this sender may send now.
+ * Decides whether this sender may send now.
  *
- * Asking is sending — the call records the attempt it allows, so there is no
- * way to check the limit and then forget to spend it.
+ * Asking spends the allowance. The call records the attempt it allows, so
+ * there is no way to check the limit and then forget to spend it.
  */
 export interface LimitZapytan {
   przyjmij(nadawca: string): boolean;
@@ -55,7 +53,7 @@ export interface LimitZapytan {
  * A limiter over a sliding window, counting per sender.
  *
  * Sliding rather than a fixed hour, because a fixed window lets twice the cap
- * through across its boundary — and the clock is an argument so the tests can
+ * through across its boundary. The clock is an argument so the tests can
  * cross an hour without waiting one.
  */
 export function limitZapytan(czas: () => number = Date.now): LimitZapytan {

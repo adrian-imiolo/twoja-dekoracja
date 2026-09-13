@@ -9,9 +9,9 @@ import { realizacje } from "@content/realizacje";
  * All the work, in one grid.
  *
  * Not split into Wesela / Imprezy sections. That split reads badly at the
- * launch archive's actual shape — one wedding sitting alone in its own
- * section next to five other events — so category is a small badge on each
- * card instead (`RealizationCard`) rather than a section boundary. Revisit
+ * launch archive's shape (one wedding sitting alone in its own section next
+ * to five other events), so category is a small badge on each card instead
+ * (`RealizationCard`). Revisit
  * once there is enough wedding work to justify a section of its own.
  */
 
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
  *
  * This is not a general rule against orphans. Three columns strand the last
  * card of a grid of four, five, seven or eight, and nothing here or in the
- * test suite says otherwise — it is sized for the archive this page actually
- * has, revisited as that archive grows.
+ * test suite says otherwise. It is sized for the archive this page has,
+ * revisited as that archive grows.
  */
 function gridLayout(count: number): { className: string; sizes: string } {
   if (count >= 3) {

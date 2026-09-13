@@ -8,7 +8,7 @@ import { miejsceITermin, site } from "@/lib/site";
 import { findRealizacja, realizacje } from "@content/realizacje";
 
 /**
- * One completed event, at its own address.
+ * One realization, at its own address.
  *
  * A real route rather than a modal overlay: the owner sends a prospective
  * client a link to the one wedding that answers "have you worked somewhere
@@ -18,7 +18,7 @@ import { findRealizacja, realizacje } from "@content/realizacje";
 /**
  * Every published realization, rendered at build time. `dynamicParams = false`
  * closes the route to anything else, so a mistyped address is a static 404
- * rather than a server rendering an event that does not exist.
+ * rather than a server rendering a realization that does not exist.
  */
 export const dynamicParams = false;
 
@@ -30,16 +30,16 @@ export function generateStaticParams() {
  * What a search result and a pasted link show.
  *
  * The description is the authored introduction rather than a composition of
- * the event's fields: it is written as the two sentences that describe this
- * event, which is exactly what a snippet needs, and a template assembled from
+ * the realization's fields: it is written as the two sentences that describe
+ * this realization, which is what a snippet needs, and a template assembled from
  * place, date and style would read as a machine listing at every one of them.
  *
- * The preview image is the event's own cover photograph. A generated card
+ * The preview image is the realization's own cover photograph. A generated card
  * would put the brand in front of the work, and the work is what persuades
  * whoever the link was sent to.
  *
  * The place/date suffix is dropped entirely for a realization whose venue
- * isn't known yet — `Tytuł — [DO UZUPEŁNIENIA]` in a browser tab or a search
+ * isn't known yet: `Tytuł - [DO UZUPEŁNIENIA]` in a browser tab or a search
  * result would read as a broken build rather than as unfinished content.
  */
 export async function generateMetadata({
@@ -50,9 +50,8 @@ export async function generateMetadata({
   const { slug } = await params;
   const realizacja = findRealizacja(slug);
 
-  // Unreachable while `dynamicParams` is false — but silently returning empty
-  // metadata would turn a registry fault into a page that previews as nothing,
-  // which is exactly the failure this route exists to avoid.
+  // Unreachable while `dynamicParams` is false, but silently returning empty
+  // metadata would turn a registry fault into a page that previews as nothing.
   if (!realizacja) notFound();
 
   const path = `/realizacje/${realizacja.slug}`;

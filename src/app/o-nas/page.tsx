@@ -13,18 +13,18 @@ import { portret } from "@content/o-nas";
  *
  * A wedding is expensive and unrepeatable, and it is being handed to someone
  * found on the internet. The archive proves the work is good; this page is the
- * only one that answers who would actually turn up at the venue. For a service
+ * only one that answers who would turn up at the venue. For a service
  * bought on trust it does as much work as the photographs do.
  *
  * The story is the owners' own, given by them and written up here rather than
- * invented — which is why it stayed a `[DO UZUPEŁNIENIA]` marker until they
- * had told it. A fabricated account of why a real person does this work is not
+ * invented, so it stayed a `[DO UZUPEŁNIENIA]` marker until they had told
+ * it. A fabricated account of why a real person does this work is not
  * a rough draft of the truth, and this is the paragraph on the site most
  * likely to be read closely and quoted back.
  *
- * What the page deliberately does not say is that either of them does this
- * full time. The business is działalność nierejestrowana, which caps monthly
- * revenue — "na pełen etat" would be warm, plausible, and contradicted by the
+ * The page does not say that either of them does this full time. The
+ * business is działalność nierejestrowana, which caps monthly revenue, and
+ * "na pełen etat" would be warm, plausible, and contradicted by the
  * same legal status the footer and the privacy policy both rest on.
  */
 
@@ -56,7 +56,7 @@ export default function ONasPage() {
         {/*
          * The genitive, not the locative: "pracownia dekoracji ze Szczecina".
          * The locative beside it is the form "w …" takes and is what the page
-         * description uses — putting either in the other's place is the kind
+         * description uses. Putting either in the other's place is the kind
          * of error a visitor from the city reads before they read anything.
          */}
         <p className="mt-6 text-lg leading-relaxed text-cream-50/85">

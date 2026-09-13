@@ -7,8 +7,7 @@ import { realizacje } from "@content/realizacje";
  * Every address the site publishes, handed to a search engine as a list.
  *
  * The archive's half is generated from the registry rather than listed,
- * because a hand-maintained list goes stale at exactly the moment it matters —
- * a realization is added, nothing says its page is missing from here, and the
+ * because a hand-maintained list goes stale when a realization is added: nothing says its page is missing from here, and the
  * one new page nobody links to yet is the one that never gets crawled.
  *
  * The static half cannot be generated: those routes are files, and the
@@ -18,7 +17,9 @@ import { realizacje } from "@content/realizacje";
  * set. A second written list would have gone stale in step with this one.
  *
  * No `lastModified`, `changeFrequency` or `priority`. Google ignores the last
- * two outright, and the first would have to be invented: nothing in the
+ * two outright
+ * (https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap),
+ * and the first would have to be invented: nothing in the
  * content carries a modification date, and stamping the build time on every
  * entry tells a crawler the whole site changed every deploy, which is both
  * false and the fastest way to have the field distrusted.
@@ -26,7 +27,7 @@ import { realizacje } from "@content/realizacje";
 
 /**
  * The pages that exist whatever is in the registry, in the order a visitor
- * meets them. Realization details are not here — they come and go with the
+ * meets them. Realization details are not here; they come and go with the
  * archive and are generated below.
  */
 const TRASY_STALE = [

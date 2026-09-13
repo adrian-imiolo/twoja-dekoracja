@@ -5,11 +5,10 @@ import type { Fotografia } from "@content/realizacje";
 /**
  * The gallery of one realization.
  *
- * A single column of large photographs rather than a grid. Some events have
- * five photographs and some twenty-five, and a grid is exactly what breaks at
- * the sparse end: three across leaves two survivors stranded in the last row,
- * and the page reads as unfinished at the volume the archive actually launches
- * with. A sequence has no last row, so five photographs read as an edit and
+ * A single column of large photographs rather than a grid. Some realizations
+ * have five photographs and some twenty-five, and a grid breaks at the sparse
+ * end: three across leaves two survivors stranded in the last row, and the
+ * page reads as unfinished at the volume the archive launched with. A sequence has no last row, so five photographs read as an edit and
  * twenty-five read as a long one.
  *
  * Width follows the photograph's own shape instead of a fixed frame: a

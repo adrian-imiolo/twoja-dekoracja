@@ -8,14 +8,14 @@ import { sasiednieRealizacje, type Realizacja } from "@content/realizacje";
  *
  * Seven photographs down on a phone, the header scrolled away long ago and the
  * page would otherwise hand straight to the footer. That is the worst place
- * to lose someone: they have just looked at every photograph of one event,
- * which is the moment they most want the next one.
+ * to lose someone: they have just looked at every photograph of one
+ * realization and most want the next one.
  *
  * Previous and next rather than only a way back: the back link answers "get
  * me out", the neighbours answer "show me another", and the second is what
- * this site is for. Each link names the event it leads to rather than only a
- * direction, so the choice is between two events, not two arrows. The ends
- * drop the missing side rather than wrapping — see `sasiednieRealizacje`.
+ * this site is for. Each link names the realization it leads to as well as a
+ * direction, so the choice is between two titles. The ends drop the missing
+ * side instead of wrapping; see `sasiednieRealizacje`.
  *
  * A band here rather than a sticky header, which would solve the same problem
  * by permanently covering part of the photographs that are the thing being
@@ -39,7 +39,7 @@ export function RealizationNav({ slug }: { slug: string }) {
           <NeighbourLink kierunek="poprzednia" realizacja={poprzednia} />
         ) : null}
         {/*
-         * Pinned to the right-hand column so the first event's lone "next"
+         * Pinned to the right-hand column so the first realization's lone "next"
          * still sits where "next" sits everywhere else, rather than sliding
          * into the empty "previous" slot.
          */}
@@ -50,9 +50,9 @@ export function RealizationNav({ slug }: { slug: string }) {
 
       {/*
        * The one loud thing in the band. The neighbours are a choice between
-       * two named events and read as titles; this is the way out of the choice
-       * altogether, which is what the visitor who has stopped caring about
-       * this event needs to find without hunting for it.
+       * two named realizations and read as titles; this is the way out of the
+       * choice altogether, for the visitor who has stopped caring about this
+       * realization and needs to find without hunting for it.
        */}
       <p className="mt-10 text-center sm:mt-12">
         <PrimaryCta href="/realizacje">Wszystkie realizacje</PrimaryCta>

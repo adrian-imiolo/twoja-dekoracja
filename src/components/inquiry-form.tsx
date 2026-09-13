@@ -18,21 +18,19 @@ import {
 /**
  * The form the whole site exists to feed.
  *
- * It validates against `zapytanieSchema` — the same object the route handler
- * parses — so the sentence shown under a field here is the sentence the server
- * would have produced. That is the entire reason the schema lives outside both
- * of them.
+ * It validates against `zapytanieSchema`, the same object the route handler
+ * parses, so the sentence shown under a field here is the sentence the server
+ * would have produced.
  *
- * Every path out of a submit ends in something the visitor can read. A form
- * that quietly does nothing is the worst thing this site can ship: it destroys
- * the only purpose the site has while looking like it worked.
+ * Every path out of a submit ends in something the visitor can read; the
+ * portfolio spec's "Contact submission" section says why.
  */
 
 /**
  * What the form is doing, and therefore what the visitor is looking at.
  *
  * `wysylanie` is a state rather than a flag beside the others because it is
- * the one that has to disable the button — a second click on a form that is
+ * the one that has to disable the button. A second click on a form that is
  * working is how the owner receives the same inquiry three times.
  */
 type Stan = "spoczynek" | "wysylanie" | "wyslane" | "niedostarczone";
@@ -91,8 +89,8 @@ export function InquiryForm() {
 
     /*
      * Parsed here first so an obvious mistake is answered without a round
-     * trip. The route handler parses the same schema regardless — this is a
-     * courtesy to the visitor, not the check that matters.
+     * trip. The route handler parses the same schema regardless, and that is
+     * the check that matters.
      */
     const wynik = zapytanieSchema.safeParse(pola);
     if (!wynik.success) {
@@ -213,8 +211,8 @@ export function InquiryForm() {
       </div>
 
       {/*
-       * Moved off-screen rather than hidden with `display: none`, which the
-       * scripts this is meant to catch have known to skip for years. Kept out
+       * Moved off-screen rather than hidden with `display: none`, because a
+       * form-filling script can skip fields that are not displayed. Kept out
        * of the tab order and out of the accessibility tree, so nobody filling
        * the form by keyboard or by screen reader ever meets it.
        */}
@@ -259,10 +257,9 @@ function Potwierdzenie() {
 /**
  * What a visitor is given when the message did not get out.
  *
- * A number to dial rather than an apology: the point of saying anything at all
- * is that the inquiry still reaches its destination. This is the one place on
- * the site where a contact detail is load-bearing in the moment it is read —
- * the visitor has already written the message once and has just been told it
+ * A number to dial, so the inquiry still reaches its destination. This is the
+ * one place on the site where a contact detail is load-bearing in the moment
+ * it is read: the visitor has already written the message once and has just been told it
  * went nowhere, and the next thing they do is either call or leave.
  *
  * Both numbers, named, for the same reason `ContactChannels` names them: a

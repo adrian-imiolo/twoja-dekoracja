@@ -17,7 +17,7 @@ export function QuietLink({
 }: {
   href: React.ComponentProps<typeof Link>["href"];
   /*
-   * Layout only — how the link sits, never how it reads. The header lays these
+   * Layout only: how the link sits, never how it reads. The header lays these
    * in a row and the footer stacks them with room to tap, and the colour and
    * tracking that make them the same link stay here.
    */

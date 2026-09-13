@@ -50,8 +50,8 @@ function submission(
  * The handler with a limiter of its own.
  *
  * A fresh one per call, so that a test which is not about the rate limit
- * cannot be made to fail by one that is — and so the tests that *are* about it
- * have to pass their own limiter in, which is the only way to spend it twice.
+ * cannot be made to fail by one that is. The tests that *are* about it have
+ * to pass their own limiter in, which is the only way to spend it twice.
  */
 function przyjmij(
   request: Request,

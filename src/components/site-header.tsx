@@ -21,7 +21,7 @@ export function SiteHeader() {
         >
           {/*
            * The same badge the browser tab shows, reused rather than
-           * re-derived — one asset, two conventions (`src/app/icon.png` is
+           * re-derived: one asset, two conventions (`src/app/icon.png` is
            * also the favicon file Next serves automatically). Decorative next
            * to a wordmark that already names the site, so a screen reader
            * does not announce the link twice.
@@ -36,7 +36,7 @@ export function SiteHeader() {
           {/*
            * Scales with the screen up to its full size rather than stepping
            * at a breakpoint, because the room beside the badge runs out
-           * gradually — at 320px the whole name fits beside it at 16px and
+           * gradually. At 320px the whole name fits beside it at 16px and
            * no bigger, on a 390px phone at 20px.
            */}
           <Wordmark className="text-[clamp(1rem,5vw,1.5rem)] sm:text-3xl" />

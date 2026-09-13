@@ -14,7 +14,7 @@ import {
  * checkable by sending real mail to a real inbox and going to look.
  */
 
-/** A composed inquiry, ready for whatever actually puts mail on the wire. */
+/** A composed inquiry, ready for whatever puts mail on the wire. */
 export interface InquiryEmail {
   to: string;
   /** Absent when the visitor left a phone number rather than an address. */
@@ -27,8 +27,8 @@ export interface InquiryEmail {
  * Whether the inquiry reached the outside world.
  *
  * Reported rather than thrown, because a delivery failure is an outcome this
- * application has something to say about — the form has to offer the phone
- * number instead — and not an exception in the sense of something unforeseen.
+ * application has something to say about (the form offers the phone number
+ * instead), and not something unforeseen.
  */
 export type Delivery = { ok: true } | { ok: false; reason: string };
 
@@ -36,11 +36,11 @@ export type Delivery = { ok: true } | { ok: false; reason: string };
 export type Transport = (email: InquiryEmail) => Promise<void>;
 
 /**
- * The port: hand it a validated inquiry, learn whether it got out.
+ * Takes a validated inquiry and reports whether it got out.
  *
  * It accepts the inquiry rather than an already-composed email so that
- * addressing, subject and body are decided in one place — see
- * `inquiryMailer` — instead of at each call site.
+ * addressing, subject and body are decided in one place (`inquiryMailer`)
+ * instead of at each call site.
  */
 export interface InquiryMailer {
   send(zapytanie: Zapytanie): Promise<Delivery>;
@@ -49,7 +49,7 @@ export interface InquiryMailer {
 /**
  * How an inquiry reads in the owner's inbox.
  *
- * Plain text on purpose. This is mail from one person to one person; HTML buys
+ * Plain text. This is mail from one person to one person; HTML buys
  * nothing here and costs deliverability, and the owner reads it on a phone.
  */
 export function composeInquiryEmail(
@@ -62,12 +62,12 @@ export function composeInquiryEmail(
     to,
     /*
      * Set only for an address, because a `Reply-To` holding a phone number
-     * makes every reply bounce — worse than no reply-to at all, which at least
-     * leaves the owner looking at the body for a way to answer.
+     * makes every reply bounce. No reply-to at all is better: it leaves the
+     * owner looking at the body for a way to answer.
      */
     replyTo: wygladaJakEmail(zapytanie.kontakt) ? zapytanie.kontakt : undefined,
     /*
-     * Event, date, name — in the order the owner decides with. The inbox list
+     * Event, date, name, in the order the owner decides with. The inbox list
      * truncates, so the two facts that settle "can I take this?" come before
      * the one that is in the body anyway.
      */
@@ -88,7 +88,7 @@ export function composeInquiryEmail(
  * A mailer that composes the inquiry and hands it to a transport.
  *
  * The recipient and the transport are arguments rather than things this module
- * reads for itself, which is what keeps the composition testable: the test
+ * reads for itself. That keeps the composition testable: the test
  * substitutes a recorder for the transport and asserts against the same email
  * the Resend implementation would have sent, instead of against its own idea
  * of one.
