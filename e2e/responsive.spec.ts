@@ -4,13 +4,13 @@ import { site } from "../src/lib/site";
 import { otworzStrone, przejdzCalyServis, przewinCalaStrone } from "./crawl";
 
 /**
- * Every page, at the widths a visitor actually has.
+ * Every page, at the widths a visitor has.
  *
  * The portfolio spec's story 6 names a visitor on a phone over mobile data as
  * the person this site is built for, and a layout that holds on a developer's
  * monitor says nothing about theirs. So each width below walks the whole site
  * and measures every page, rather than a handful of pages each asserting its
- * own viewport — a page added later is measured the day it is linked, and a
+ * own viewport. A page added later is measured the day it is linked, and a
  * page that stops fitting fails here rather than in a phone's hand.
  *
  * What "fits" means, and why each rule is the one it is:
@@ -26,8 +26,8 @@ import { otworzStrone, przejdzCalyServis, przewinCalaStrone } from "./crawl";
  * - Nothing overlaps. Two pieces of text drawn over each other is what a
  *   fixed height or a negative margin does at a width nobody looked at.
  * - Text is legible without pinching. Anything smaller than 12px is.
- * - The wordmark is on one line. It is one word to the brand — the header's
- *   own comment calls its letter-spacing non-negotiable — and a wrapped name
+ * - The wordmark is on one line. It is one word to the brand (the header's
+ *   own comment calls its letter-spacing non-negotiable), and a wrapped name
  *   is the one fault the checks above cannot see, being neither too wide nor
  *   clipped. `Wordmark` forbids the wrap outright, so this is the guard for
  *   the day that is removed.
@@ -35,32 +35,31 @@ import { otworzStrone, przejdzCalyServis, przewinCalaStrone } from "./crawl";
  *   with the pointer nowhere near it, which is where a thumb always is.
  * - Every tap target is one a thumb lands on. WCAG 2.5.8 sets a floor of
  *   24px and exempts links inline in a sentence, whose size a line of text
- *   dictates; a target standing on its own — a nav link, a button, a field —
+ *   dictates; a target standing on its own (a nav link, a button, a field)
  *   has no such excuse and is held to 36px, the height the footer's links
  *   and the contact channels were designed to. Asked below the tablet width
- *   only — above it a pointer lands where it is put — so the floor holds on
+ *   only, since above it a pointer lands where it is put, so the floor holds on
  *   the phone widths and is not a promise about a desktop. This file is the
  *   only place it is written down: a second copy in a page's own spec is a
  *   number that drifts.
  */
 
 /**
- * The widths that matter, and why these five.
+ * The five widths the suite measures.
  *
  * 320 is the narrowest phone still worth supporting and the width at which a
  * letter-spaced wordmark beside four nav links first has to give. 390 is the
  * phone most visitors hold. 640 is where every `sm:` layout on this site
- * switches on, and so where a column is the narrowest it will ever be — the
+ * switches on, and so where a column is the narrowest it will ever be: the
  * footer's e-mail address is one word with nowhere to break, and the width
  * that gives it least room is the width it runs out of first. 768 is a tablet
  * held upright, and the width from which this suite stops treating a viewport
  * as something held in one hand. 1024 is a tablet turned sideways or a small
  * laptop, where `lg:` grids first appear and are at their tightest.
  *
- * Nothing wider. The site's layouts are written in `sm:` and `lg:` and
- * nothing above them, so a desktop is `lg:` again with room to spare — a
- * width already measured where it is tightest, which is the measurement that
- * can fail.
+ * No width above 1024 is measured. The site's layouts are written in `sm:`
+ * and `lg:` and nothing above them, so a desktop is `lg:` again with room to
+ * spare, a width already measured where it is tightest.
  */
 const SZEROKOSCI = [
   { width: 320, height: 568 },
@@ -148,7 +147,7 @@ async function zmierzStrone(page: Page): Promise<Pomiar> {
       const tekstowe: { element: Element; prostokat: DOMRect }[] = [];
 
       for (const element of document.body.querySelectorAll("*")) {
-        // Hidden from everyone on purpose — the form's honeypot.
+        // Hidden from everyone on purpose: the form's honeypot.
         if (element.closest('[aria-hidden="true"]')) continue;
 
         const prostokat = element.getBoundingClientRect();
@@ -156,8 +155,8 @@ async function zmierzStrone(page: Page): Promise<Pomiar> {
 
         /*
          * A thumb cannot hover. A control that is in the page but not on it
-         * — faded out, hidden, or laid out to nothing until a pointer rests
-         * on something — is unreachable on every phone.
+         * (faded out, hidden, or laid out to nothing until a pointer rests on
+         * something) is unreachable on every phone.
          */
         if (
           element.matches(cele) &&
@@ -207,8 +206,8 @@ async function zmierzStrone(page: Page): Promise<Pomiar> {
         }
 
         /*
-         * Content wider than the box it was given, still inside the viewport
-         * — an e-mail address with no break in it running out past its
+         * Content wider than the box it was given, still inside the viewport:
+         * an e-mail address with no break in it running out past its
          * panel's edge. Reported at the innermost box only: every ancestor
          * up to the page overflows by the same amount and would only repeat
          * the finding.

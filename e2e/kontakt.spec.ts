@@ -6,10 +6,10 @@ import { MINIMALNY_CZAS_MS } from "../src/lib/zapytanie/handler";
 /**
  * The flow the site exists to produce, driven the way a visitor drives it.
  *
- * What the owner actually receives is asserted at the other seam, in
+ * What the owner receives is asserted at the other seam, in
  * `src/lib/zapytanie/handler.test.ts`, where a recorder sits behind the email
- * port. This file answers the question that seam cannot: does the person who
- * filled the form know it worked.
+ * port. This file checks what that seam cannot see, whether the person who
+ * filled the form knows it worked.
  */
 
 const ZAPYTANIE = {
@@ -37,9 +37,9 @@ async function wypelnij(page: Page) {
   /*
    * The route handler drops anything filled in faster than a person could
    * type it, and reports it as sent so that whoever is probing learns nothing.
-   * Playwright is exactly that fast. Without this wait the test would watch
-   * the confirmation appear over a submission that was thrown away — passing
-   * while the form was broken, which is the one thing it is here to catch.
+   * Playwright is that fast. Without this wait the test would watch the
+   * confirmation appear over a submission that was thrown away, and pass
+   * while the form was broken.
    */
   await page.waitForTimeout(MINIMALNY_CZAS_MS + 500);
 }
@@ -53,7 +53,7 @@ test("confirms an inquiry that went through, and stops asking for another", asyn
   await page.getByRole("button", { name: "Wyślij zapytanie" }).click();
 
   await expect(page.getByRole("status")).toContainText("Dziękujemy");
-  // The form is gone rather than merely annotated — a still-filled form under
+  // The form is gone, not left under the message: a still-filled form under
   // a confirmation is how the owner receives the same inquiry three times.
   await expect(
     page.getByRole("button", { name: "Wyślij zapytanie" }),
@@ -146,8 +146,8 @@ test("offers the ways of getting in touch that are not the form", async ({
 }) => {
   await page.goto("/kontakt");
 
-  // Each phone is labelled with whose it is — an unlabelled second number
-  // reads as an overflow line for the first rather than as another person.
+  // Each phone is labelled with whose it is (see `Wlasciciel` in
+  // `src/lib/site.ts`).
   // Scoped to the page's own content: the footer offers the same channels
   // under the same labels, and an unscoped match would find both.
   for (const kanal of [
@@ -175,7 +175,7 @@ test("leads to the form from the site header", async ({ page }) => {
  * Which taps keep the visitor on the site and which hand them away.
  *
  * Both pages that offer the channels are checked, because the one that matters
- * most is the home page's closing band — that is where somebody is deciding
+ * most is the home page's closing band. That is where somebody is deciding
  * whether to write, and a social feed opened over the top of that decision is
  * a visitor who does not come back.
  */

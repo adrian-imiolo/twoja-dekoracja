@@ -1,6 +1,6 @@
 name: CI
 
-# Every push, on every branch — a feature branch without an open PR still gets
+# Every push, on every branch: a feature branch without an open PR still gets
 # the same checks the default branch does.
 on: push
 
@@ -31,7 +31,7 @@ jobs:
       - run: npm test
 
       # Playwright's webServer runs `next build`, so this step is also the
-      # build check — a broken build fails here rather than at deploy time.
+      # build check. A broken build fails here rather than at deploy time.
       - run: npx playwright install --with-deps chromium
 
       - run: npm run test:e2e

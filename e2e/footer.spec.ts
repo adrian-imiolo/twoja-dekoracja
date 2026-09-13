@@ -9,7 +9,7 @@ import { imie, instagramHref, site, telHref } from "../src/lib/site";
  * Checked on the privacy policy rather than on the home page, because that is
  * the one page with no closing contact band of its own: whatever the footer
  * offers there is all a visitor has. Every locator is scoped to `contentinfo`
- * for the same reason — the home page and `/kontakt` carry the same channels
+ * for the same reason: the home page and `/kontakt` carry the same channels
  * higher up, and an unscoped match would pass against those.
  */
 test.describe("the footer", () => {
@@ -35,7 +35,7 @@ test.describe("the footer", () => {
     /*
      * A footer row carries no label of its own. What a sighted visitor reads
      * is the number under its owner's name, the address, the handle, the
-     * business's name beside Facebook's mark — and what kind of row it is
+     * business's name beside Facebook's mark. What kind of row it is
      * reaches a screen reader through the link's name instead, which is the
      * only thing telling them that "Twoja Dekoracja" leads to Facebook.
      */
@@ -76,7 +76,7 @@ test.describe("the footer", () => {
     const stopka = page.getByRole("contentinfo");
 
     // The same list the header reads, so a page added there is asserted here
-    // without this file being told — plus the one link only the footer has,
+    // without this file being told, plus the one link only the footer has,
     // in the strip under the columns rather than among the site's pages.
     for (const strona of [
       ...STRONY,
@@ -102,9 +102,9 @@ test.describe("the footer", () => {
   /*
    * The one question about a narrow footer that is the footer's own: on a
    * phone the columns collapse into a single stack rather than wrapping into
-   * a ragged block. Everything else a width can do to this footer — a page
+   * a ragged block. Everything else a width can do to this footer (a page
    * that scrolls sideways, a link past the right edge, a target too small for
-   * a thumb — is asserted over every page of the site, this one included, in
+   * a thumb) is asserted over every page of the site, this one included, in
    * `responsive.spec.ts`, and asking it twice only gives the 36px floor two
    * homes to drift apart in.
    */
@@ -122,8 +122,8 @@ test.describe("the footer", () => {
         ),
       );
 
-    // Collapsed, not wrapped: every link starts at the same left edge. A
-    // footer with no links at all fails this too, which is the right answer.
+    // Every link starts at the same left edge. A footer with no links at all
+    // fails this too.
     expect(new Set(leweKrawedzie).size).toBe(1);
   });
 });

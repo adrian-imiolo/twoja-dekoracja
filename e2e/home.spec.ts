@@ -9,7 +9,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
  */
 
 /**
- * Wait for a photograph to have actually arrived and decoded, rather than for
+ * Wait for a photograph to have arrived and decoded, rather than for
  * an `img` element to exist. A page that renders every frame and fills none of
  * them passes the second check and shows the visitor nothing.
  */
@@ -31,7 +31,7 @@ async function expectLoaded(zdjecie: Locator) {
  * being fetched, read off the browser's own resource timeline.
  *
  * The timeline is the right witness here rather than Playwright's request
- * events: it is recorded by the browser as the connection actually behaved,
+ * events: it is recorded by the browser as the connection behaved,
  * at high resolution, instead of being reconstructed from timestamps taken on
  * the test's side of the wire.
  */
@@ -74,12 +74,12 @@ test("leads from the home page into a realization and its photographs", async ({
  *
  * Four realizations are a sample; the archive is the work. A visitor who never
  * finds the way into it has been shown a quarter of the thing the page exists
- * to sell — which is why the link is the hero's button rather than the small
+ * to sell. That is why the link is the hero's button rather than the small
  * caption it used to be, and why the trip is followed here rather than assumed
  * from the presence of an `href`.
  *
  * Nothing below asserts how the link is drawn. That it is a bordered button is
- * markup, which this suite deliberately does not constrain; that it is visible
+ * markup, which this suite does not constrain; that it is visible
  * without hover, tall enough for a thumb and inside the gutter at 320px is a
  * behaviour, and `responsive.spec.ts` is where the site asks it of every page
  * at once.
@@ -104,12 +104,9 @@ test("opens on a photograph that loads eagerly, and lets it paint before fetchin
   page,
 }) => {
   /*
-   * The hero is built poster-first: the still is the page's
-   * largest-contentful-paint candidate, and footage — when `content/hero`
-   * carries any — is layered over it and requested only once it has painted.
-   * Footage fetched any earlier would compete with the poster for the
-   * connection on the one page whose speed the business's entire acquisition
-   * channel is graded on.
+   * The hero is built poster-first (design spec, "Hero video"): the still is
+   * the page's largest-contentful-paint candidate, and footage, when
+   * `content/hero` carries any, is requested only once it has painted.
    *
    * Nothing here asserts whether footage exists; that fact belongs to
    * `content/hero/index.ts` alone. With none, no media is ever requested and
@@ -122,10 +119,10 @@ test("opens on a photograph that loads eagerly, and lets it paint before fetchin
   await expectLoaded(poster);
 
   /*
-   * Eager. Next omits the attribute entirely on a `priority` image and writes
-   * `loading="lazy"` on every other one, so this is the assertion that goes
-   * red the day someone drops `priority` from the poster — and a poster the
-   * browser defers cannot be the thing a visitor sees first.
+   * The poster loads eagerly. Next omits the attribute entirely on a
+   * `priority` image and writes `loading="lazy"` on every other one, so this
+   * assertion goes red the day someone drops `priority` from the poster, and a
+   * poster the browser defers cannot be the thing a visitor sees first.
    */
   expect(await poster.getAttribute("loading")).not.toBe("lazy");
 
@@ -139,7 +136,7 @@ test("opens on a photograph that loads eagerly, and lets it paint before fetchin
   /*
    * The mount gate runs a frame after the poster paints, and the request
    * follows the mount, so both trail the assertions above. Wait for them
-   * rather than reading the timeline early — a timeline sampled before the
+   * rather than reading the timeline early: a timeline sampled before the
    * request exists would satisfy the ordering by having nothing in it.
    */
   const video = page.locator("video");
@@ -170,12 +167,12 @@ test("plays the footage layered over the poster", async ({ page }) => {
   /*
    * The one failure on this page that hides itself completely. The hero is
    * built to degrade to the still: the video is held transparent until it
-   * reports playing, and a source that 404s or decodes to nothing simply
-   * never appears. A renamed file or a bad re-encode would leave the page
-   * looking exactly right, so this is the only thing that would notice.
+   * reports playing, and a source that 404s or decodes to nothing never
+   * appears. A renamed file or a bad re-encode would leave the page looking
+   * right, so this is the only thing that would notice.
    *
-   * Delete this test — deliberately, alongside the `video` entry — if the
-   * client's footage is ever withdrawn. Its going red is the point.
+   * Delete this test, alongside the `video` entry, if the client's footage is
+   * ever withdrawn.
    */
   await page.goto("/");
 
@@ -191,8 +188,8 @@ test("plays the footage layered over the poster", async ({ page }) => {
     )
     .toBe(true);
 
-  // Revealed, not merely running. The fade-in is driven by the same `playing`
-  // event, and it is what actually puts the footage in front of the poster.
+  // The footage is visible as well as playing. The fade-in is driven by the
+  // same `playing` event, and it puts the footage in front of the poster.
   await expect(video).toHaveClass(/opacity-100/);
 });
 
@@ -214,12 +211,12 @@ test("puts a way of making contact within one click of the first screen", async 
  * The structured data, read off the rendered page.
  *
  * Asserted here rather than in `src/lib/local-business.test.ts` because the
- * two facts worth checking only exist after a build: the photograph's URL,
+ * two facts it checks only exist after a build: the photograph's URL,
  * which Vitest cannot see, and the whole block as a search engine receives it.
  *
  * The failure this guards is silent in a way nothing else on the site is. A
  * block naming a residential address, or offering `[DO UZUPEŁNIENIA]` as a
- * phone number, renders as nothing at all — the page looks perfect and only a
+ * phone number, renders as nothing at all: the page looks perfect and only a
  * search engine is misled.
  */
 test("describes the business to a search engine without giving away an address", async ({
@@ -237,8 +234,7 @@ test("describes the business to a search engine without giving away an address",
   expect(firma["@type"]).toBe("LocalBusiness");
   expect(firma).not.toHaveProperty("address");
 
-  // The service area is the whole point: it is what answers "dekoracje
-  // weselne Szczecin" in the absence of a street the business could name.
+  // The service area answers "dekoracje weselne Szczecin" in the absence of a street the business could name.
   expect(
     firma.areaServed.map((miasto: { name: string }) => miasto.name),
   ).toContain("Szczecin");

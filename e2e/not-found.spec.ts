@@ -6,10 +6,11 @@ import { expect, test } from "@playwright/test";
  * `smoke.spec.ts` against the same root layout. Two things here are neither.
  *
  * An unknown top-level address had no coverage at all. `realizacja.spec.ts`
- * watches the status of an unpublished slug — the other road to this page —
- * and nothing watched this one. A soft 404 is what that guards against:
- * Google indexes a 200 that merely looks like a 404 and serves it for the
- * business's own name, and nothing in the browser looks wrong.
+ * watches the status of an unpublished slug (the other road to this page),
+ * and nothing watched this one. A soft 404 is what that guards against: a 200
+ * that looks like a 404 is reported by Google as a soft 404
+ * (https://developers.google.com/search/docs/crawling-indexing/http-network-errors#soft-404-errors),
+ * and nothing in the browser looks wrong.
  *
  * The onward route is the second. Without it the page is an apology, which is
  * the thing it was built to stop being.
@@ -29,7 +30,7 @@ test("answers 404 for an address the site does not publish", async ({
 test("offers the work rather than only a link home", async ({ page }) => {
   await page.goto(UNPUBLISHED_REALIZATION);
 
-  // The first link on the page, not merely a link somewhere on it: a 404 that
+  // The first link on the page, not any link somewhere on it: a 404 that
   // leads with "go home" is the dead end this one exists to replace.
   await page.getByRole("main").getByRole("link").first().click();
 

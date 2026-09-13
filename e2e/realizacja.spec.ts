@@ -4,9 +4,9 @@ import { przewinCalaStrone } from "./crawl";
 
 /**
  * One of the realizations the repository publishes today. These are authored
- * content, so replacing this event means editing them — a coupling that is
- * deliberate, and that fails loudly rather than quietly passing against a
- * page that no longer exists.
+ * content, so replacing this realization means editing them. The coupling is
+ * intended: it fails loudly rather than quietly passing against a page that
+ * no longer exists.
  */
 const SLUG = "wesele";
 const TITLE = "Wesele w ogrodzie";
@@ -16,7 +16,7 @@ const PHOTO_COUNT = 3;
 
 const url = `/realizacje/${SLUG}`;
 
-/** Scroll the whole page so lazily loaded photographs are actually requested. */
+/** Scroll the whole page so lazily loaded photographs are requested. */
 test("shows its style and an introduction, and no unfilled placeholder text", async ({
   page,
 }) => {
@@ -31,7 +31,7 @@ test("shows its style and an introduction, and no unfilled placeholder text", as
 
   /*
    * `place` and `date` are outstanding client input for every launch
-   * realization and ship as `[DO UZUPEŁNIENIA]` — rendered conditionally
+   * realization and ship as `[DO UZUPEŁNIENIA]`, rendered conditionally
    * rather than as literal text, so a visitor to this real, published page
    * never sees the marker. A regression here would be a silent one: the page
    * would still look complete.
@@ -56,19 +56,19 @@ test("shows every photograph of the event, each with its own description", async
   for (const alt of alts) {
     expect(alt.trim()).not.toBe("");
   }
-  // Templated alt text ("… — zdjęcie 3") would repeat itself; authored text
+  // Templated alt text ("… - zdjęcie 3") would repeat itself; authored text
   // does not.
   expect(new Set(alts).size).toBe(alts.length);
 
   /*
-   * Each photograph is waited for where a visitor meets it — in view — rather
+   * Each photograph is waited for where a visitor meets it, in view, rather
    * than by scrolling past the whole gallery and then asking whether
    * everything arrived.
    *
-   * The difference is not pedantry. A browser gives an image that has scrolled
+   * A browser gives an image that has scrolled
    * out of sight the lowest priority it has, and will leave the request
    * unfinished indefinitely rather than spend a connection on something nobody
-   * is looking at. Traces of three CI runs show exactly that — taken when this
+   * is looking at. Traces of three CI runs show that, taken when this
    * gallery still held seven photographs: the first, sixth, seventh and eighth
    * served in under 60 ms, and the three left far above the fold by the scroll
    * never delivered at all. A fast machine hides it by finishing them before

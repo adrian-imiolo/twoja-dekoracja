@@ -1,7 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
 
 /**
- * The realizations index — one page, one unified grid.
+ * The realizations index: one page, one unified grid.
  *
  * Like `realizacja.spec.ts`, the events below are authored content spelled out
  * rather than imported from the registry: Playwright's transform has no loader
@@ -18,10 +18,10 @@ const IMPREZA = {
 
 /**
  * A card's own accessible name is its badge, title and description run
- * together — `/Wesele/` alone stopped being unique the moment a second
+ * together. `/Wesele/` alone stopped being unique the moment a second
  * wesele-category realization joined the registry. Its `h3` title is the one
- * part of that name authored to be unique, so the card is found by exactly
- * matching that instead of loosely matching the whole thing.
+ * part of that name authored to be unique, so the card is found by an exact
+ * match on that instead of loosely matching the whole thing.
  */
 function realizationCard(page: Page, title: string) {
   return page.getByRole("link").filter({

@@ -5,13 +5,12 @@ import type { Page } from "@playwright/test";
  *
  * Shared by the reachability check and by the responsive pass, because both
  * need the same answer to "which pages are there?" and a second list would go
- * stale the moment a page was added — which is exactly when either check is
- * worth having.
+ * stale the moment a page was added.
  */
 
 /**
  * The pages that exist regardless of what content is in the registry, in the
- * order a visitor meets them. Realization details are not here — they come and
+ * order a visitor meets them. Realization details are not here; they come and
  * go with the archive, and the crawl asserts their shape instead.
  */
 export const TRASY_STALE = [
@@ -31,16 +30,16 @@ export const TRASY_STALE = [
  * scrolls each page to the bottom, and a browser drops an image that has
  * scrolled out of sight to the lowest priority it has, leaving the request
  * unfinished indefinitely rather than spending a connection on something
- * nobody is looking at — the behaviour `realizacja.spec.ts` sets out at
+ * nobody is looking at, the behaviour `realizacja.spec.ts` sets out at
  * length, from traces of its own.
  *
  * The cost lands on the *next* page. A request for an address the browser is
  * already fetching joins the one in flight rather than starting its own, so a
  * navigation to a page carrying an abandoned image waits on a request that
  * will never finish, and the test spends its whole budget there. Three CI runs
- * died exactly that way, each of them on the archive's heaviest cover and only
- * at the widths that ask for the size of it that is heaviest — which is to say
- * the one still in flight when the scroll went past.
+ * died that way, each of them on the archive's heaviest cover and only at the
+ * widths that ask for its heaviest size, the one still in flight when the
+ * scroll went past.
  *
  * What a page has to be before it can be measured is laid out, not loaded, and
  * `przewinCalaStrone` waits for that itself: for the images it can still get
@@ -60,7 +59,7 @@ export function otworzStrone(page: Page, sciezka: string) {
  * Facebook profiles are not this site's to answer for.
  *
  * `naStronie` runs once per page while it is open, so a caller that wants to
- * measure every page — rather than only learn its address — does so in the
+ * measure every page, and not only learn its address, does so in the
  * same walk instead of navigating to each one a second time.
  */
 export async function przejdzCalyServis(

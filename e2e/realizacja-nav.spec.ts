@@ -4,8 +4,8 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
  * The way on from the bottom of a realization: previous, next, and back to
  * the archive.
  *
- * Three events from the registry as authored today — the first, one in the
- * middle and the last — because the band behaves differently at each: the
+ * Three realizations from the registry as authored today (the first, one in
+ * the middle and the last), because the band behaves differently at each: the
  * first has no "previous", the last has no "next", and only the middle shows
  * both. Like `realizacja.spec.ts`, this couples to authored content on
  * purpose: reordering the archive fails here rather than quietly passing
@@ -95,7 +95,7 @@ test("a middle realization offers both neighbours, each named", async ({
   );
 });
 
-test("the last realization offers only a previous — no wrap back to the first", async ({
+test("the last realization offers only a previous, with no wrap back to the first", async ({
   page,
 }) => {
   await page.goto(`/realizacje/${OSTATNIA.slug}`);

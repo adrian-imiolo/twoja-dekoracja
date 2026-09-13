@@ -4,7 +4,7 @@ import type { NextConfig } from "next";
  * A production build that cannot send mail is refused.
  *
  * The route handler already fails a submission it cannot deliver, and shows
- * the visitor the phone number instead — but that is a second line of defence,
+ * the visitor the phone number instead, but that is a second line of defence,
  * and by the time it fires someone has already tried to get in touch and
  * failed. A deployment is the last moment the mistake costs nothing.
  *
@@ -23,7 +23,7 @@ function wymagajKonfiguracjiZapytan(): void {
   if (brakujace.length === 0) return;
 
   throw new Error(
-    `Produkcyjny build nie mógłby wysłać żadnego zapytania — brakuje: ${brakujace.join(", ")}.`,
+    `Produkcyjny build nie mógłby wysłać żadnego zapytania - brakuje: ${brakujace.join(", ")}.`,
   );
 }
 
