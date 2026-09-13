@@ -334,8 +334,6 @@ None of these block starting implementation. All of them block launching.
 - Client's name as it should appear publicly, phone number, email address and
   Instagram handle
 - Real copy for `/o-nas` and the FAQ answers
-- A portrait of the person running the business, for `/o-nas`. It ships as a
-  placeholder card, and the page does not do its job until it is a real face
 - Privacy policy details, which ship with `[DO UZUPEŁNIENIA]` placeholders
 - Venue and date for each of the six launch realizations. They ship as
   `[DO UZUPEŁNIENIA]`, rendered conditionally rather than shown as literal

@@ -415,9 +415,6 @@ None of these block implementation. All of them block launch.
 - The owner's name as it should appear publicly, phone number, email address,
   and Instagram handle
 - Real copy for the about page and answers for the FAQ
-- A photograph of the person running the business, for the about page. It ships
-  as a generated placeholder card, and story 25 (seeing who you would be
-  working with) is not served until it is real
 - Privacy policy details, replacing placeholder text
 - Venue and date for each of the six launch realizations. Photographs and the
   rest of the metadata are in; only `place` and `date` remain

@@ -1,6 +1,8 @@
+import { imie, site } from "@/lib/site";
+
 import type { Fotografia } from "../realizacje/types";
 
-import kadrPortretowy from "./portret.jpg";
+import zdjecieWspolne from "./portret.jpg";
 
 /**
  * The photograph of the people behind the business.
@@ -12,18 +14,18 @@ import kadrPortretowy from "./portret.jpg";
  * asked to trust, and this is the one image on the site whose job is to
  * make the business feel like a person.
  *
- * PLACEHOLDER CONTENT. `portret.jpg` is the same generated plum card the
- * placeholder realizations use, marked *zdjęcie zastępcze*, so a preview
- * deployment can never be mistaken for the real thing.
+ * It is one photograph of both owners together, not two separate portraits.
+ * The page names both of them under a single frame and the copy beside it
+ * says "jesteśmy we dwie"; a picture of one of them under that caption reads
+ * as the other not existing. It is landscape, 3:2, cropped once from the
+ * original so that the page and the share preview show the same frame: a CSS
+ * crop would leave the preview with the ceiling and floor the page hides.
  *
- * What replaces it is **one photograph of both owners together**, not two
- * separate portraits. The page names both of them under a single frame and the
- * copy beside it says "jesteśmy we dwie"; a picture of one of them under that
- * caption reads as the other not existing. It should also be a portrait: the
- * frame is tall, and a wide photograph put into it loses either the faces or
- * the work behind them. Its alt text is rewritten with it, naming both.
+ * The names in the alt text come from `site.owners` so that the caption under
+ * the frame and the description read to a screen reader cannot disagree about
+ * who is in it.
  */
 export const portret: Fotografia = {
-  image: kadrPortretowy,
-  alt: "Zdjęcie zastępcze w miejscu portretu osób prowadzących pracownię",
+  image: zdjecieWspolne,
+  alt: `${site.owners.map(imie).join(" i ")}, właścicielki pracowni ${site.name}, przy dekoracji balonowej na chrzest i roczek`,
 };
