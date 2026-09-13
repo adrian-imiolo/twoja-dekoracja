@@ -1,0 +1,6 @@
+# LF in every working copy, matching Prettier's endOfLine default. Without it a
+# Windows checkout with core.autocrlf gets CRLF files that format:check rejects.
+* text=auto eol=lf
+*.jpg binary
+*.png binary
+*.mp4 binary
