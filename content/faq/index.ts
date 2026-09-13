@@ -73,7 +73,7 @@ export const pytania: readonly Pytanie[] = [
   {
     id: "obszar",
     pytanie: "Gdzie pracujecie?",
-    odpowiedz: `${site.city} i okolice. Przy większych realizacjach dojeżdżamy również dalej, więc dalszy adres nie przekreśla rozmowy - napiszcie, gdzie jest sala, a odpowiemy wprost.`,
+    odpowiedz: `${site.city} i okolice. Przy większych realizacjach dojeżdżamy też dalej. Jeśli sala jest poza ${site.cityInstrumental}, napiszcie, gdzie - odpowiemy, czy dojedziemy.`,
   },
   {
     id: "pierwsza-rozmowa",
