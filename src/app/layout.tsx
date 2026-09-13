@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Glass_Antiqua, Jost, Marcellus } from "next/font/google";
 
+import { BackToTop } from "@/components/back-to-top";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { site } from "@/lib/site";
@@ -56,6 +57,7 @@ export default function RootLayout({
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
+        <BackToTop />
       </body>
     </html>
   );

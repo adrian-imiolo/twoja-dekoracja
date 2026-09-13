@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import znak from "@/app/icon.png";
+import { HEADER_HOME_LINK_ID } from "@/components/back-to-top";
 import { HeaderMenu } from "@/components/header-menu";
 import { QuietLink } from "@/components/ui/quiet-link";
 import { Wordmark } from "@/components/ui/wordmark";
@@ -31,6 +32,7 @@ export function SiteHeader() {
          * its own, and the same height as the other half of the row.
          */}
         <Link
+          id={HEADER_HOME_LINK_ID}
           href="/"
           className="flex items-center gap-3 transition-opacity hover:opacity-90 max-sm:min-h-11"
         >
