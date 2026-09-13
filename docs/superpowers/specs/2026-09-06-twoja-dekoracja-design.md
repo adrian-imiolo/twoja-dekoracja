@@ -17,12 +17,12 @@ Where atmosphere and findability conflict, findability wins.
 
 - **Content lives in the repo.** The developer adds new realizations by pushing
   commits. No CMS, no admin panel, no client-facing upload flow.
-- **Six realizations at launch**: one wedding and five other events, thinner
-  than the nine originally planned for. The design has to hold up at that
+- **Seven realizations at launch**: two weddings and five other events,
+  thinner than the nine originally planned for. The design has to hold up at that
   volume without looking sparse; see "Pages" below for how the Wesela/Imprezy
   split was amended to fit it.
 - **Photo archive is real but modest**: 24 WhatsApp-compressed photographs
-  across the six launch realizations (2–7 each), where 50+ were originally
+  across the seven launch realizations (2–7 each), where 50+ were originally
   assumed. `next/image` handles format negotiation regardless of source
   quality; no separate editing pipeline was built for this archive.
 - **Hero video has shipped.** The client's own footage, a vertical phone pan
@@ -151,8 +151,8 @@ realizations → an FAQ teaser of three questions → contact call to action.
 Amended from the original two-way Wesela/Imprezy homepage split. That split
 carried the search intent a combined `/realizacje` page can't ("dekoracje
 weselne Szczecin" and "dekoracje urodzinowe Szczecin" are different queries),
-but at six launch realizations (one wedding, five events) it meant a section
-holding a single card next to one holding five. Dropped in favour of one
+but at seven launch realizations (two weddings, five events) it meant a
+section holding two cards next to one holding five. Dropped in favour of one
 "Wybrane realizacje" grid; the category survives as a small badge on each card
 (`RealizationCard`), so the split can return once there is enough wedding work
 to justify it.
@@ -160,10 +160,19 @@ to justify it.
 ### `/realizacje`
 
 One unified grid, for the same reason as the home page above. Cards are large
-and generously spaced, in a grid that reflows without leaving an orphan in the
-final row at six items.
+and generously spaced: one per row below `lg`, three per row from it.
 
-Not split into two category pages either: with one wedding and five events,
+The grid ends with an invitation to write: the same callout panel that closes
+`/o-nas`, with a heading, one line and the button to `/kontakt`. It is the
+grid's last item and takes whatever the last row of cards leaves, spanning two
+columns beside a lone card, one beside a pair, and the whole row when the
+cards already fill theirs. A grid of two cards follows the same rule with two
+columns. So the grid ends flush at any count, and adding a realization never
+strands a card in the final row. Beside cards the panel
+matches their height with its content centred; alone in a row it is sized by
+its padding.
+
+Not split into two category pages either: with two weddings and five events,
 two thin pages would rank worse than one substantial one. Revisit when the
 archive has enough weddings for its own section, let alone its own page.
 
@@ -335,7 +344,7 @@ None of these block starting implementation. All of them block launching.
   Instagram handle
 - Real copy for `/o-nas` and the FAQ answers
 - Privacy policy details, which ship with `[DO UZUPEŁNIENIA]` placeholders
-- Venue and date for each of the six launch realizations. They ship as
+- Venue and date for each of the seven launch realizations. They ship as
   `[DO UZUPEŁNIENIA]`, rendered conditionally rather than shown as literal
   placeholder text (see `src/lib/site.ts`'s `miejsceITermin`)
 - Confirmation that Vercel Web Analytics satisfies what the client means by

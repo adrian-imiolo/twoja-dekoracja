@@ -37,8 +37,8 @@ serving one purpose: turning a stranger into an inquiry.
 
 The site shows the work first. Real photographs of real events, presented on a
 dark plum ground drawn from the business's own logo so that the photography is
-the brightest thing on every screen. Six realizations at launch (thinner than
-the nine originally planned for, one wedding among five other events), each
+the brightest thing on every screen. Seven realizations at launch (thinner than
+the nine originally planned for, two weddings among five other events), each
 with its own page that can be linked, shared and found on Google.
 
 Every page is server-rendered and statically generated, carries structured data
@@ -199,13 +199,13 @@ realizations.
 
 Amended from a two-way Wesela/Imprezy split, both on the home page and on the
 realizations index. The split was meant to carry the distinct search intents
-behind stories 1 and 2, but at six launch realizations (one wedding, five
-events) it produced a section holding a single card. Category is now a small
+behind stories 1 and 2, but at seven launch realizations (two weddings, five
+events) it produced a section holding two cards. Category is now a small
 badge on each card (`RealizationCard`) instead of a section boundary, so the
 split can return once there is enough wedding work to justify it.
 
 The realizations index is a single page rather than two category pages either
-way: with one wedding and five events, two thin pages would rank worse than one
+way: with two weddings and five events, two thin pages would rank worse than one
 substantial page. This decision is revisited once the archive has enough
 weddings for its own section, let alone its own page.
 
@@ -416,7 +416,7 @@ None of these block implementation. All of them block launch.
   and Instagram handle
 - Real copy for the about page and answers for the FAQ
 - Privacy policy details, replacing placeholder text
-- Venue and date for each of the six launch realizations. Photographs and the
+- Venue and date for each of the seven launch realizations. Photographs and the
   rest of the metadata are in; only `place` and `date` remain
   `[DO UZUPEŁNIENIA]`
 - Confirmation that Vercel Web Analytics is what the client means by
@@ -424,7 +424,7 @@ None of these block implementation. All of them block launch.
 
 ### Risks
 
-**Six realizations is a thin archive, thinner than the nine planned for.** The
+**Seven realizations is a thin archive, thinner than the nine planned for.** The
 layouts must hold up at that volume without looking sparse, and detail pages
 must hold up when a realization has only two photographs. `urodziny-18` and
 `urodziny-30` launch with two: the gallery layout was already designed

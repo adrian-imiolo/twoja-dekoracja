@@ -51,3 +51,28 @@ test("leads from a card to that event", async ({ page }) => {
     WESELE.title,
   );
 });
+
+test("ends the grid with an invitation that leads to the contact page", async ({
+  page,
+}) => {
+  await page.goto("/realizacje");
+
+  const grid = page
+    .getByRole("list")
+    .filter({ has: realizationCard(page, WESELE.title) });
+  const invitation = grid.locator(":scope > li").last();
+
+  await expect(
+    invitation.getByRole("heading", {
+      name: "Planujecie wesele albo przyjęcie?",
+      level: 2,
+    }),
+  ).toBeVisible();
+  await expect(invitation).toContainText(
+    "Napiszcie, co i kiedy - odpiszemy, czy termin jest wolny.",
+  );
+
+  await invitation.getByRole("link", { name: "Napisz do nas" }).click();
+
+  await expect(page).toHaveURL(/\/kontakt$/);
+});

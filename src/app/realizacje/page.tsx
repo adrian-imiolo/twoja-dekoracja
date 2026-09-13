@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 
 import { RealizationCard } from "@/components/realization-card";
+import { CalloutPanel } from "@/components/ui/callout-panel";
+import { PrimaryCta } from "@/components/ui/primary-cta";
 import { sharePreview } from "@/lib/metadata";
+import { gridLayout } from "@/lib/realizacje-grid";
 import { site } from "@/lib/site";
 import { realizacje } from "@content/realizacje";
 
@@ -9,10 +12,10 @@ import { realizacje } from "@content/realizacje";
  * All the work, in one grid.
  *
  * Not split into Wesela / Imprezy sections. That split reads badly at the
- * launch archive's shape (one wedding sitting alone in its own section next
- * to five other events), so category is a small badge on each card instead
- * (`RealizationCard`). Revisit
- * once there is enough wedding work to justify a section of its own.
+ * archive's shape (two weddings sitting in their own section next to five
+ * other events), so category is a small badge on each card instead
+ * (`RealizationCard`). Revisit once there is enough wedding work to justify a
+ * section of its own.
  */
 
 export const metadata: Metadata = {
@@ -24,35 +27,6 @@ export const metadata: Metadata = {
     description: `Wesela i przyjęcia okolicznościowe, które dekorowaliśmy w ${site.cityLocative} i okolicach.`,
   }),
 };
-
-/**
- * How the grid is laid out for the number of cards it holds.
- *
- * Three columns divide the launch count of six exactly, leaving no orphan in
- * the final row. Below `lg` there is a single large card per row, which is
- * also what "large and generously spaced" means on a laptop that is not full
- * width.
- *
- * This is not a general rule against orphans. Three columns strand the last
- * card of a grid of four, five, seven or eight, and nothing here or in the
- * test suite says otherwise. It is sized for the archive this page has,
- * revisited as that archive grows.
- */
-function gridLayout(count: number): { className: string; sizes: string } {
-  if (count >= 3) {
-    return {
-      className: "lg:grid-cols-3",
-      sizes: "(min-width: 64rem) 22rem, 100vw",
-    };
-  }
-  if (count === 2) {
-    return {
-      className: "lg:grid-cols-2",
-      sizes: "(min-width: 64rem) 34rem, 100vw",
-    };
-  }
-  return { className: "sm:max-w-xl", sizes: "(min-width: 40rem) 36rem, 100vw" };
-}
 
 export default function RealizacjePage() {
   const layout = gridLayout(realizacje.length);
@@ -70,13 +44,36 @@ export default function RealizacjePage() {
       </header>
 
       <ul
-        className={`mt-16 grid grid-cols-1 gap-12 sm:mt-20 sm:gap-16 ${layout.className}`}
+        className={`mt-16 grid grid-cols-1 gap-12 sm:mt-20 sm:gap-16 ${layout.gridClassName}`}
       >
         {realizacje.map((realizacja) => (
           <li key={realizacja.slug}>
             <RealizationCard realizacja={realizacja} sizes={layout.sizes} />
           </li>
         ))}
+        {/*
+         * The invitation is an item of the grid rather than a panel after it,
+         * so it fills the last row (see `gridLayout`). Beside cards it
+         * stretches to their height and centres its content; alone in a row
+         * its padding sizes it. The tighter padding from `lg` is for the
+         * one-column span, where the button's label would otherwise wrap.
+         */}
+        <li className={layout.invitationClassName}>
+          <CalloutPanel
+            as="section"
+            className="flex h-full flex-col justify-center px-8 py-12 text-center sm:px-16 sm:py-16 lg:px-6"
+          >
+            <h2 className="font-display text-2xl leading-tight text-cream-50 sm:text-3xl">
+              Planujecie wesele albo przyjęcie?
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl leading-relaxed text-cream-50/80">
+              Napiszcie, co i kiedy - odpiszemy, czy termin jest wolny.
+            </p>
+            <p className="mt-8">
+              <PrimaryCta href="/kontakt">Napisz do nas</PrimaryCta>
+            </p>
+          </CalloutPanel>
+        </li>
       </ul>
     </div>
   );
