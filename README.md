@@ -1,8 +1,8 @@
 # Twoja Dekoracja
 
-Portfolio site for a decoration business in Szczecin: weddings, birthdays and
-private celebrations. A statically generated Next.js site whose sole purpose is
-generating inquiries.
+Portfolio and enquiry site for a Szczecin event-decoration business: weddings,
+birthdays and christenings. A statically generated Next.js site with the local
+SEO setup that brings in enquiries; its sole purpose is generating them.
 
 ## Commands
 
