@@ -3,11 +3,10 @@
  *
  * Polish inflects place names, so the city is held in every case the site's
  * prose asks for rather than in the one a database would store: the
- * nominative it is listed under, the locative that "w …" takes, the genitive
- * that "ze …" takes and the instrumental that "poza …" takes. None can be
- * derived from another by a template, and both "w Szczecin" and "z Szczecinie"
- * are errors a visitor from the city notices before they notice anything else
- * on the page.
+ * nominative it is listed under, the locative that "w …" takes and the
+ * genitive that "ze …" takes. None can be derived from another by a template,
+ * and both "w Szczecin" and "z Szczecinie" are errors a visitor from the city
+ * notices before they notice anything else on the page.
  */
 /**
  * What the site shows where it is waiting on the client.
@@ -181,7 +180,6 @@ export const site = {
   city: "Szczecin",
   cityLocative: "Szczecinie",
   cityGenitive: "Szczecina",
-  cityInstrumental: "Szczecinem",
   serviceArea: ["Szczecin"],
   owners: WLASCICIELKI,
   email: "twoja.dekoracja.kontakt@gmail.com",
