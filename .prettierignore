@@ -1,0 +1,9 @@
+# Prettier also reads .gitignore; these are listed so the check does not
+# depend on that default.
+.next/
+playwright-report/
+test-results/
+package-lock.json
+
+# Rewritten by `next dev`; formatting it would dirty the tree on every start.
+CLAUDE.md
