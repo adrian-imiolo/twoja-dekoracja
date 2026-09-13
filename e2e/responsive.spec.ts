@@ -146,6 +146,46 @@ async function zmierzStrone(page: Page): Promise<Pomiar> {
       const cele = "a, button, input, select, textarea";
       const tekstowe: { element: Element; prostokat: DOMRect }[] = [];
 
+      const widoczny = (element: Element) =>
+        element.checkVisibility({
+          opacityProperty: true,
+          visibilityProperty: true,
+        });
+
+      const sterowany = (przycisk: Element) => {
+        const id = przycisk.getAttribute("aria-controls");
+        return id ? document.getElementById(id) : null;
+      };
+
+      /*
+       * Hidden, but not waiting on a hover, in exactly two cases. Both are
+       * read from ARIA, so a menu that loses its `aria-controls` wiring is
+       * reported like anything else hidden.
+       *
+       * Inside a closed disclosure: a visible button with
+       * `aria-expanded="false"` controls it, and one tap opens it. The
+       * header's menu on a phone is this.
+       *
+       * A button whose target is already on screen: a toggle with nothing
+       * left to reveal. The same menu button from `sm` up, hidden beside the
+       * nav row it would otherwise disclose.
+       */
+      const ukrytyCelowo = (element: Element) => {
+        const wZamknietymPanelu = [
+          ...document.querySelectorAll(
+            'button[aria-expanded="false"][aria-controls]',
+          ),
+        ].some((przycisk) => {
+          const panel = sterowany(przycisk);
+          return widoczny(przycisk) && panel?.contains(element) === true;
+        });
+        if (wZamknietymPanelu) return true;
+
+        if (!element.matches("button[aria-controls]")) return false;
+        const cel = sterowany(element);
+        return cel !== null && widoczny(cel);
+      };
+
       for (const element of document.body.querySelectorAll("*")) {
         // Hidden from everyone on purpose: the form's honeypot.
         if (element.closest('[aria-hidden="true"]')) continue;
@@ -158,14 +198,10 @@ async function zmierzStrone(page: Page): Promise<Pomiar> {
          * (faded out, hidden, or laid out to nothing until a pointer rests on
          * something) is unreachable on every phone.
          */
-        if (
-          element.matches(cele) &&
-          !element.checkVisibility({
-            opacityProperty: true,
-            visibilityProperty: true,
-          })
-        ) {
-          usterki.niewidoczneCele.push(opisz(element));
+        if (element.matches(cele) && !widoczny(element)) {
+          if (!ukrytyCelowo(element)) {
+            usterki.niewidoczneCele.push(opisz(element));
+          }
           continue;
         }
 
