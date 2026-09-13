@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 
 import { site } from "../src/lib/site";
 import { przejdzCalyServis, TRASY_STALE } from "./crawl";

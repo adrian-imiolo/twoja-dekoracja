@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./test";
 
 import { STRONY } from "../src/lib/nawigacja";
 import { site } from "../src/lib/site";

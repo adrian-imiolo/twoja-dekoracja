@@ -1,4 +1,4 @@
-import { expect, type Page, test } from "@playwright/test";
+import { expect, type Page, test } from "./test";
 
 import { imie, instagramHref, site, telHref } from "../src/lib/site";
 import { MINIMALNY_CZAS_MS } from "../src/lib/zapytanie/handler";

@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 
 import { STRONY } from "../src/lib/nawigacja";
 import { imie, instagramHref, site, telHref } from "../src/lib/site";

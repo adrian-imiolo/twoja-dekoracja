@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 
 /**
  * The 404 page's copy and layout are static content, which the portfolio
