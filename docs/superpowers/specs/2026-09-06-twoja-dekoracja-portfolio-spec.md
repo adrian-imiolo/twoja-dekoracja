@@ -1,4 +1,4 @@
-# Spec — Twoja Dekoracja portfolio site
+# Spec: Twoja Dekoracja portfolio site
 
 **Date:** 2026-09-06
 **Status:** Ready for implementation
@@ -8,8 +8,8 @@
 
 ## Problem Statement
 
-A decoration business in Szczecin — weddings, birthdays, and private
-celebrations — has no website. Its entire presence is an Instagram profile.
+A decoration business in Szczecin (weddings, birthdays, and private
+celebrations) has no website. Its entire presence is an Instagram profile.
 
 This costs it work in three specific ways.
 
@@ -18,15 +18,14 @@ Szczecin" cannot find the business at all. Search is how people look for a
 supplier they have never heard of, and the business is invisible in exactly the
 moment a stranger is ready to hire.
 
-Someone who _is_ referred — by a venue, a photographer, a friend — has nowhere
+Someone who _is_ referred (by a venue, a photographer, a friend) has nowhere
 credible to be sent. An Instagram grid mixes finished work with stories, reposts
 and personal posts, and cannot be skimmed by someone deciding whether to trust a
 supplier with the decoration of their wedding.
 
 And someone convinced by the work has no reliable way to make contact. Instagram
 DMs are missed, buried, or filtered into message requests. Inquiries are lost
-silently, which is the worst way to lose them: the business never learns it
-happened.
+silently, and the business never learns it happened.
 
 The underlying problem is that the business has good work and good photographs
 of it, and no way for a stranger to find that work, trust it, and make contact.
@@ -38,18 +37,18 @@ serving one purpose: turning a stranger into an inquiry.
 
 The site shows the work first. Real photographs of real events, presented on a
 dark plum ground drawn from the business's own logo so that the photography is
-the brightest thing on every screen. Six realizations at launch — thinner than
-the nine originally planned for, one wedding among five other events — each
+the brightest thing on every screen. Six realizations at launch (thinner than
+the nine originally planned for, one wedding among five other events), each
 with its own page that can be linked, shared and found on Google.
 
-The site is built to be found. Every page is server-rendered and statically
-generated, carries structured data describing a local business serving Szczecin,
-and is fast enough on a phone over mobile data that a visitor does not leave
-before the first photograph appears.
+Every page is server-rendered and statically generated, carries structured data
+describing a local business serving Szczecin, and is fast enough on a phone
+over mobile data that a visitor does not leave before the first photograph
+appears.
 
 The site makes contact easy and reliable. A short form asks only what is needed
 to reply usefully, delivers to the owner's inbox, and always tells the visitor
-what happened — including, when something breaks, a phone number to call
+what happened, including, when something breaks, a phone number to call
 instead.
 
 The site is maintained by pushing commits. New work is added by dropping
@@ -70,7 +69,7 @@ CMS, no admin panel, no login, and no database.
 
 ### Judging the work
 
-8. As a prospective client, I want to see photographs of real completed events rather than stock imagery, so that I can judge what this business actually produces.
+8. As a prospective client, I want to see photographs of real completed events rather than stock imagery, so that I can judge what this business produces.
 9. As a prospective client, I want to see the work immediately on the homepage without hunting through navigation, so that I can decide quickly whether the style suits me.
 10. As someone planning a wedding, I want to see only weddings when I want to, so that I am not scrolling past children's parties.
 11. As someone planning a birthday party, I want to see that the business does more than weddings, so that I do not rule them out as wedding specialists.
@@ -78,7 +77,7 @@ CMS, no admin panel, no login, and no database.
 13. As a prospective client, I want to know where an event took place, so that I can tell whether they have worked at venues like mine.
 14. As a prospective client, I want to know roughly when an event took place, so that I can judge whether the work is current.
 15. As a prospective client, I want a short description of the style of each event, so that I have language for what I do and do not like.
-16. As a prospective client, I want photographs to be large and uncluttered by text, so that I can actually see the detail of the decoration.
+16. As a prospective client, I want photographs to be large and uncluttered by text, so that I can see the detail of the decoration.
 17. As a visitor, I want photographs to load progressively rather than appearing as blank rectangles, so that the page feels alive while it loads.
 18. As a visitor, I want the page layout to stay still as images load, so that I do not lose my place or tap the wrong thing.
 19. As someone browsing on a phone, I want galleries to work with vertical scrolling, so that I am not fighting a layout designed for a mouse.
@@ -162,28 +161,27 @@ server-side code is a single route handler for contact submissions.
 Next.js is chosen over the Vite + React Router stack used in the sibling
 `shop_sznyt_design` project for two reasons that both trace to the problem
 statement: search visibility requires server-rendered HTML per route, and a
-photography-led site requires automatic image optimization. Patterns from that
-project — its SEO component's shape, the submit/loading/error state machine in
-its public form hook, and its CI workflow — are adapted. Its components are not
-reused, as they depend on React Router and a different design system.
+photography-led site requires automatic image optimization. Some patterns from
+that project (its SEO component's shape, the submit/loading/error state machine
+in its public form hook, and its CI workflow) are adapted. Its components are
+not reused, as they depend on React Router and a different design system.
 
 ### Content model
 
-Realizations are stored in the repository, one directory per event, containing
-image files and a single metadata module. The metadata module exports a typed
-record: slug, title, category (`wesela` or `imprezy`), place, human-readable
-date, style description, a two-sentence introduction, a cover image, and an
-ordered list of photographs.
+Realizations are stored in the repository, one directory per realization,
+containing image files and a single metadata module. The metadata module exports
+a typed record: slug, title, category (`wesela` or `imprezy`), place,
+human-readable date, style description, a two-sentence introduction, a cover
+image, and an ordered list of photographs.
 
 Photographs are **statically imported** rather than referenced by path string.
 This gives the build intrinsic dimensions for every image, which in turn yields
 automatic low-quality placeholders and eliminates cumulative layout shift
-without any hand-maintained dimension data — satisfying stories 17, 18 and 56 as
-a property of the approach rather than as work to remember.
+without any hand-maintained dimension data. Stories 17, 18 and 56 are satisfied
+by the approach itself, with no work to remember.
 
 A single registry module imports every realization and exports them in an
-explicit display order. Order is authored, not derived from dates or filenames,
-so the strongest work can lead.
+explicit display order. Order is authored so the strongest work can lead.
 
 No CMS, no database, no admin interface. The developer is the only person who
 updates content, and infrastructure for a second author is not justified at nine
@@ -191,20 +189,20 @@ realizations.
 
 ### Routes
 
-- Home — hero, positioning statement, four selected realizations, FAQ teaser, contact call to action
-- Realizations index — one page, one unified grid with a category badge per card
-- Realization detail — statically generated per event, one route per realization
+- Home: hero, positioning statement, four selected realizations, FAQ teaser, contact call to action
+- Realizations index: one page, one unified grid with a category badge per card
+- Realization detail: statically generated, one route per realization
 - About
 - FAQ
 - Contact
 - Privacy policy
 
-**Amended from a two-way Wesela/Imprezy split**, both on the home page and on
-the realizations index. The split was meant to carry the distinct search
-intents behind stories 1 and 2, but at six launch realizations — one wedding,
-five events — it produced a section holding a single card. Category is now a
-small badge on each card (`RealizationCard`) instead of a section boundary, so
-the split can return once there is enough wedding work to justify it.
+Amended from a two-way Wesela/Imprezy split, both on the home page and on the
+realizations index. The split was meant to carry the distinct search intents
+behind stories 1 and 2, but at six launch realizations (one wedding, five
+events) it produced a section holding a single card. Category is now a small
+badge on each card (`RealizationCard`) instead of a section boundary, so the
+split can return once there is enough wedding work to justify it.
 
 The realizations index is a single page rather than two category pages either
 way: with one wedding and five events, two thin pages would rank worse than one
@@ -216,25 +214,14 @@ be linked, shared or indexed, which would defeat stories 4, 20, 21 and 22.
 
 ### Hero
 
-The hero is built poster-first. A static image is the hero element and the LCP
-candidate; video is an enhancement layered over it when footage exists.
+The hero is built poster-first: a static image is the hero element and the LCP
+candidate, and video is layered over it. The design spec's "Hero video" section
+records why, the byte budget, and how the portrait source fits the band.
 
-**Shipped at launch**, not deferred: the client's footage is a vertical phone
-pan (a Reel, not a landscape take) across a "Młoda Para" neon sign, re-encoded
-from a 12.7 MB original to 1.77 MB H.264 — comfortably under the 3 MB / 10–15 s
-budget, since this clip is only 6.7 s. It is muted, looping, plays inline, is
+The client's footage shipped at launch: a 6.7 s clip re-encoded to 1.77 MB
+H.264, under the 3 MB / 10–15 s budget. It is muted, looping, plays inline, is
 not preloaded, is requested only after the poster has painted, and is
-suppressed entirely under a reduced-motion preference. The poster is a frame
-pulled from the same clip, so the still-to-video handoff shows no visible cut.
-
-The portrait source turned out not to need the redesign the original spec
-worried about: the hero band is `min-h-[78svh]`, so it is already
-portrait-shaped on a phone and only becomes landscape on desktop, where
-`object-cover` crops the same source sensibly at both extremes.
-
-This ordering — poster always present, video layered over it — is a deliberate
-architectural choice, not a temporary workaround: it means the video can never
-regress the site's largest-contentful-paint, launch footage or not.
+suppressed entirely under a reduced-motion preference.
 
 ### Contact submission
 
@@ -244,7 +231,7 @@ contact, event type, approximate date, and message.
 Validation uses one schema shared between browser and server, so both enforce
 identical rules and error messages cannot drift apart.
 
-**Email delivery sits behind a narrow port.** The application depends on an
+Email delivery sits behind a narrow port. The application depends on an
 interface that accepts a validated inquiry and reports success or failure; the
 Resend-backed implementation is supplied at the application boundary. This is
 the single piece of indirection introduced purely for testability, and it exists
@@ -259,9 +246,9 @@ Abuse is handled by a honeypot field plus a minimum time-to-submit threshold,
 and per-IP rate limiting held in process memory. This is proportionate to the
 expected volume and requires no data store.
 
-**Error handling is a functional requirement, not a nicety.** The form reports
-success, field-specific validation failures, or a delivery failure that surfaces
-the phone number as an alternative. A silently failing contact form is the worst
+Error handling is a functional requirement. The form reports success,
+field-specific validation failures, or a delivery failure that surfaces the
+phone number as an alternative. A silently failing contact form is the worst
 defect this site can ship, because it destroys the site's only purpose while
 appearing to work.
 
@@ -273,10 +260,9 @@ destination address.
 Vercel Web Analytics, included in the first release at the client's request.
 
 It is cookieless and stores no personal data, and therefore requires no consent
-banner. That is the substantive reason for the choice: a consent dialog on every
-visit to a nine-page portfolio costs conversions, and conversion is the site's
-only purpose. Stories 53 and 54 are satisfied by this decision rather than by
-additional work.
+banner. A consent dialog on every visit to a nine-page portfolio costs
+conversions, and conversion is the site's only purpose. Stories 53 and 54 are
+satisfied by this decision rather than by additional work.
 
 Google Analytics 4 would reverse this: it would require a compliant consent
 banner, deferred loading until consent, and a processor section in the privacy
@@ -284,16 +270,16 @@ policy. It is not adopted unless the client specifically requires it.
 
 ### Legal identity
 
-The business operates as _działalność nierejestrowana_ — unregistered activity
+The business operates as _działalność nierejestrowana_, unregistered activity
 under Polish law, with no NIP, REGON, or company entity.
 
 - The footer carries the owner's name, service region, phone, email and
   Instagram. No company registration numbers, because none exist.
-- Structured data describes a local business by **service area** — Szczecin,
-  Police, Stargard, Goleniów, Świnoujście — and emits no street address.
+- Structured data describes a local business by **service area** (Szczecin,
+  Police, Stargard, Goleniów, Świnoujście) and emits no street address.
   Publishing a residential address is unnecessary and unwise.
 - The privacy policy names an **individual** as data controller. RODO applies to
-  unregistered activity; the controller is simply a person rather than a company.
+  unregistered activity; the controller is then a person.
 - No VAT or invoice language appears anywhere. An unregistered business issues a
   _rachunek_, not a _faktura VAT_, and the FAQ must not imply otherwise.
 
@@ -322,9 +308,9 @@ present, or that a function was called. Markup, class names and component
 structure will change throughout the life of this site; behaviour will not.
 
 Tests are written against the two seams identified below and nowhere else. The
-count of seams is kept deliberately low — indirection introduced solely to
-enable testing is a cost, and is only paid where the alternative is leaving a
-critical flow untested.
+count of seams is kept low. Indirection introduced solely to enable testing is
+a cost, and is only paid where the alternative is leaving a critical flow
+untested.
 
 ### Seams
 
@@ -338,8 +324,8 @@ outside world. Tests substitute a recording fake for the Resend implementation,
 which makes the delivery flow assertable without sending mail and without
 network access.
 
-No third seam. No component-level tests, no mocking of framework internals, no
-markup snapshots.
+There is no third seam: no component-level tests, no mocking of framework
+internals, and no markup snapshots.
 
 ### What is tested
 
@@ -365,7 +351,7 @@ Through the email port:
 - A submission failing validation produces no inquiry
 - A submission tripping the honeypot or time threshold produces no inquiry
 
-As static assertions over content — closer to a build-time check than a test:
+As static assertions over content (closer to a build-time check than a test):
 
 - Every slug in the registry resolves to a realization
 - Every category is one of the two permitted values
@@ -382,13 +368,12 @@ constrain behaviour.
 One exception, added when `/realizacje/[slug]` was built: the shared-link
 preview above. The reasoning for the exclusion does not reach it. Whether a
 title renders is framework wiring, but whether the preview image resolves to an
-absolute URL is a behaviour with a silent failure mode — the page looks
-perfect, and only the link previews as nothing, which is precisely the outcome
-story 22 exists to prevent.
+absolute URL is a behaviour with a silent failure mode. The page looks perfect
+and only the link previews as nothing, the outcome story 22 exists to prevent.
 
 ### Prior art
 
-None in this repository — it is new. The sibling `shop_sznyt_design` project
+None in this repository, which is new. The sibling `shop_sznyt_design` project
 uses Vitest with Playwright for end-to-end coverage and is the closest reference
 for tooling configuration, though its tests target a different framework and
 architecture and should not be used as a structural model.
@@ -414,9 +399,6 @@ banner.
 No animation library. Transitions are written in CSS until a specific need
 demonstrates that a library is required.
 
-No hero video in the first release. The design accommodates it; the footage does
-not exist yet.
-
 No separate category pages for weddings and events. Revisited when the archive
 roughly doubles.
 
@@ -434,10 +416,10 @@ None of these block implementation. All of them block launch.
   and Instagram handle
 - Real copy for the about page and answers for the FAQ
 - A photograph of the person running the business, for the about page. It ships
-  as a generated placeholder card, and story 25 — seeing who you would be
-  working with — is not served until it is real
+  as a generated placeholder card, and story 25 (seeing who you would be
+  working with) is not served until it is real
 - Privacy policy details, replacing placeholder text
-- Venue and date for each of the six launch realizations — photographs and the
+- Venue and date for each of the six launch realizations. Photographs and the
   rest of the metadata are in; only `place` and `date` remain
   `[DO UZUPEŁNIENIA]`
 - Confirmation that Vercel Web Analytics is what the client means by
@@ -446,23 +428,23 @@ None of these block implementation. All of them block launch.
 ### Risks
 
 **Six realizations is a thin archive, thinner than the nine planned for.** The
-layouts must look deliberate at that volume rather than sparse, and detail
-pages must hold up when an event has only two photographs — `urodziny-18` and
-`urodziny-30` launch at exactly that, on the reasoning that the gallery layout
-was already designed for the sparse case rather than held back for more
-photographs that may not arrive. Design for the sparse case first; a layout
-that only works when full will look broken at launch.
+layouts must hold up at that volume without looking sparse, and detail pages
+must hold up when a realization has only two photographs. `urodziny-18` and
+`urodziny-30` launch with exactly two: the gallery layout was already designed
+for the sparse case, so they were not held back for more photographs that may
+not arrive. Design for the sparse case first; a layout that only works when
+full will look broken at launch.
 
 **A dark palette is unforgiving of inconsistent photography.** This works in the
-site's favour — a dark ground hides uneven exposure across a mixed archive — but
-it demands genuine attention to text contrast, which is the accessibility risk
-in stories 62 and 65.
+site's favour, since a dark ground hides uneven exposure across a mixed archive,
+but it demands attention to text contrast, which is the accessibility risk in
+stories 62 and 65.
 
 **The chosen visual direction can drift cold.** The palette is dark aubergine
 taken from the logo's ink, while the logo itself is soft, pale, and hand-drawn.
 Warm copy and generous spacing are what keep the site elegant rather than
-severe. This was raised during design, overruled deliberately, and is recorded
-here as something to check finished pages against rather than as an unresolved
+severe. This was raised during design, overruled, and is recorded here as
+something to check finished pages against rather than as an unresolved
 objection.
 
 ### A note for the client, outside the site's scope
