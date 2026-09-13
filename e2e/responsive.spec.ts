@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 import { site } from "../src/lib/site";
-import { przejdzCalyServis, przewinCalaStrone } from "./crawl";
+import { otworzStrone, przejdzCalyServis, przewinCalaStrone } from "./crawl";
 
 /**
  * Every page, at the widths a visitor actually has.
@@ -345,7 +345,7 @@ for (const { width, height } of SZEROKOSCI) {
     const odwiedzone = await przejdzCalyServis(page, baseURL!, zmierz);
     expect(odwiedzone.size).toBeGreaterThan(0);
 
-    await page.goto(STRONA_404);
+    await otworzStrone(page, STRONA_404);
     await zmierz(STRONA_404);
 
     expect(znalezione).toEqual([]);

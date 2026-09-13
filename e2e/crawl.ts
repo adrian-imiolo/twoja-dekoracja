@@ -24,6 +24,34 @@ export const TRASY_STALE = [
 ] as const;
 
 /**
+ * Opens a page and waits for its markup, not for its images.
+ *
+ * `page.goto` waits for `load` by default, and `load` waits for every image
+ * the page carries. This walk abandons images by design: `przewinCalaStrone`
+ * scrolls each page to the bottom, and a browser drops an image that has
+ * scrolled out of sight to the lowest priority it has, leaving the request
+ * unfinished indefinitely rather than spending a connection on something
+ * nobody is looking at — the behaviour `realizacja.spec.ts` sets out at
+ * length, from traces of its own.
+ *
+ * The cost lands on the *next* page. A request for an address the browser is
+ * already fetching joins the one in flight rather than starting its own, so a
+ * navigation to a page carrying an abandoned image waits on a request that
+ * will never finish, and the test spends its whole budget there. Three CI runs
+ * died exactly that way, each of them on the archive's heaviest cover and only
+ * at the widths that ask for the size of it that is heaviest — which is to say
+ * the one still in flight when the scroll went past.
+ *
+ * What a page has to be before it can be measured is laid out, not loaded, and
+ * `przewinCalaStrone` waits for that itself: for the images it can still get
+ * and for the fonts, under a timeout. That bound is the one this navigation
+ * was going around.
+ */
+export function otworzStrone(page: Page, sciezka: string) {
+  return page.goto(sciezka, { waitUntil: "domcontentloaded" });
+}
+
+/**
  * Where a crawl starting at the home page can get to, and what each address
  * answered with.
  *
@@ -47,7 +75,7 @@ export async function przejdzCalyServis(
     const sciezka = kolejka.shift()!;
     if (odwiedzone.has(sciezka)) continue;
 
-    const odpowiedz = await page.goto(sciezka);
+    const odpowiedz = await otworzStrone(page, sciezka);
     odwiedzone.set(sciezka, odpowiedz?.status() ?? 0);
 
     const adresy = await page
