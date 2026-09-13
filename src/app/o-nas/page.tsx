@@ -28,6 +28,16 @@ import { portret } from "@content/o-nas";
  * same legal status the footer and the privacy policy both rest on.
  */
 
+/*
+ * The paragraph "Jak pracujemy" was made of, split at its three clauses. The
+ * order is the order of a booking, and the copy is the owners' own.
+ */
+const KROKI = [
+  "Rozmawiamy o tym, jak wyobrażacie sobie salę, i proponujemy dekorację, która to oddaje.",
+  "Przyjeżdżamy i budujemy ją od zera.",
+  "Zabieramy wszystko po przyjęciu.",
+] as const;
+
 const OPIS = `Kto stoi za pracownią ${site.name} i dlaczego zajmujemy się dekoracjami przyjęć w ${site.cityLocative}.`;
 
 export const metadata: Metadata = {
@@ -65,109 +75,128 @@ export default function ONasPage() {
           przy każdym przyjęciu jesteśmy obie: od pustej sali po ostatni
           element, który z niej zabieramy.
         </p>
+        <p className="mt-6 text-sm tracking-[0.2em] text-blush-300 uppercase">
+          {site.city} i okolice
+        </p>
       </header>
 
       {/*
-       * The portrait leads on a phone, where it sits above the story, and sits
-       * beside it from the width at which both fit. It is given a fixed
-       * portrait frame rather than being allowed to take its own shape,
-       * because the placeholder and the real photograph will not agree on one
-       * and the layout must not move when it is swapped.
+       * One photograph of both owners, landscape and full content width. Any
+       * portrait crop of it loses one of them, and the intro above says
+       * "jesteśmy we dwie". The frame matches the file's 3:2 so nothing is
+       * cropped at any width, and the share preview shows the same frame.
        */}
-      <div className="mt-16 grid gap-12 sm:mt-20 lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-20">
-        <div>
-          <div className="relative aspect-4/5 overflow-hidden bg-plum-900">
-            <Image
-              src={portret.image}
-              alt={portret.alt}
-              placeholder="blur"
-              fill
-              sizes="(min-width: 64rem) 20rem, 100vw"
-              className="object-cover"
-            />
-          </div>
-          <p className="mt-5 text-sm leading-relaxed text-cream-50/60">
-            {site.owners.map(imie).join(" i ")}
-            <br />
-            {site.name}, {site.city}
+      <figure className="mt-16 sm:mt-20">
+        <div className="relative aspect-3/2 overflow-hidden bg-plum-900">
+          <Image
+            src={portret.image}
+            alt={portret.alt}
+            placeholder="blur"
+            fill
+            sizes="(min-width: 72rem) 72rem, 100vw"
+            className="object-cover"
+          />
+        </div>
+        <figcaption className="mt-5 text-sm leading-relaxed text-cream-50/60">
+          {site.owners.map(imie).join(" i ")}
+          <br />
+          {site.name}, {site.city}
+        </figcaption>
+      </figure>
+
+      <div className="mt-16 max-w-xl sm:mt-20">
+        <section aria-labelledby="jak-to-sie-zaczelo">
+          <h2
+            id="jak-to-sie-zaczelo"
+            className="font-display text-2xl text-blush-200 sm:text-3xl"
+          >
+            Jak to się zaczęło
+          </h2>
+          {/* The owners' own story, in their words, written up. */}
+          <p className="mt-6 leading-relaxed text-cream-50/80">
+            Obie skończyłyśmy studia architektoniczne i obie trafiłyśmy tu tą
+            samą drogą - od patrzenia na wnętrze jak na coś, co się projektuje,
+            a nie tylko zastawia stołami. Zaczęło się od przyjęć w rodzinie i u
+            znajomych: chrzciny, osiemnastka, potem pierwsze wesele. Za każdym
+            razem okazywało się to samo - że to, co dla nas jest układaniem
+            kompozycji, proporcji i światła, dla kogoś innego jest dniem, który
+            zapamięta na zawsze. Z przysługi dla bliskich zrobiła się pasja, a z
+            pasji to, czym zajmujemy się dziś.
           </p>
-        </div>
+        </section>
 
-        <div className="max-w-xl">
-          <section aria-labelledby="jak-to-sie-zaczelo">
-            <h2
-              id="jak-to-sie-zaczelo"
-              className="font-display text-2xl text-blush-200 sm:text-3xl"
-            >
-              Jak to się zaczęło
-            </h2>
-            {/* The owners' own story, in their words, written up. */}
-            <p className="mt-6 leading-relaxed text-cream-50/80">
-              Obie skończyłyśmy studia architektoniczne i obie trafiłyśmy tu tą
-              samą drogą - od patrzenia na wnętrze jak na coś, co się
-              projektuje, a nie tylko zastawia stołami. Zaczęło się od przyjęć w
-              rodzinie i u znajomych: chrzciny, osiemnastka, potem pierwsze
-              wesele. Za każdym razem okazywało się to samo - że to, co dla nas
-              jest układaniem kompozycji, proporcji i światła, dla kogoś innego
-              jest dniem, który zapamięta na zawsze. Z przysługi dla bliskich
-              zrobiła się pasja, a z pasji to, czym zajmujemy się dziś.
-            </p>
-          </section>
-
-          <section aria-labelledby="dlaczego" className="mt-14">
-            <h2
-              id="dlaczego"
-              className="font-display text-2xl text-blush-200 sm:text-3xl"
-            >
-              Dlaczego to robimy
-            </h2>
-            <p className="mt-6 leading-relaxed text-cream-50/80">
-              Wesele albo okrągłe urodziny zdarzają się raz. Nikt nie ma na nie
-              drugiego podejścia i nikt nie ćwiczy ich wcześniej - a osoby,
-              które je organizują, mają tego dnia sto innych rzeczy na głowie.
-              Dekoracja jest jedną z niewielu, które da się z nich zdjąć w
-              całości.
-            </p>
-            {/*
-             * Where the limit on how much work is taken on belongs: stated as
-             * a preference that follows from what the two of them enjoy,
-             * rather than announced up front as a constraint. The same fact
-             * read as an excuse when it led the page.
-             */}
-            <p className="mt-4 leading-relaxed text-cream-50/80">
-              Najbardziej lubimy dwa momenty. Pierwszy, kiedy wychodzi się z
-              sali, która kilka godzin wcześniej była pusta, i widzi się ją
-              skończoną. Drugi, kiedy wchodzą do niej goście. Dlatego bierzemy
-              tylko tyle przyjęć, ile jesteśmy w stanie obsłużyć osobiście -
-              wolimy zrobić mniej i być na miejscu od początku do końca, niż
-              rozpisać się na kilka sal naraz i wysłać na nie kogoś, kto Waszą
-              dekorację widzi pierwszy raz.
-            </p>
-          </section>
-
-          <section aria-labelledby="jak-pracujemy" className="mt-14">
-            <h2
-              id="jak-pracujemy"
-              className="font-display text-2xl text-blush-200 sm:text-3xl"
-            >
-              Jak pracujemy
-            </h2>
-            <p className="mt-6 leading-relaxed text-cream-50/80">
-              Rozmawiamy o tym, jak wyobrażacie sobie salę, i proponujemy
-              dekorację, która to oddaje - a potem przyjeżdżamy, budujemy ją od
-              zera i zabieramy po przyjęciu. Ustalona kwota jest kwotą końcową,
-              a wszystko, co jest w niej zawarte, mówimy wprost, zanim cokolwiek
-              zostanie zarezerwowane.
-            </p>
-            <p className="mt-6 text-sm tracking-[0.2em] text-blush-300 uppercase">
-              {site.city} i okolice
-            </p>
-            <p className="mt-8">
-              <QuietLink href="/faq">Częste pytania</QuietLink>
-            </p>
-          </section>
-        </div>
+        <section aria-labelledby="dlaczego" className="mt-14">
+          <h2
+            id="dlaczego"
+            className="font-display text-2xl text-blush-200 sm:text-3xl"
+          >
+            Dlaczego to robimy
+          </h2>
+          <p className="mt-6 leading-relaxed text-cream-50/80">
+            Wesele albo okrągłe urodziny zdarzają się raz. Nikt nie ma na nie
+            drugiego podejścia i nikt nie ćwiczy ich wcześniej - a osoby, które
+            je organizują, mają tego dnia sto innych rzeczy na głowie. Dekoracja
+            jest jedną z niewielu, które da się z nich zdjąć w całości.
+          </p>
+          {/*
+           * The one sentence on the page a visitor would quote back, lifted
+           * out so it is read once on its own. It stays in the paragraph
+           * below as well: the quote is emphasis, not a replacement.
+           */}
+          <blockquote className="mt-8 border-l-2 border-blush-300/60 pl-6 font-display text-2xl leading-snug text-blush-200">
+            Wolimy zrobić mniej i być na miejscu od początku do końca.
+          </blockquote>
+          {/*
+           * Where the limit on how much work is taken on belongs: stated as
+           * a preference that follows from what the two of them enjoy,
+           * rather than announced up front as a constraint. The same fact
+           * read as an excuse when it led the page.
+           */}
+          <p className="mt-8 leading-relaxed text-cream-50/80">
+            Najbardziej lubimy dwa momenty. Pierwszy, kiedy wychodzi się z sali,
+            która kilka godzin wcześniej była pusta, i widzi się ją skończoną.
+            Drugi, kiedy wchodzą do niej goście. Dlatego bierzemy tylko tyle
+            przyjęć, ile jesteśmy w stanie obsłużyć osobiście - wolimy zrobić
+            mniej i być na miejscu od początku do końca, niż rozpisać się na
+            kilka sal naraz i wysłać na nie kogoś, kto Waszą dekorację widzi
+            pierwszy raz.
+          </p>
+        </section>
       </div>
+
+      <section aria-labelledby="jak-pracujemy" className="mt-20 sm:mt-28">
+        <h2
+          id="jak-pracujemy"
+          className="font-display text-2xl text-blush-200 sm:text-3xl"
+        >
+          Jak pracujemy
+        </h2>
+        {/*
+         * The same three-column grid the home page's FAQ teaser uses, so the
+         * steps read as one row at laptop width rather than a stacked list
+         * beside nothing.
+         */}
+        <ol className="mt-12 grid gap-10 lg:grid-cols-3 lg:gap-12">
+          {KROKI.map((krok, i) => (
+            <li key={krok}>
+              <span
+                aria-hidden="true"
+                className="font-display text-3xl text-blush-300"
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <p className="mt-3 leading-relaxed text-cream-50/80">{krok}</p>
+            </li>
+          ))}
+        </ol>
+        <p className="mt-12 max-w-xl leading-relaxed text-cream-50/80">
+          Ustalona kwota jest kwotą końcową, a wszystko, co jest w niej zawarte,
+          mówimy wprost, zanim cokolwiek zostanie zarezerwowane.
+        </p>
+        <p className="mt-8">
+          <QuietLink href="/faq">Częste pytania</QuietLink>
+        </p>
+      </section>
 
       <CalloutPanel
         as="section"
