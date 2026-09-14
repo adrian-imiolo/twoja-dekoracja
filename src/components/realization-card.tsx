@@ -2,7 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { miejsceITermin } from "@/lib/site";
-import { KATEGORIA_LABEL, type Realizacja } from "@content/realizacje";
+import {
+  KATEGORIA_LABEL,
+  realizacjaHref,
+  type Realizacja,
+} from "@content/realizacje";
 
 /**
  * One realization as it appears in a listing.
@@ -31,7 +35,7 @@ export function RealizationCard({
 }) {
   return (
     <Link
-      href={`/realizacje/${realizacja.slug}`}
+      href={realizacjaHref(realizacja)}
       className="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blush-300"
     >
       <div className="relative aspect-4/3 overflow-hidden bg-plum-900">

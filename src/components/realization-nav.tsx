@@ -1,7 +1,11 @@
 import Link from "next/link";
 
 import { PrimaryCta } from "@/components/ui/primary-cta";
-import { sasiednieRealizacje, type Realizacja } from "@content/realizacje";
+import {
+  realizacjaHref,
+  sasiednieRealizacje,
+  type Realizacja,
+} from "@content/realizacje";
 
 /**
  * The way on from the bottom of a realization.
@@ -84,7 +88,7 @@ function NeighbourLink({
 
   return (
     <Link
-      href={`/realizacje/${realizacja.slug}`}
+      href={realizacjaHref(realizacja)}
       className={`group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blush-300 ${klasy}`}
     >
       <span className="block text-xs tracking-[0.25em] text-blush-300/80 uppercase">

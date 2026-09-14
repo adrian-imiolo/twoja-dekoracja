@@ -5,7 +5,12 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { findRealizacja, realizacje, sasiednieRealizacje } from "./index";
+import {
+  findRealizacja,
+  realizacjaHref,
+  realizacje,
+  sasiednieRealizacje,
+} from "./index";
 
 /**
  * Static assertions over the published content, closer to a build-time check
@@ -114,6 +119,14 @@ describe("realization registry", () => {
 
     expect(byContents.size).toBeGreaterThan(0);
     expect(twice).toEqual([]);
+  });
+
+  it("addresses a realization under /realizacje by its slug", () => {
+    const [pierwsza] = realizacje;
+
+    expect(realizacjaHref({ ...pierwsza, slug: "wesele" })).toBe(
+      "/realizacje/wesele",
+    );
   });
 
   it("returns nothing for a slug it does not publish", () => {

@@ -43,6 +43,16 @@ export function findRealizacja(slug: string): Realizacja | undefined {
 }
 
 /**
+ * A realization's site-relative address.
+ *
+ * Here beside `findRealizacja` because the registry owns what a realization's
+ * address is; callers that need an absolute URL compose it from this path.
+ */
+export function realizacjaHref(realizacja: Realizacja): string {
+  return `/realizacje/${realizacja.slug}`;
+}
+
+/**
  * The realizations either side of one, in the authored order above.
  *
  * Lives here rather than in the page because the registry owns the order: a

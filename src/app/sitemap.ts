@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { site } from "@/lib/site";
-import { realizacje } from "@content/realizacje";
+import { realizacjaHref, realizacje } from "@content/realizacje";
 
 /**
  * Every address the site publishes, handed to a search engine as a list.
@@ -41,10 +41,7 @@ const TRASY_STALE = [
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const sciezki = [
-    ...TRASY_STALE,
-    ...realizacje.map((realizacja) => `/realizacje/${realizacja.slug}`),
-  ];
+  const sciezki = [...TRASY_STALE, ...realizacje.map(realizacjaHref)];
 
   // Absolute, and not through `metadataBase`: a sitemap is fetched on its own,
   // and the framework resolves nothing here.
