@@ -29,8 +29,9 @@ function columnButton(page: Page, index: number): Locator {
 async function letViewerImagesFinish(page: Page) {
   await expect
     .poll(() =>
+      // Every image, not only the current one: its neighbours load too.
       viewer(page)
-        .getByRole("img")
+        .locator("img")
         .evaluateAll((images) =>
           images.every(
             (image) =>
@@ -84,6 +85,75 @@ test("shows one photograph at a time, whole within the screen", async ({
   expect(box!.y + box!.height).toBeLessThanOrEqual(size.height);
 
   await letViewerImagesFinish(page);
+});
+
+/**
+ * A one-finger drag through the DevTools protocol, which is what reaches the
+ * page as real `touchstart`/`touchmove`/`touchend`; Playwright's own
+ * touchscreen only taps.
+ */
+async function swipe(page: Page, dx: number, dy: number) {
+  const session = await page.context().newCDPSession(page);
+  const size = page.viewportSize()!;
+  const start = { x: size.width / 2, y: size.height / 2 };
+  const steps = 8;
+
+  await session.send("Input.dispatchTouchEvent", {
+    type: "touchStart",
+    touchPoints: [start],
+  });
+  for (let step = 1; step <= steps; step += 1) {
+    await session.send("Input.dispatchTouchEvent", {
+      type: "touchMove",
+      touchPoints: [
+        {
+          x: start.x + (dx * step) / steps,
+          y: start.y + (dy * step) / steps,
+        },
+      ],
+    });
+  }
+  await session.send("Input.dispatchTouchEvent", {
+    type: "touchEnd",
+    touchPoints: [],
+  });
+  await session.detach();
+}
+
+test("a sideways swipe moves to the next photograph, and a short one does not", async ({
+  page,
+}) => {
+  await page.goto(url);
+  await columnButton(page, 1).click();
+  await expect(viewer(page)).toContainText(`2 / ${PHOTO_COUNT}`);
+
+  await swipe(page, -30, 0);
+  await expect(viewer(page)).toContainText(`2 / ${PHOTO_COUNT}`);
+
+  await swipe(page, -200, 0);
+  await expect(viewer(page)).toContainText(`3 / ${PHOTO_COUNT}`);
+
+  await swipe(page, 200, 0);
+  await expect(viewer(page)).toContainText(`2 / ${PHOTO_COUNT}`);
+
+  await letViewerImagesFinish(page);
+});
+
+test("a swipe down closes it and stays on the realization", async ({
+  page,
+}) => {
+  await page.goto(url);
+  const address = page.url();
+  await columnButton(page, 1).click();
+  await expect(viewer(page)).toBeVisible();
+  await letViewerImagesFinish(page);
+
+  await swipe(page, 0, 40);
+  await expect(viewer(page)).toBeVisible();
+
+  await swipe(page, 0, 200);
+  await expect(viewer(page)).toHaveCount(0);
+  expect(page.url()).toBe(address);
 });
 
 test("a click beside the photograph closes it", async ({ page }) => {
