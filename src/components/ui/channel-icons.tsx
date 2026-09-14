@@ -14,7 +14,7 @@ import type { ReactNode } from "react";
  * announced the mark would read the same thing twice; these are decoration
  * over a label, never a label of their own.
  */
-function Glif({ children }: { children: ReactNode }) {
+export function Glif({ children }: { children: ReactNode }) {
   return (
     <svg
       viewBox="0 0 24 24"

@@ -1,6 +1,11 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 import type { Fotografia } from "@content/realizacje";
+
+import { RealizationViewer } from "./realization-viewer";
 
 /**
  * The gallery of one realization.
@@ -17,15 +22,51 @@ import type { Fotografia } from "@content/realizacje";
  * cannot be seen whole. Both the shape and the reserved space come from the
  * intrinsic dimensions the build reads out of the static import, so nothing
  * here is a hand-maintained number and nothing shifts as an image arrives.
+ *
+ * Each photograph opens `RealizationViewer` over the column for detail and for
+ * moving through the set. The column stays: it shows the work with no click,
+ * and a viewer adds what it lacks without stranding a two-photograph
+ * realization in a strip of two.
  */
 export function RealizationGallery({
   photos,
 }: {
   photos: readonly Fotografia[];
 }) {
+  const [otwarte, setOtwarte] = useState<number | null>(null);
+  const przyciski = useRef<(HTMLButtonElement | null)[]>([]);
+  const otwierajacy = useRef<number | null>(null);
+
+  function otworz(indeks: number) {
+    otwierajacy.current = indeks;
+    /*
+     * Pushed here, on the click, rather than when the viewer mounts: an effect
+     * runs twice under Strict Mode and would leave two entries, one of them a
+     * back press that does nothing. Same URL, so the realization stays the
+     * page that is linked and shared, and a shared link never opens a viewer.
+     */
+    history.pushState({ viewer: true }, "");
+    setOtwarte(indeks);
+  }
+
+  function zamknij() {
+    setOtwarte(null);
+  }
+
+  // Focus goes back once the viewer is gone; while it is open the page is
+  // inert and the button would refuse it.
+  useEffect(
+    function oddajFocus() {
+      if (otwarte !== null || otwierajacy.current === null) return;
+      przyciski.current[otwierajacy.current]?.focus();
+      otwierajacy.current = null;
+    },
+    [otwarte],
+  );
+
   return (
     <div className="mt-16 flex flex-col gap-16 sm:mt-24 sm:gap-24">
-      {photos.map((photo, index) => {
+      {photos.map(function fotografia(photo, index) {
         const isLandscape = photo.image.width >= photo.image.height;
 
         return (
@@ -33,24 +74,43 @@ export function RealizationGallery({
             key={photo.image.src}
             className={`mx-auto w-full ${isLandscape ? "max-w-5xl" : "max-w-2xl"}`}
           >
-            <Image
-              src={photo.image}
-              alt={photo.alt}
-              placeholder="blur"
-              // The first photograph is the page's largest contentful paint;
-              // the rest are below the fold and load as the visitor reaches
-              // them.
-              priority={index === 0}
-              sizes={
-                isLandscape
-                  ? "(min-width: 64rem) 64rem, 100vw"
-                  : "(min-width: 42rem) 42rem, 100vw"
-              }
-              className="h-auto w-full"
-            />
+            <button
+              ref={function zapamietaj(przycisk) {
+                przyciski.current[index] = przycisk;
+              }}
+              type="button"
+              onClick={function otworzTo() {
+                otworz(index);
+              }}
+              className="block w-full cursor-zoom-in"
+            >
+              <Image
+                src={photo.image}
+                alt={photo.alt}
+                placeholder="blur"
+                // The first photograph is the page's largest contentful paint;
+                // the rest are below the fold and load as the visitor reaches
+                // them.
+                priority={index === 0}
+                sizes={
+                  isLandscape
+                    ? "(min-width: 64rem) 64rem, 100vw"
+                    : "(min-width: 42rem) 42rem, 100vw"
+                }
+                className="h-auto w-full"
+              />
+            </button>
           </figure>
         );
       })}
+
+      {otwarte === null ? null : (
+        <RealizationViewer
+          photos={photos}
+          startIndex={otwarte}
+          onClose={zamknij}
+        />
+      )}
     </div>
   );
 }
