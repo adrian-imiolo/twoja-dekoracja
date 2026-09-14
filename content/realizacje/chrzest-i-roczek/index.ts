@@ -1,6 +1,6 @@
 import { DO_UZUPELNIENIA } from "@/lib/site";
 
-import type { Fotografia, Realizacja } from "../types";
+import type { Galeria, Realizacja } from "../types";
 
 import zdjecie01 from "./01.jpg";
 import zdjecie02 from "./02.jpg";
@@ -14,7 +14,7 @@ import zdjecie05 from "./05.jpg";
  *
  * "Poli" is the child's name as printed on the client's own backdrop signage.
  */
-const photos: readonly [Fotografia, ...Fotografia[]] = [
+const photos: Galeria = [
   {
     image: zdjecie01,
     alt: "Ścianka z papierowych stokrotek w pudrowym różu i kremie, z personalizowanym napisem „Chrzest święty i roczek Poli” oraz białą cyfrą 1",

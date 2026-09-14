@@ -172,7 +172,9 @@ Realizations are stored in the repository, one directory per realization,
 containing image files and a single metadata module. The metadata module exports
 a typed record: slug, title, category (`wesela` or `imprezy`), place,
 human-readable date, style description, a two-sentence introduction, a cover
-image, and an ordered list of photographs.
+photograph, and a non-empty ordered list of photographs. Each photograph carries
+its own alt text, and optionally `position`, `zoom` and `zoomOrigin`; those
+three fields only shape the cropped cover in listings.
 
 Photographs are **statically imported** rather than referenced by path string.
 This gives the build intrinsic dimensions for every image, which in turn yields
@@ -316,8 +318,8 @@ untested.
 
 **The HTTP boundary of the running application.** Playwright drives a real
 browser against a real server. This is the highest available seam and covers
-almost the entire product: navigation, the realizations index and its two
-sections, realization detail pages, and the contact form's full behaviour.
+almost the entire product: navigation, the realizations index and its unified
+grid, realization detail pages, and the contact form's full behaviour.
 
 **The outbound email port.** The one place where the application reaches the
 outside world. Tests substitute a recording fake for the Resend implementation,
@@ -335,8 +337,8 @@ Through the browser seam:
   photographs
 - A realization's link carries a title, a description and an image that
   resolves absolutely, so it previews when pasted into a messaging app
-- The realizations index shows both category sections, each containing its
-  realizations
+- The realizations index shows every realization in one unified grid, each card
+  carrying its category badge
 - Submitting a valid inquiry produces a visible success state
 - Submitting an invalid inquiry produces field-specific errors and does not
   send

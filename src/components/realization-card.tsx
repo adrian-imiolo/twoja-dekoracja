@@ -1,8 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { coverStyle } from "@/lib/cover-style";
 import { miejsceITermin } from "@/lib/site";
-import { KATEGORIA_LABEL, type Realizacja } from "@content/realizacje";
+import {
+  KATEGORIA_LABEL,
+  realizacjaHref,
+  type Realizacja,
+} from "@content/realizacje";
 
 /**
  * One realization as it appears in a listing.
@@ -31,7 +36,7 @@ export function RealizationCard({
 }) {
   return (
     <Link
-      href={`/realizacje/${realizacja.slug}`}
+      href={realizacjaHref(realizacja)}
       className="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blush-300"
     >
       <div className="relative aspect-4/3 overflow-hidden bg-plum-900">
@@ -48,19 +53,7 @@ export function RealizationCard({
           placeholder="blur"
           fill
           sizes={sizes}
-          style={
-            realizacja.cover.position || realizacja.cover.zoom
-              ? {
-                  objectPosition: realizacja.cover.position,
-                  transform: realizacja.cover.zoom
-                    ? `scale(${realizacja.cover.zoom})`
-                    : undefined,
-                  transformOrigin: realizacja.cover.zoom
-                    ? (realizacja.cover.zoomOrigin ?? "50% 50%")
-                    : undefined,
-                }
-              : undefined
-          }
+          style={coverStyle(realizacja.cover)}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
         />
       </div>
@@ -72,7 +65,7 @@ export function RealizationCard({
         {realizacja.title}
       </h3>
       {miejsceITermin(realizacja) ? (
-        <p className="mt-2 text-sm tracking-[0.2em] text-blush-300 uppercase">
+        <p className="mt-2 text-sm tracking-[0.25em] text-blush-300 uppercase">
           {miejsceITermin(realizacja)}
         </p>
       ) : null}

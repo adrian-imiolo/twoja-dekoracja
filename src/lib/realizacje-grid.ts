@@ -1,4 +1,20 @@
 /**
+ * The column classes a listing of realization cards uses, and how wide a card
+ * is rendered in each, keyed by how many cards share a row from `lg`.
+ *
+ * The only place a column count is paired with a `sizes` string. `next/image`
+ * says nothing when the two disagree, it just serves a soft picture, so every
+ * listing reads both halves from the same record. The one-column record is
+ * capped at `sm:max-w-xl` rather than a column class, since a lone card shares
+ * a row with nothing.
+ */
+export const CARD_COLUMNS = {
+  1: { className: "sm:max-w-xl", sizes: "(min-width: 40rem) 36rem, 100vw" },
+  2: { className: "lg:grid-cols-2", sizes: "(min-width: 64rem) 34rem, 100vw" },
+  3: { className: "lg:grid-cols-3", sizes: "(min-width: 64rem) 22rem, 100vw" },
+} as const;
+
+/**
  * Indexed by `count % 3`, the cards left over after the full rows of three.
  * None left over means the last row is full, so the invitation takes a row of
  * its own.
@@ -33,21 +49,21 @@ export function gridLayout(count: number): {
 } {
   if (count >= 3) {
     return {
-      gridClassName: "lg:grid-cols-3",
-      sizes: "(min-width: 64rem) 22rem, 100vw",
+      gridClassName: CARD_COLUMNS[3].className,
+      sizes: CARD_COLUMNS[3].sizes,
       invitationClassName: THREE_COLUMN_SPANS[count % 3],
     };
   }
   if (count === 2) {
     return {
-      gridClassName: "lg:grid-cols-2",
-      sizes: "(min-width: 64rem) 34rem, 100vw",
+      gridClassName: CARD_COLUMNS[2].className,
+      sizes: CARD_COLUMNS[2].sizes,
       invitationClassName: "lg:col-span-2",
     };
   }
   return {
-    gridClassName: "sm:max-w-xl",
-    sizes: "(min-width: 40rem) 36rem, 100vw",
+    gridClassName: CARD_COLUMNS[1].className,
+    sizes: CARD_COLUMNS[1].sizes,
     invitationClassName: "",
   };
 }

@@ -5,7 +5,11 @@ import { RealizationGallery } from "@/components/realization-gallery";
 import { RealizationNav } from "@/components/realization-nav";
 import { asOgImage, sharePreview } from "@/lib/metadata";
 import { miejsceITermin, site } from "@/lib/site";
-import { findRealizacja, realizacje } from "@content/realizacje";
+import {
+  findRealizacja,
+  realizacjaHref,
+  realizacje,
+} from "@content/realizacje";
 
 /**
  * One realization, at its own address.
@@ -54,7 +58,7 @@ export async function generateMetadata({
   // metadata would turn a registry fault into a page that previews as nothing.
   if (!realizacja) notFound();
 
-  const path = `/realizacje/${realizacja.slug}`;
+  const path = realizacjaHref(realizacja);
   const gdzieKiedy = miejsceITermin(realizacja);
   const title = gdzieKiedy
     ? `${realizacja.title} - ${gdzieKiedy}`

@@ -9,7 +9,7 @@ import { wesele } from "./wesele";
 import { weseleKiM } from "./wesele-k-i-m";
 
 export { KATEGORIA_LABEL } from "./types";
-export type { Fotografia, Kategoria, Realizacja } from "./types";
+export type { Fotografia, Galeria, Kategoria, Realizacja } from "./types";
 
 /**
  * Every realization the site publishes, in the order it is shown.
@@ -40,6 +40,16 @@ assertRealizacjeValid(realizacje);
 
 export function findRealizacja(slug: string): Realizacja | undefined {
   return realizacje.find((realizacja) => realizacja.slug === slug);
+}
+
+/**
+ * A realization's site-relative address.
+ *
+ * Here beside `findRealizacja` because the registry owns what a realization's
+ * address is; callers that need an absolute URL compose it from this path.
+ */
+export function realizacjaHref(realizacja: Realizacja): string {
+  return `/realizacje/${realizacja.slug}`;
 }
 
 /**

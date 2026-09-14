@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { QuietLink } from "@/components/ui/quiet-link";
 import { miejsceITermin } from "@/lib/site";
-import { realizacje } from "@content/realizacje";
+import { realizacjaHref, realizacje } from "@content/realizacje";
 
 /**
  * Every address the site does not publish.
@@ -56,7 +56,7 @@ export default function NotFound() {
         {suggested.map((realizacja) => (
           <li key={realizacja.slug}>
             <Link
-              href={`/realizacje/${realizacja.slug}`}
+              href={realizacjaHref(realizacja)}
               className="block border border-plum-800 px-6 py-5 transition-colors hover:border-blush-300 hover:bg-plum-900"
             >
               <span className="font-display text-xl text-blush-200">

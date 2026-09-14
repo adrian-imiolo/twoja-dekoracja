@@ -10,6 +10,7 @@ import { PrimaryCta } from "@/components/ui/primary-cta";
 import { QuietLink } from "@/components/ui/quiet-link";
 import { localBusinessSchema } from "@/lib/local-business";
 import { sharePreview } from "@/lib/metadata";
+import { CARD_COLUMNS } from "@/lib/realizacje-grid";
 import { site } from "@/lib/site";
 import { wybranePytania } from "@content/faq";
 import { realizacje } from "@content/realizacje";
@@ -33,20 +34,14 @@ import { realizacje } from "@content/realizacje";
 const WYBRANE = 4;
 
 /**
- * The grid "Wybrane realizacje" is shown in, and how wide a card in it gets.
- *
- * The class list and the `sizes` string are one decision and are kept in one
- * place for the reason `/realizacje` gives for the same pairing: `next/image`
- * says nothing when the two disagree, it just serves a soft picture.
+ * The columns "Wybrane realizacje" is shown in, with the `sizes` string that
+ * goes with them.
  *
  * Two columns rather than four: four across would make a card small enough
  * that the decoration in it stops being legible, which is the one thing a
  * visitor came to look at.
  */
-const SIATKA = {
-  className: "mt-12 grid grid-cols-1 gap-12 sm:mt-16 lg:grid-cols-2 lg:gap-16",
-  sizes: "(min-width: 64rem) 34rem, 100vw",
-} as const;
+const SIATKA = CARD_COLUMNS[2];
 
 /**
  * The three questions, answered here rather than teased.
@@ -164,7 +159,9 @@ export default function HomePage() {
           Wybrane realizacje
         </h2>
 
-        <ul className={SIATKA.className}>
+        <ul
+          className={`mt-12 grid grid-cols-1 gap-12 sm:mt-16 lg:gap-16 ${SIATKA.className}`}
+        >
           {wybrane.map((realizacja) => (
             <li key={realizacja.slug}>
               <RealizationCard realizacja={realizacja} sizes={SIATKA.sizes} />
