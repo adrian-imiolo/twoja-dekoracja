@@ -19,13 +19,13 @@ const IMPREZA = {
 /**
  * A card's own accessible name is its badge, title and description run
  * together. `/Wesele/` alone stopped being unique the moment a second
- * wesele-category realization joined the registry. Its `h3` title is the one
+ * wesele-category realization joined the registry. Its `h2` title is the one
  * part of that name authored to be unique, so the card is found by an exact
  * match on that instead of loosely matching the whole thing.
  */
 function realizationCard(page: Page, title: string) {
   return page.getByRole("link").filter({
-    has: page.getByRole("heading", { name: title, exact: true, level: 3 }),
+    has: page.getByRole("heading", { name: title, exact: true, level: 2 }),
   });
 }
 

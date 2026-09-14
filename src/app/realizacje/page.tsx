@@ -48,7 +48,11 @@ export default function RealizacjePage() {
       >
         {realizacje.map((realizacja) => (
           <li key={realizacja.slug}>
-            <RealizationCard realizacja={realizacja} sizes={layout.sizes} />
+            <RealizationCard
+              realizacja={realizacja}
+              sizes={layout.sizes}
+              titleAs="h2"
+            />
           </li>
         ))}
         {/*

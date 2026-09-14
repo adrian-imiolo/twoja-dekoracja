@@ -164,7 +164,11 @@ export default function HomePage() {
         >
           {wybrane.map((realizacja) => (
             <li key={realizacja.slug}>
-              <RealizationCard realizacja={realizacja} sizes={SIATKA.sizes} />
+              <RealizationCard
+                realizacja={realizacja}
+                sizes={SIATKA.sizes}
+                titleAs="h3"
+              />
             </li>
           ))}
         </ul>
