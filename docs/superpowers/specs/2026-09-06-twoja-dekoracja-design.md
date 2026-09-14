@@ -115,6 +115,16 @@ Each `index.ts` exports a typed `Realizacja`:
 ```ts
 type Kategoria = "wesela" | "imprezy";
 
+interface Fotografia {
+  image: StaticImageData;
+  alt: string; // descriptive Polish, written for this photograph
+  position?: string; // CSS object-position
+  zoom?: number; // CSS scale factor
+  zoomOrigin?: string; // CSS transform-origin, "50% 50%" by default
+}
+
+type Galeria = readonly [Fotografia, ...Fotografia[]]; // never empty
+
 interface Realizacja {
   slug: string;
   title: string; // "Wesele Anny i Piotra"
@@ -123,19 +133,23 @@ interface Realizacja {
   date: string; // "Czerwiec 2025"
   style: string; // "Pastelowe róże, biel, zieleń"
   intro: string; // two sentences, maximum
-  cover: StaticImageData;
-  photos: StaticImageData[];
+  cover: Fotografia;
+  photos: Galeria;
 }
 ```
 
 Photos are statically imported rather than referenced by path; the portfolio
-spec's "Content model" section records what that buys.
+spec's "Content model" section records what that buys. The three optional
+fields `position`, `zoom` and `zoomOrigin` only shape the cropped cover in
+listings; the gallery on a realization's own page shows every photograph whole.
 
 A single registry module imports every realization and exports them in display
 order. Display order is set by hand so the best work can lead.
 
-Adding a realization is: create the folder, drop the photos, write roughly
-fifteen lines, add one line to the registry, push.
+Adding a realization is: create the folder, drop the photos, write the
+`index.ts` (the photo imports, one photograph object with its alt text per
+file, and the record; roughly forty to fifty-five lines for a typical gallery), add one line
+to the registry, push.
 
 If this becomes tedious past about twenty realizations, replace `index.ts`
 authoring with a build-time script that scans folders using `sharp`. That
