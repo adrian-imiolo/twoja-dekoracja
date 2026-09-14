@@ -1,6 +1,6 @@
 import { DO_UZUPELNIENIA } from "@/lib/site";
 
-import type { Fotografia, Realizacja } from "../types";
+import type { Galeria, Realizacja } from "../types";
 
 import zdjecie01 from "./01.jpg";
 import zdjecie02 from "./02.jpg";
@@ -12,7 +12,7 @@ import zdjecie02 from "./02.jpg";
  * Only two photographs. The portfolio spec's "Risks" section says why it
  * launched with two.
  */
-const photos: readonly [Fotografia, ...Fotografia[]] = [
+const photos: Galeria = [
   {
     image: zdjecie01,
     alt: "Girlanda z czerwonych i lustrzanych balonów z neonowym napisem „Happy Birthday” w stonowanym, niebieskim świetle",

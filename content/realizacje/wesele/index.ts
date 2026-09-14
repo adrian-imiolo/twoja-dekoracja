@@ -1,6 +1,6 @@
 import { DO_UZUPELNIENIA } from "@/lib/site";
 
-import type { Fotografia, Realizacja } from "../types";
+import type { Galeria, Realizacja } from "../types";
 
 import zdjecie01 from "./01.jpg";
 import zdjecie02 from "./02.jpg";
@@ -19,7 +19,7 @@ import zdjecie03 from "./03.jpg";
  * because nothing in these frames identifies them, and "Wesele" alone no longer
  * tells the two apart.
  */
-const photos: readonly [Fotografia, ...Fotografia[]] = [
+const photos: Galeria = [
   {
     image: zdjecie01,
     alt: "Okrągła brama z balonów w zieleni, bieli i srebrze, ustawiona na trawniku ogrodu z altaną w tle",

@@ -9,7 +9,7 @@ import { wesele } from "./wesele";
 import { weseleKiM } from "./wesele-k-i-m";
 
 export { KATEGORIA_LABEL } from "./types";
-export type { Fotografia, Kategoria, Realizacja } from "./types";
+export type { Fotografia, Galeria, Kategoria, Realizacja } from "./types";
 
 /**
  * Every realization the site publishes, in the order it is shown.

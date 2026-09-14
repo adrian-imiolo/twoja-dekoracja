@@ -1,6 +1,6 @@
 import { DO_UZUPELNIENIA } from "@/lib/site";
 
-import type { Fotografia, Realizacja } from "../types";
+import type { Galeria, Realizacja } from "../types";
 
 import zdjecie01 from "./01.jpg";
 import zdjecie02 from "./02.jpg";
@@ -15,7 +15,7 @@ import zdjecie03 from "./03.jpg";
  * the welcome hoop. `chrzest-i-roczek` follows the same principle with
  * "Poli", read off its own backdrop rather than invented.
  */
-const photos: readonly [Fotografia, ...Fotografia[]] = [
+const photos: Galeria = [
   {
     image: zdjecie01,
     alt: "Balonowe koło w zieleni, złocie i bieli z tabliczką powitalną „Witamy” i inicjałami pary młodej „K i M”, na tle pikowanej białej ściany",

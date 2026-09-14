@@ -1,6 +1,6 @@
 import { DO_UZUPELNIENIA } from "@/lib/site";
 
-import type { Fotografia, Realizacja } from "../types";
+import type { Galeria, Realizacja } from "../types";
 
 import zdjecie01 from "./01.jpg";
 import zdjecie02 from "./02.jpg";
@@ -15,7 +15,7 @@ import zdjecie04 from "./04.jpg";
  * left out of the copy, which describes the decoration. The salon is the
  * client's client.
  */
-const photos: readonly [Fotografia, ...Fotografia[]] = [
+const photos: Galeria = [
   {
     image: zdjecie01,
     alt: "Łuk z balonów w pudrowym różu, fiolecie i lawendzie przy wejściu do salonu kosmetycznego, z różowymi leżakami na chodniku",

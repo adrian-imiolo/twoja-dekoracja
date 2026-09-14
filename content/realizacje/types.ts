@@ -74,6 +74,13 @@ export interface Fotografia {
   zoomOrigin?: string;
 }
 
+/**
+ * A realization's photographs, in authored order. A non-empty tuple, so a
+ * realization with no photographs is a compile error rather than an empty
+ * page.
+ */
+export type Galeria = readonly [Fotografia, ...Fotografia[]];
+
 export interface Realizacja {
   /** URL segment under `/realizacje`, and the folder name on disk. */
   slug: string;
@@ -104,10 +111,6 @@ export interface Realizacja {
    * repeat it in the gallery below.
    */
   cover: Fotografia;
-  /**
-   * The gallery, in authored order. Typed as a non-empty tuple so a
-   * realization with no photographs is a compile error rather than an empty
-   * page.
-   */
-  photos: readonly [Fotografia, ...Fotografia[]];
+  /** The gallery shown on the realization's own page. */
+  photos: Galeria;
 }
