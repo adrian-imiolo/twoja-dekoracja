@@ -43,17 +43,19 @@ export function SiteFooter() {
       <div className="page-shell pt-10 pb-6 sm:pt-12">
         {/*
          * One column on a phone; the identity across the top with the two link
-         * columns beneath it from a tablet up; and from a laptop, the identity
-         * on the left with both link columns gathered at the right edge. Sized
-         * to their content and pushed to the edge, they leave the empty width
-         * on the inside of the row, where it reads as room around the wordmark
-         * rather than as a column somebody forgot to fill.
+         * columns beneath it from a tablet up; and from a laptop, all three
+         * side by side, each sized to its content, with the spare width split
+         * into equal gutters between them. Given to the identity column, that
+         * width pooled beside a short tagline as a hole wider than the tagline
+         * itself, next to two far taller lists: a column nobody filled. Spread
+         * out, it is the same width read as rhythm across the row. The gap is
+         * only the floor the gutters never shrink below.
          *
          * Collapsing rather than letting columns wrap is what keeps a footer
          * full of links from turning into a ragged block: everything starts
          * at one edge and reads top to bottom.
          */}
-        <div className="grid gap-10 sm:grid-cols-[auto_1fr] sm:gap-x-12 lg:grid-cols-[1fr_auto_auto] lg:gap-x-20">
+        <div className="grid gap-10 sm:grid-cols-[auto_1fr] sm:gap-x-12 lg:grid-cols-[auto_auto_auto] lg:justify-between lg:gap-x-20">
           <div className="flex flex-col items-start gap-4 sm:col-span-2 lg:col-span-1">
             <Link
               href="/"
