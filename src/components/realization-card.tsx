@@ -76,7 +76,7 @@ export function RealizationCard({
         {realizacja.title}
       </h3>
       {miejsceITermin(realizacja) ? (
-        <p className="mt-2 text-sm tracking-[0.2em] text-blush-300 uppercase">
+        <p className="mt-2 text-sm tracking-[0.25em] text-blush-300 uppercase">
           {miejsceITermin(realizacja)}
         </p>
       ) : null}
