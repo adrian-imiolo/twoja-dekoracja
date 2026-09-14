@@ -21,10 +21,9 @@ import type { Fotografia } from "@content/realizacje";
  * is `display: none`, and its buttons would fail the responsive pass's check
  * that every control on a page can be seen.
  *
- * The photographs sit in a snapping horizontal strip, so a swipe is the
- * browser's own scrolling and needs no gesture code. Zoom has two states, fit
- * and the source's own width, because past 1:1 there is nothing in the file
- * to show; panning a zoomed photograph is again plain scrolling, of the slide.
+ * Every photograph is rendered and all but the current one hidden, rather than
+ * swapping a single image: a photograph left mid-download keeps downloading
+ * instead of being cancelled, and one already seen comes back instantly.
  *
  * Closing always goes through history. Opening pushed a same-URL entry (the
  * gallery does that, on the click), so the phone's back gesture closes the
@@ -41,44 +40,28 @@ export function RealizationViewer({
   onClose: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
-  const pasek = useRef<HTMLDivElement>(null);
   const przyciskZamknij = useRef<HTMLButtonElement>(null);
+  const poczatekDotyku = useRef<number | null>(null);
 
   const [aktualne, setAktualne] = useState(startIndex);
-  const [powiekszone, setPowiekszone] = useState<number | null>(null);
 
-  /** Where on the photograph the visitor clicked to zoom, as fractions. */
-  const punktPowiekszenia = useRef({ x: 0.5, y: 0.5 });
+  useLayoutEffect(function pokaz() {
+    const element = dialog.current;
+    if (!element) return;
 
-  useLayoutEffect(
-    function pokazNaZdjeciuStartowym() {
-      const element = dialog.current;
-      const strip = pasek.current;
-      if (!element || !strip) return;
+    element.showModal();
+    przyciskZamknij.current?.focus();
 
-      element.showModal();
-      // `showModal()` focuses the first control, which is the first slide's,
-      // off screen whenever the viewer opens further along.
-      przyciskZamknij.current?.focus();
-      // Instant, not the strip's smooth scrolling: the viewer opens on the
-      // photograph clicked rather than sliding past the ones before it.
-      strip.scrollTo({
-        left: startIndex * strip.clientWidth,
-        behavior: "instant",
-      });
+    // `showModal()` makes the page inert but does not stop it scrolling
+    // under the viewer.
+    const poprzedniOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
-      // `showModal()` makes the page inert but does not stop it scrolling
-      // under the viewer.
-      const poprzedniOverflow = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-
-      return function schowaj() {
-        document.body.style.overflow = poprzedniOverflow;
-        element.close();
-      };
-    },
-    [startIndex],
-  );
+    return function schowaj() {
+      document.body.style.overflow = poprzedniOverflow;
+      element.close();
+    };
+  }, []);
 
   const zamknij = useEffectEvent(onClose);
 
@@ -93,14 +76,10 @@ export function RealizationViewer({
     history.back();
   }
 
-  function przejdzDo(indeks: number) {
-    const strip = pasek.current;
-    if (!strip || indeks < 0 || indeks >= photos.length) return;
-
-    setPowiekszone(null);
-    // No `behavior`: the strip's CSS makes this smooth, and the reduced-motion
-    // rule in globals.css makes it a jump, with no check here.
-    strip.scrollTo({ left: indeks * strip.clientWidth });
+  function przejdzO(krok: number) {
+    setAktualne(function nowe(poprzednie) {
+      return Math.min(Math.max(poprzednie + krok, 0), photos.length - 1);
+    });
   }
 
   /*
@@ -115,7 +94,7 @@ export function RealizationViewer({
     const krok = KROK_KLAWISZA[zdarzenie.key];
     if (krok === undefined) return;
     zdarzenie.preventDefault();
-    przejdzDo(aktualne + krok);
+    przejdzO(krok);
   });
 
   useEffect(function nawigujStrzalkami() {
@@ -125,16 +104,19 @@ export function RealizationViewer({
     };
   }, []);
 
-  function sledzAktualne() {
-    const strip = pasek.current;
-    if (!strip || strip.clientWidth === 0) return;
+  function zapamietajDotyk(zdarzenie: React.TouchEvent) {
+    poczatekDotyku.current = zdarzenie.touches[0]?.clientX ?? null;
+  }
 
-    const indeks = Math.round(strip.scrollLeft / strip.clientWidth);
-    if (indeks === aktualne) return;
+  function przesunPalcem(zdarzenie: React.TouchEvent) {
+    const start = poczatekDotyku.current;
+    const koniec = zdarzenie.changedTouches[0]?.clientX;
+    poczatekDotyku.current = null;
+    if (start === null || koniec === undefined) return;
 
-    setAktualne(indeks);
-    // A zoomed photograph swiped out of view comes back fitted.
-    setPowiekszone(null);
+    const przesuniecie = koniec - start;
+    if (Math.abs(przesuniecie) < PROG_MACHNIECIA) return;
+    przejdzO(przesuniecie < 0 ? 1 : -1);
   }
 
   function zamknijEscapem(zdarzenie: React.SyntheticEvent) {
@@ -142,40 +124,6 @@ export function RealizationViewer({
     zdarzenie.preventDefault();
     cofnij();
   }
-
-  function przelaczPowiekszenie(indeks: number, zdarzenie: React.MouseEvent) {
-    if (powiekszone === indeks) {
-      setPowiekszone(null);
-      return;
-    }
-
-    const obszar = zdarzenie.currentTarget.getBoundingClientRect();
-    punktPowiekszenia.current = {
-      x: (zdarzenie.clientX - obszar.left) / obszar.width,
-      y: (zdarzenie.clientY - obszar.top) / obszar.height,
-    };
-    setPowiekszone(indeks);
-  }
-
-  /*
-   * A zoomed photograph opens on the spot that was clicked rather than at its
-   * top-left corner, which on a portrait is usually ceiling.
-   */
-  useLayoutEffect(
-    function przewinDoPunktuPowiekszenia() {
-      if (powiekszone === null) return;
-      const slajd = pasek.current?.children[powiekszone];
-      if (!(slajd instanceof HTMLElement)) return;
-
-      const { x, y } = punktPowiekszenia.current;
-      slajd.scrollTo({
-        left: x * slajd.scrollWidth - slajd.clientWidth / 2,
-        top: y * slajd.scrollHeight - slajd.clientHeight / 2,
-        behavior: "instant",
-      });
-    },
-    [powiekszone],
-  );
 
   function zamknijPoza(zdarzenie: React.MouseEvent) {
     if (zdarzenie.target !== zdarzenie.currentTarget) return;
@@ -187,58 +135,33 @@ export function RealizationViewer({
       ref={dialog}
       aria-label="Zdjęcia realizacji"
       onCancel={zamknijEscapem}
-      className="m-0 h-dvh max-h-none w-screen max-w-none bg-plum-950 p-0 text-blush-300 backdrop:bg-plum-950"
+      className="m-0 h-dvh max-h-none w-screen max-w-none overflow-hidden bg-plum-950/95 p-0 text-blush-300 backdrop:bg-plum-950"
     >
       <div
-        ref={pasek}
-        onScroll={sledzAktualne}
-        className="flex h-full w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden scroll-smooth"
+        onClick={zamknijPoza}
+        onTouchStart={zapamietajDotyk}
+        onTouchEnd={przesunPalcem}
+        className="flex h-full w-full items-center justify-center px-0 py-12 sm:px-16"
       >
-        {photos.map(function slajd(photo, indeks) {
-          const zoomed = powiekszone === indeks;
-
+        {photos.map(function zdjecie(photo, indeks) {
           return (
-            <div
+            <Image
               key={photo.image.src}
-              data-testid="slajd"
-              onClick={zamknijPoza}
-              className={`h-full w-full shrink-0 snap-center snap-always overflow-auto ${
-                zoomed
-                  ? "block overscroll-contain"
-                  : "flex items-center justify-center"
+              src={photo.image}
+              alt={photo.alt}
+              placeholder="blur"
+              sizes="100vw"
+              className={`h-auto max-h-full w-auto max-w-full ${
+                indeks === aktualne ? "" : "hidden"
               }`}
-            >
-              <button
-                type="button"
-                aria-label={zoomed ? "Pomniejsz" : "Powiększ"}
-                onClick={function przelacz(zdarzenie) {
-                  przelaczPowiekszenie(indeks, zdarzenie);
-                }}
-                className={`block ${zoomed ? "mx-auto w-fit cursor-zoom-out" : "cursor-zoom-in"}`}
-              >
-                <Image
-                  src={photo.image}
-                  alt={photo.alt}
-                  placeholder="blur"
-                  sizes="100vw"
-                  style={
-                    zoomed ? { width: `${photo.image.width}px` } : undefined
-                  }
-                  className={
-                    zoomed
-                      ? "h-auto max-w-none"
-                      : "h-auto max-h-dvh w-auto max-w-screen"
-                  }
-                />
-              </button>
-            </div>
+            />
           );
         })}
       </div>
 
       <p
         aria-live="polite"
-        className="absolute top-0 left-0 flex min-h-11 items-center bg-plum-950/60 px-4 text-sm tracking-[0.25em]"
+        className="absolute top-0 left-0 flex min-h-11 items-center px-4 text-sm tracking-[0.25em]"
       >
         {aktualne + 1} / {photos.length}
       </p>
@@ -257,7 +180,7 @@ export function RealizationViewer({
         type="button"
         disabled={aktualne === 0}
         onClick={function poprzednie() {
-          przejdzDo(aktualne - 1);
+          przejdzO(-1);
         }}
         className={`absolute top-1/2 left-0 -translate-y-1/2 ${PRZYCISK}`}
       >
@@ -269,7 +192,7 @@ export function RealizationViewer({
         type="button"
         disabled={aktualne === photos.length - 1}
         onClick={function nastepne() {
-          przejdzDo(aktualne + 1);
+          przejdzO(1);
         }}
         className={`absolute top-1/2 right-0 -translate-y-1/2 ${PRZYCISK}`}
       >
@@ -285,8 +208,11 @@ const KROK_KLAWISZA: Partial<Record<string, number>> = {
   ArrowRight: 1,
 };
 
-// Over a photograph, so a translucent plum ground keeps the glyph legible on
-// a white tablecloth as well as on a dark wall.
+/** Horizontal travel, in pixels, that counts as a swipe rather than a tap. */
+const PROG_MACHNIECIA = 50;
+
+// Over a photograph on a phone, so a translucent plum ground keeps the glyph
+// legible on a white tablecloth as well as on a dark wall.
 const PRZYCISK =
   "flex size-11 items-center justify-center bg-plum-950/60 text-2xl text-blush-300 transition-colors hover:text-blush-100 disabled:cursor-not-allowed disabled:opacity-30";
 

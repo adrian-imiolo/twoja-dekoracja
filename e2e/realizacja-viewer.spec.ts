@@ -66,33 +66,34 @@ test("opens at the photograph clicked and moves one photograph at a time, withou
   await letViewerImagesFinish(page);
 });
 
-test("zooms the photograph to its own size and back", async ({ page }) => {
+test("shows one photograph at a time, whole within the screen", async ({
+  page,
+}) => {
   await page.goto(url);
   await columnButton(page, 1).click();
 
-  const slide = viewer(page).getByTestId("slajd").nth(1);
-  const zoomIn = slide.getByRole("button", { name: "Powiększ" });
-  await zoomIn.click();
+  const shown = viewer(page).getByRole("img").locator("visible=true");
+  await expect(shown).toHaveCount(1);
 
-  const zoomOut = slide.getByRole("button", { name: "Pomniejsz" });
-  await expect(zoomOut).toBeVisible();
-  const overflows = await slide.evaluate((element) => {
-    const image = element.querySelector("img")!;
-    return (
-      element.scrollWidth > element.clientWidth ||
-      image.getBoundingClientRect().width > window.innerWidth
-    );
-  });
-  expect(overflows).toBe(true);
-
-  await zoomOut.click();
-  await expect(slide.getByRole("button", { name: "Powiększ" })).toBeVisible();
-  const fits = await slide.evaluate(
-    (element) => element.scrollWidth <= element.clientWidth,
-  );
-  expect(fits).toBe(true);
+  const box = await shown.boundingBox();
+  const size = page.viewportSize()!;
+  expect(box).not.toBeNull();
+  expect(box!.x).toBeGreaterThanOrEqual(0);
+  expect(box!.y).toBeGreaterThanOrEqual(0);
+  expect(box!.x + box!.width).toBeLessThanOrEqual(size.width);
+  expect(box!.y + box!.height).toBeLessThanOrEqual(size.height);
 
   await letViewerImagesFinish(page);
+});
+
+test("a click beside the photograph closes it", async ({ page }) => {
+  await page.goto(url);
+  await columnButton(page, 1).click();
+  await expect(viewer(page)).toBeVisible();
+  await letViewerImagesFinish(page);
+
+  await viewer(page).click({ position: { x: 5, y: 200 } });
+  await expect(viewer(page)).toHaveCount(0);
 });
 
 test("Escape closes it, hands focus back to the photograph and leaves the address alone", async ({
