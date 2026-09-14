@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { coverStyle } from "@/lib/cover-style";
 import { miejsceITermin } from "@/lib/site";
 import {
   KATEGORIA_LABEL,
@@ -52,19 +53,7 @@ export function RealizationCard({
           placeholder="blur"
           fill
           sizes={sizes}
-          style={
-            realizacja.cover.position || realizacja.cover.zoom
-              ? {
-                  objectPosition: realizacja.cover.position,
-                  transform: realizacja.cover.zoom
-                    ? `scale(${realizacja.cover.zoom})`
-                    : undefined,
-                  transformOrigin: realizacja.cover.zoom
-                    ? (realizacja.cover.zoomOrigin ?? "50% 50%")
-                    : undefined,
-                }
-              : undefined
-          }
+          style={coverStyle(realizacja.cover)}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
         />
       </div>
