@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
+import { Glif } from "@/components/ui/channel-icons";
 import type { Fotografia } from "@content/realizacje";
 
 import { RealizationViewer } from "./realization-viewer";
@@ -82,8 +83,28 @@ export function RealizationGallery({
               onClick={function otworzTo() {
                 otworz(index);
               }}
-              className="block w-full cursor-zoom-in"
+              className="group relative block w-full cursor-zoom-in"
             >
+              {/*
+               * A phone has no hover and no zoom cursor, so without a mark
+               * nothing says a photograph opens. Decoration only: the image's
+               * alt already names the button.
+               */}
+              <span
+                aria-hidden="true"
+                className="absolute right-3 bottom-3 z-10 flex size-10 items-center justify-center bg-plum-950/60 text-xl text-blush-300 transition-colors group-hover:text-blush-100"
+              >
+                <Glif>
+                  <path
+                    d="M14 4h6v6M10 20H4v-6M20 4l-6.5 6.5M4 20l6.5-6.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </Glif>
+              </span>
               <Image
                 src={photo.image}
                 alt={photo.alt}
