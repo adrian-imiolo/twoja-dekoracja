@@ -25,8 +25,16 @@ import {
 export function RealizationCard({
   realizacja,
   sizes,
+  titleAs: Title,
 }: {
   realizacja: Realizacja;
+  /**
+   * The title's heading level. It comes from whoever laid out the listing,
+   * because only they know whether the cards sit directly under the page's
+   * `h1` or under a section `h2`. Required on purpose: a default would encode
+   * one of those as the normal case and skip a level in the other.
+   */
+  titleAs: "h2" | "h3";
   /**
    * How wide the card will be rendered, in `next/image` terms. It
    * comes from whoever laid out the listing, because only they know how many
@@ -61,9 +69,9 @@ export function RealizationCard({
       <p className="mt-6 text-xs tracking-[0.25em] text-blush-300/80 uppercase">
         {KATEGORIA_LABEL[realizacja.category]}
       </p>
-      <h3 className="mt-2 font-display text-2xl text-blush-200 transition-colors group-hover:text-blush-100">
+      <Title className="mt-2 font-display text-2xl text-blush-200 transition-colors group-hover:text-blush-100">
         {realizacja.title}
-      </h3>
+      </Title>
       {miejsceITermin(realizacja) ? (
         <p className="mt-2 text-sm tracking-[0.25em] text-blush-300 uppercase">
           {miejsceITermin(realizacja)}
