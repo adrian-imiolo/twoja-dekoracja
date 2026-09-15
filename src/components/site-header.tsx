@@ -12,24 +12,23 @@ export function SiteHeader() {
   return (
     <header className="border-b border-plum-800">
       {/*
-       * Below `sm` the four pages go behind a "Menu" button. Wrapped under the
+       * Below `sm` the four pages go behind a menu button. Wrapped under the
        * wordmark they took two rows and a third of a 320px screen before the
        * page began, and a button is the only arrangement that gives that
        * screen back: a 2×2 grid is still two rows. From `sm` up the row holds
        * without it, and the button is not shown.
        *
-       * The button needs room on the wordmark's row, and at 320px that row is
-       * already full. The badge gives way rather than the wordmark, whose
-       * letter-spacing is the brand and is not negotiable. Shrinking it enough
-       * to fit a button beside the badge would take it to 11.5px, under the
-       * 12px the suite reads as legible. The badge is still in the browser
-       * tab, in the footer, and here from `sm` up.
+       * Below `sm` the badge, the wordmark and the 44px icon button share one
+       * row, and at 320px that row is 272px. The badge shrinks to 32px and
+       * the wordmark gives up size, never its letter-spacing, which is the
+       * brand. What the row can't do is lose the badge, the other half of the
+       * brand, or push the wordmark under the 12px the suite reads as legible.
        */}
       <div className="page-shell flex flex-wrap items-center justify-between gap-x-3 gap-y-4 py-8 sm:gap-x-6">
         {/*
-         * Without the badge the link is only as tall as the wordmark's line,
-         * so below `sm` it takes the button's 44px instead: a tap target on
-         * its own, and the same height as the other half of the row.
+         * The 32px badge is shorter than the button, so below `sm` the link
+         * takes the button's 44px: a tap target on its own, and the same
+         * height as the other half of the row.
          */}
         <Link
           id={HEADER_HOME_LINK_ID}
@@ -48,15 +47,19 @@ export function SiteHeader() {
             alt=""
             width={56}
             height={56}
-            className="shrink-0 max-sm:hidden"
+            className="shrink-0 max-sm:size-8"
           />
           {/*
            * Scales with the screen up to its full size rather than stepping
-           * at a breakpoint, because the room beside the menu button runs out
-           * gradually. At 320px it is 16px, which leaves the button a few
-           * pixels to spare, and on a 390px phone 19.5px.
+           * at a breakpoint, because the room beside the badge and the button
+           * runs out gradually. The row's fixed parts (page padding, badge,
+           * button, gaps) take a constant 148px, so the room left is the
+           * viewport minus a constant, which a plain `vw` can't track. The
+           * slope and offset are fitted to that room so 320px is the tightest
+           * width: 13.5px with 2.5px to spare, 18.75px on a 390px phone, and
+           * the full 24px from 460px.
            */}
-          <Wordmark className="text-[clamp(1rem,5vw,1.5rem)] sm:text-3xl" />
+          <Wordmark className="text-[clamp(0.75rem,7.5vw_-_10.5px,1.5rem)] sm:text-3xl" />
         </Link>
 
         {/*
