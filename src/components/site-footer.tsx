@@ -40,22 +40,24 @@ const ROK = new Date().getFullYear();
 export function SiteFooter() {
   return (
     <footer className="mt-24 border-t border-plum-800">
-      <div className="page-shell pt-10 pb-6 sm:pt-12">
+      <div className="page-shell pt-8 pb-6 sm:pt-12">
         {/*
-         * One column on a phone; the identity across the top with the two link
-         * columns beneath it from a tablet up; and from a laptop, all three
-         * side by side, each sized to its content, with the spare width split
+         * On a phone the three blocks stack, closer together than the columns
+         * sit from a tablet up: a footer read by scrolling needs less air
+         * between its parts than one taken in at a glance. From a tablet up,
+         * the identity across the top with the two link columns beneath it;
+         * and from a laptop, all three side by side, each sized to its content, with the spare width split
          * into equal gutters between them. Given to the identity column, that
          * width pooled beside a short tagline as a hole wider than the tagline
          * itself, next to two far taller lists: a column nobody filled. Spread
          * out, it is the same width read as rhythm across the row. The gap is
          * only the floor the gutters never shrink below.
          *
-         * Collapsing rather than letting columns wrap is what keeps a footer
-         * full of links from turning into a ragged block: everything starts
+         * Stacking rather than letting columns wrap is what keeps a footer
+         * full of links from turning into a ragged block: every block starts
          * at one edge and reads top to bottom.
          */}
-        <div className="grid gap-10 sm:grid-cols-[auto_1fr] sm:gap-x-12 lg:grid-cols-[auto_auto_auto] lg:justify-between lg:gap-x-20">
+        <div className="grid gap-6 sm:grid-cols-[auto_1fr] sm:gap-x-12 sm:gap-y-10 lg:grid-cols-[auto_auto_auto] lg:justify-between lg:gap-x-20">
           <div className="flex flex-col items-start gap-4 sm:col-span-2 lg:col-span-1">
             <Link
               href="/"
@@ -86,21 +88,24 @@ export function SiteFooter() {
           {/*
            * Both headings take the badge's height and centre in it, so that
            * across the row they sit on the wordmark's line rather than a
-           * little above it.
+           * little above it. On a phone the grid of page names needs no title
+           * to read as one, so this heading leaves the screen, but only the
+           * screen: the outline stays the same at every width.
            */}
           <nav aria-label="Na stronie">
-            <h2 className="font-display text-lg leading-10 text-blush-200">
+            <h2 className="font-display text-lg leading-10 text-blush-200 max-sm:sr-only">
               Na stronie
             </h2>
             {/*
-             * Each link its own row, because on a phone this column is a
-             * stack of tap targets rather than a line of text. A row of
-             * them would be the header's nav again, and the header's nav is
-             * one scroll away. The link brings its own 36px target; the
-             * row's padding lets two neighbouring targets
-             * meet without overlapping, and stretches each across the column.
+             * On a phone the header's nav is behind the menu button, so this
+             * list is the only page navigation always in view there, and a
+             * 2×2 grid keeps it that without a row per page. Read row by row,
+             * it keeps the header's order. From a tablet up, a link per row
+             * again, a column beside the contact one. The link brings its own
+             * 36px target; the cell's padding lets two neighbouring targets
+             * meet without overlapping, and stretches each across its cell.
              */}
-            <ul className="mt-1">
+            <ul className="grid grid-cols-2 gap-x-6 sm:mt-1 sm:block">
               {STRONY.map((strona) => (
                 <li key={strona.sciezka} className="py-2">
                   <QuietLink href={strona.sciezka} className="w-full">
@@ -129,7 +134,7 @@ export function SiteFooter() {
          * copyright line it is also out of the navigation, which then lists
          * the same four pages as the header and nothing that is not one.
          */}
-        <div className="mt-8 flex flex-col items-start gap-2 border-t border-plum-800/70 pt-4 text-sm text-cream-50/55 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-6 flex flex-col items-start gap-2 border-t border-plum-800/70 pt-4 text-sm text-cream-50/55 sm:mt-8 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {ROK} {site.name}
           </p>
