@@ -100,30 +100,81 @@ test.describe("the footer", () => {
   });
 
   /*
-   * The one question about a narrow footer that is the footer's own: on a
-   * phone the columns collapse into a single stack rather than wrapping into
-   * a ragged block. Everything else a width can do to this footer (a page
-   * that scrolls sideways, a link past the right edge, a target too small for
-   * a thumb) is asserted over every page of the site, this one included, in
-   * `responsive.spec.ts`, and asking it twice only gives the 36px floor two
-   * homes to drift apart in.
+   * The questions about a narrow footer that are the footer's own: on a phone
+   * the blocks stack on one edge, the pages sit in a 2×2 grid, and the list's
+   * heading leaves the screen but not the outline. Everything else a width can
+   * do to this footer (a page that scrolls sideways, a link past the right
+   * edge, a target too small for a thumb) is asserted over every page of the
+   * site, this one included, in `responsive.spec.ts`, and asking it twice only
+   * gives the 36px floor two homes to drift apart in. Its height is not
+   * asserted: a pixel budget would fail on every copy edit.
    */
-  test("collapses into one column on a phone", async ({ page }) => {
+  test("stacks its blocks and grids its pages on a phone", async ({ page }) => {
     // The page is already loaded; narrowing it is what lays the footer out
-    // again, and the grid that does the collapsing is pure CSS.
+    // again, and the grid is pure CSS.
     await page.setViewportSize({ width: 390, height: 844 });
 
-    const leweKrawedzie = await page
-      .getByRole("contentinfo")
-      .getByRole("link")
-      .evaluateAll((elementy) =>
-        elementy.map((element) =>
-          Math.round(element.getBoundingClientRect().left),
-        ),
-      );
+    const stopka = page.getByRole("contentinfo");
+    const nawigacja = stopka.getByRole("navigation", { name: "Na stronie" });
 
-    // Every link starts at the same left edge. A footer with no links at all
-    // fails this too.
-    expect(new Set(leweKrawedzie).size).toBe(1);
+    function lewaKrawedz(pudelko: { x: number } | null) {
+      return Math.round(pudelko!.x);
+    }
+
+    // The identity block, the nav and the contact block start on one edge.
+    const krawedzie = [
+      lewaKrawedz(
+        await stopka
+          .getByRole("link", { name: site.wordmark, exact: true })
+          .boundingBox(),
+      ),
+      lewaKrawedz(await nawigacja.boundingBox()),
+      lewaKrawedz(
+        await stopka
+          .getByRole("heading", { name: "Kontakt", exact: true })
+          .boundingBox(),
+      ),
+    ];
+    expect(new Set(krawedzie).size).toBe(1);
+
+    /*
+     * Two columns, two rows, read row by row in the header's order. The grid
+     * is sized for four pages; a fifth would need the layout rethought, and
+     * this is where that shows.
+     */
+    expect(STRONY).toHaveLength(4);
+    const pudelka = await nawigacja
+      .getByRole("link")
+      .evaluateAll(function polozenia(elementy) {
+        return elementy.map(function polozenie(element) {
+          const { left, top } = element.getBoundingClientRect();
+          return {
+            nazwa: element.textContent,
+            left: Math.round(left),
+            top: Math.round(top),
+          };
+        });
+      });
+    expect(pudelka.map((pudelko) => pudelko.nazwa)).toEqual(
+      STRONY.map((strona) => strona.nazwa),
+    );
+    const [lewyGorny, prawyGorny, lewyDolny, prawyDolny] = pudelka;
+    expect(prawyGorny.top).toBe(lewyGorny.top);
+    expect(prawyGorny.left).toBeGreaterThan(lewyGorny.left);
+    expect(lewyDolny.top).toBeGreaterThan(lewyGorny.top);
+    expect(lewyDolny.left).toBe(lewyGorny.left);
+    expect(prawyDolny.top).toBe(lewyDolny.top);
+    expect(prawyDolny.left).toBe(prawyGorny.left);
+
+    // Still a heading to a screen reader, but not a line on the screen. Measured
+    // rather than `not.toBeVisible()`, which counts a 1px screen-reader-only
+    // box as visible.
+    const naglowek = nawigacja.getByRole("heading", {
+      name: "Na stronie",
+      exact: true,
+    });
+    await expect(naglowek).toHaveCount(1);
+    const { width, height } = (await naglowek.boundingBox())!;
+    expect(width * height).toBeLessThanOrEqual(1);
   });
 });
