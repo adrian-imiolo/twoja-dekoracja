@@ -110,7 +110,7 @@ export function RealizationGallery({
               ref={scena}
               type="button"
               onClick={otworz}
-              className="group relative block aspect-4/5 w-full cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-blush-300 sm:aspect-3/2"
+              className="group relative block aspect-4/5 w-full cursor-pointer outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid focus-visible:outline-blush-300 sm:aspect-3/2"
             >
               <div
                 style={{
@@ -203,7 +203,7 @@ export function RealizationGallery({
                     onClick={function pokazTo() {
                       setAktualne(indeks);
                     }}
-                    className={`relative block size-14 overflow-hidden outline-none transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blush-300 sm:size-20 ${
+                    className={`relative block size-14 overflow-hidden outline-none transition-opacity focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-blush-300 sm:size-20 ${
                       jestAktualne
                         ? "opacity-100 ring-2 ring-blush-300"
                         : "opacity-50 hover:opacity-80"

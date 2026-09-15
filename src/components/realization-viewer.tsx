@@ -157,7 +157,7 @@ export function RealizationViewer({
 
       <p
         aria-live="polite"
-        className="absolute top-0 left-0 flex min-h-11 items-center px-4 text-sm tracking-[0.25em]"
+        className="absolute top-[max(0.75rem,env(safe-area-inset-top))] left-[max(0.75rem,env(safe-area-inset-left))] flex min-h-11 items-center px-4 text-sm tracking-[0.25em]"
       >
         {index + 1} / {photos.length}
       </p>
@@ -166,7 +166,7 @@ export function RealizationViewer({
         ref={przyciskZamknij}
         type="button"
         onClick={onClose}
-        className={`absolute top-0 right-0 ${PRZYCISK}`}
+        className={`absolute top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] ${PRZYCISK}`}
       >
         <span className="sr-only">Zamknij</span>
         <Kreska d="M6 6l12 12M18 6 6 18" />
@@ -205,9 +205,13 @@ export const KROK_KLAWISZA: Partial<Record<string, number>> = {
 };
 
 // Over a photograph on a phone, so a translucent plum ground keeps the glyph
-// legible on a white tablecloth as well as on a dark wall.
+// legible on a white tablecloth as well as on a dark wall. The outline is
+// reset because Safari rings a focused button even after a tap, and the viewer
+// focuses its close button on open. `outline-none` also zeroes Tailwind's
+// outline-style variable, so the keyboard ring has to restore it; it is drawn
+// inside because the arrows touch the screen's edge.
 export const PRZYCISK =
-  "flex size-11 items-center justify-center bg-plum-950/60 text-2xl text-blush-300 transition-colors hover:text-blush-100 disabled:cursor-not-allowed disabled:opacity-30";
+  "flex size-11 items-center justify-center bg-plum-950/60 text-2xl text-blush-300 outline-none transition-colors hover:text-blush-100 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid focus-visible:outline-blush-300 disabled:cursor-not-allowed disabled:opacity-30";
 
 export function Kreska({ d }: { d: string }) {
   return (
