@@ -7,10 +7,12 @@ import { expect, test, type Locator, type Page } from "./test";
  * bottom, where the footer is on screen and this button is not rendered, so
  * that suite never sees it.
  *
- * The longest gallery on a phone, where the header is furthest away and the
- * button matters most.
+ * The realizations index on a phone: a card per realization one below another,
+ * the longest page there is, where the header is furthest away and the button
+ * matters most. A realization's own page no longer is: its photographs share
+ * one stage.
  */
-const GALERIA = "/realizacje/chrzest-i-roczek";
+const DLUGA_STRONA = "/realizacje";
 const TELEFON = { width: 390, height: 844 };
 
 function button(page: Page): Locator {
@@ -35,7 +37,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("is not rendered at the top of a page", async ({ page }) => {
-  await page.goto(GALERIA);
+  await page.goto(DLUGA_STRONA);
 
   await expect(homeLink(page)).toBeVisible();
   await expect(button(page)).toHaveCount(0);
@@ -44,7 +46,7 @@ test("is not rendered at the top of a page", async ({ page }) => {
 test("appears one screen past the header, a full tap target in the bottom-right corner", async ({
   page,
 }) => {
-  await page.goto(GALERIA);
+  await page.goto(DLUGA_STRONA);
   await scrollPastHeader(page);
 
   const target = button(page);
@@ -65,7 +67,7 @@ test("appears one screen past the header, a full tap target in the bottom-right 
 test("returns to the top and hands focus to the header's home link", async ({
   page,
 }) => {
-  await page.goto(GALERIA);
+  await page.goto(DLUGA_STRONA);
   await scrollPastHeader(page);
 
   await button(page).click();
@@ -79,7 +81,7 @@ test("jumps instantly for a visitor who asked for less motion", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto(GALERIA);
+  await page.goto(DLUGA_STRONA);
   await scrollPastHeader(page);
 
   await button(page).click();
@@ -89,7 +91,7 @@ test("jumps instantly for a visitor who asked for less motion", async ({
 });
 
 test("is not rendered while the footer is on screen", async ({ page }) => {
-  await page.goto(GALERIA);
+  await page.goto(DLUGA_STRONA);
   await scrollPastHeader(page);
   await expect(button(page)).toBeVisible();
 

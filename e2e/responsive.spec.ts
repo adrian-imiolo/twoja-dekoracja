@@ -186,6 +186,31 @@ async function zmierzStrone(page: Page): Promise<Pomiar> {
         return cel !== null && widoczny(cel);
       };
 
+      /*
+       * Overflow made only of what is hidden from everyone on purpose: a
+       * gallery's track, whose photographs off to the side are marked
+       * `aria-hidden` and wait there to be swiped in. Anything else past the
+       * box, a caption or a button, is still reported.
+       */
+      const nadmiarCelowoUkryty = (element: Element) => {
+        const ramka = element.getBoundingClientRect();
+        const pozaRamka = (el: Element) => {
+          const r = el.getBoundingClientRect();
+          return r.left < ramka.left - 1 || r.right > ramka.right + 1;
+        };
+        return [...element.querySelectorAll("*")].every((potomek) => {
+          if (potomek.closest('[aria-hidden="true"]')) return true;
+          // The track itself, as wide as all its slides: excused only for
+          // hidden slides it holds past the frame, not for an icon inside it.
+          const nosiUkryteSlajdy = [...potomek.children].some(
+            (dziecko) =>
+              dziecko.getAttribute("aria-hidden") === "true" &&
+              pozaRamka(dziecko),
+          );
+          return nosiUkryteSlajdy || !pozaRamka(potomek);
+        });
+      };
+
       for (const element of document.body.querySelectorAll("*")) {
         // Hidden from everyone on purpose: the form's honeypot.
         if (element.closest('[aria-hidden="true"]')) continue;
@@ -236,7 +261,8 @@ async function zmierzStrone(page: Page): Promise<Pomiar> {
         if (
           (overflowX === "hidden" || overflowX === "clip") &&
           wystaje &&
-          !przycinaMedia
+          !przycinaMedia &&
+          !nadmiarCelowoUkryty(element)
         ) {
           usterki.przyciete.push(opisz(element));
         }
@@ -255,7 +281,8 @@ async function zmierzStrone(page: Page): Promise<Pomiar> {
           overflowX === "visible" &&
           styl.display !== "inline" &&
           wystaje &&
-          !dzieckoWystaje
+          !dzieckoWystaje &&
+          !nadmiarCelowoUkryty(element)
         ) {
           usterki.wylewaSie.push(
             `${opisz(element)} ${element.scrollWidth}px in ${element.clientWidth}px`,
