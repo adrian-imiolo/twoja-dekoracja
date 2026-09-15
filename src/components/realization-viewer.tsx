@@ -1,16 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import {
-  useEffect,
-  useEffectEvent,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useEffectEvent, useLayoutEffect, useRef } from "react";
 
 import { Glif } from "@/components/ui/channel-icons";
 import type { Fotografia } from "@content/realizacje";
+
+import { useSwipe } from "./use-swipe";
 
 /**
  * A realization's photographs, full screen, one at a time.
@@ -22,35 +18,28 @@ import type { Fotografia } from "@content/realizacje";
  * that every control on a page can be seen.
  *
  * The photographs sit side by side on a track that is translated rather than
- * scrolled. A finger drags the track directly, so a swipe shows the next
- * photograph coming in, and letting go animates to whichever photograph the
- * drag settled on; the arrows and keys get the same slide for free. A
- * vertical drag moves and fades the photograph instead, and closes the viewer
- * past a threshold, the way phone galleries are dismissed. Every photograph
- * stays mounted, so one left mid-download keeps downloading.
+ * scrolled, dragged by `useSwipe` like the gallery's stage. A vertical drag
+ * moves and fades the photograph instead, and closes the viewer past a
+ * threshold, the way phone galleries are dismissed. Every photograph stays
+ * mounted, so one left mid-download keeps downloading.
  *
- * Closing always goes through history. Opening pushed a same-URL entry (the
- * gallery does that, on the click), so the phone's back gesture closes the
- * viewer instead of leaving the page, and every other way out calls
- * `history.back()` and lets that one `popstate` do the closing.
+ * Which photograph is shown belongs to the gallery, so closing leaves the
+ * stage on the photograph the visitor ended on. Every way out calls `onClose`,
+ * which goes through history (`useViewerHistory`).
  */
 export function RealizationViewer({
   photos,
-  startIndex,
+  index,
+  onIndexChange,
   onClose,
 }: {
   photos: readonly Fotografia[];
-  startIndex: number;
+  index: number;
+  onIndexChange: (index: number) => void;
   onClose: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const przyciskZamknij = useRef<HTMLButtonElement>(null);
-  const dotyk = useRef<Dotyk | null>(null);
-  /** Set by a drag so the click the browser may fire after it does not close. */
-  const bylPrzeciagniety = useRef(false);
-
-  const [aktualne, setAktualne] = useState(startIndex);
-  const [przesuniecie, setPrzesuniecie] = useState<Przesuniecie | null>(null);
 
   useLayoutEffect(function pokaz() {
     const element = dialog.current;
@@ -70,24 +59,20 @@ export function RealizationViewer({
     };
   }, []);
 
-  const zamknij = useEffectEvent(onClose);
-
-  useEffect(function zamykajPrzyCofnieciu() {
-    window.addEventListener("popstate", zamknij);
-    return function przestanNasluchiwac() {
-      window.removeEventListener("popstate", zamknij);
-    };
-  }, []);
-
-  function cofnij() {
-    history.back();
-  }
-
   function przejdzO(krok: number) {
-    setAktualne(function nowe(poprzednie) {
-      return Math.min(Math.max(poprzednie + krok, 0), photos.length - 1);
-    });
+    onIndexChange(Math.min(Math.max(index + krok, 0), photos.length - 1));
   }
+
+  const {
+    offset: przesuniecie,
+    handlers: uchwytyDotyku,
+    justDragged: wlasniePrzeciagniety,
+  } = useSwipe({
+    index,
+    count: photos.length,
+    onStep: przejdzO,
+    onDismiss: onClose,
+  });
 
   /*
    * On the window rather than the dialog: when "next" becomes disabled on the
@@ -111,72 +96,16 @@ export function RealizationViewer({
     };
   }, []);
 
-  function zacznijDotyk(zdarzenie: React.TouchEvent) {
-    const palec = zdarzenie.touches[0];
-    if (!palec || zdarzenie.touches.length > 1) return;
-    dotyk.current = {
-      x: palec.clientX,
-      y: palec.clientY,
-      os: null,
-      ostatnie: { x: 0, y: 0 },
-    };
-    bylPrzeciagniety.current = false;
-  }
-
-  function przeciagnij(zdarzenie: React.TouchEvent) {
-    const start = dotyk.current;
-    const palec = zdarzenie.touches[0];
-    if (!start || !palec) return;
-
-    const x = palec.clientX - start.x;
-    const y = palec.clientY - start.y;
-
-    // The axis is decided once, by the first clear movement, so a swipe that
-    // wobbles does not start closing and a drag down does not change photos.
-    if (start.os === null) {
-      if (Math.max(Math.abs(x), Math.abs(y)) < PROG_OSI) return;
-      start.os = Math.abs(x) >= Math.abs(y) ? "x" : "y";
-      bylPrzeciagniety.current = true;
-    }
-
-    // Past the first or last photograph the track gives, but reluctantly.
-    const naKrancu =
-      (aktualne === 0 && x > 0) || (aktualne === photos.length - 1 && x < 0);
-    const nowe =
-      start.os === "y" ? { x: 0, y } : { x: naKrancu ? x / 3 : x, y: 0 };
-
-    // Kept on the ref as well as in state: a quick flick can end before the
-    // last move has rendered, and the release would read a stale distance.
-    start.ostatnie = nowe;
-    setPrzesuniecie(nowe);
-  }
-
-  function pusc() {
-    const start = dotyk.current;
-    dotyk.current = null;
-    setPrzesuniecie(null);
-    if (!start?.os) return;
-    const koniec = start.ostatnie;
-
-    if (start.os === "y") {
-      if (Math.abs(koniec.y) >= PROG_ZAMKNIECIA) cofnij();
-      return;
-    }
-
-    if (Math.abs(koniec.x) < PROG_MACHNIECIA) return;
-    przejdzO(koniec.x < 0 ? 1 : -1);
-  }
-
   function zamknijEscapem(zdarzenie: React.SyntheticEvent) {
-    // The dialog would close itself and skip history; let `popstate` do it.
+    // The dialog would close itself and skip history.
     zdarzenie.preventDefault();
-    cofnij();
+    onClose();
   }
 
   function zamknijPoza(zdarzenie: React.MouseEvent) {
-    if (bylPrzeciagniety.current) return;
+    if (wlasniePrzeciagniety()) return;
     if (zdarzenie.target !== zdarzenie.currentTarget) return;
-    cofnij();
+    onClose();
   }
 
   const przesuniecieX = przesuniecie?.x ?? 0;
@@ -189,15 +118,12 @@ export function RealizationViewer({
       onCancel={zamknijEscapem}
       // On the dialog, not the track: the track is translated off its own box,
       // so a touch between slides would miss it.
-      onTouchStart={zacznijDotyk}
-      onTouchMove={przeciagnij}
-      onTouchEnd={pusc}
-      onTouchCancel={pusc}
+      {...uchwytyDotyku}
       className="m-0 h-dvh max-h-none w-screen max-w-none touch-none overflow-hidden bg-plum-950 p-0 text-blush-300 backdrop:bg-plum-950"
     >
       <div
         style={{
-          transform: `translate(calc(${-aktualne * 100}% + ${przesuniecieX}px), ${przesuniecieY}px)`,
+          transform: `translate(calc(${-index * 100}% + ${przesuniecieX}px), ${przesuniecieY}px)`,
           opacity: 1 - Math.min(Math.abs(przesuniecieY) / 400, 0.6),
         }}
         className={`flex h-full w-full ${
@@ -207,7 +133,7 @@ export function RealizationViewer({
         }`}
       >
         {photos.map(function zdjecie(photo, indeks) {
-          const jestAktualne = indeks === aktualne;
+          const jestAktualne = indeks === index;
 
           return (
             <div
@@ -233,13 +159,13 @@ export function RealizationViewer({
         aria-live="polite"
         className="absolute top-0 left-0 flex min-h-11 items-center px-4 text-sm tracking-[0.25em]"
       >
-        {aktualne + 1} / {photos.length}
+        {index + 1} / {photos.length}
       </p>
 
       <button
         ref={przyciskZamknij}
         type="button"
-        onClick={cofnij}
+        onClick={onClose}
         className={`absolute top-0 right-0 ${PRZYCISK}`}
       >
         <span className="sr-only">Zamknij</span>
@@ -248,7 +174,7 @@ export function RealizationViewer({
 
       <button
         type="button"
-        disabled={aktualne === 0}
+        disabled={index === 0}
         onClick={function poprzednie() {
           przejdzO(-1);
         }}
@@ -260,7 +186,7 @@ export function RealizationViewer({
 
       <button
         type="button"
-        disabled={aktualne === photos.length - 1}
+        disabled={index === photos.length - 1}
         onClick={function nastepne() {
           przejdzO(1);
         }}
@@ -273,32 +199,17 @@ export function RealizationViewer({
   );
 }
 
-type Przesuniecie = { x: number; y: number };
-type Dotyk = {
-  x: number;
-  y: number;
-  os: "x" | "y" | null;
-  ostatnie: Przesuniecie;
-};
-
-const KROK_KLAWISZA: Partial<Record<string, number>> = {
+export const KROK_KLAWISZA: Partial<Record<string, number>> = {
   ArrowLeft: -1,
   ArrowRight: 1,
 };
 
-/** Movement, in pixels, before a touch commits to a direction. */
-const PROG_OSI = 10;
-/** Horizontal travel, in pixels, that changes the photograph. */
-const PROG_MACHNIECIA = 50;
-/** Vertical travel, in pixels, that closes the viewer. */
-const PROG_ZAMKNIECIA = 100;
-
 // Over a photograph on a phone, so a translucent plum ground keeps the glyph
 // legible on a white tablecloth as well as on a dark wall.
-const PRZYCISK =
+export const PRZYCISK =
   "flex size-11 items-center justify-center bg-plum-950/60 text-2xl text-blush-300 transition-colors hover:text-blush-100 disabled:cursor-not-allowed disabled:opacity-30";
 
-function Kreska({ d }: { d: string }) {
+export function Kreska({ d }: { d: string }) {
   return (
     <Glif>
       <path

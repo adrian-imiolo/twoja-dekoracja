@@ -1,4 +1,4 @@
-import { expect, test } from "./test";
+import { expect, test, type Page } from "./test";
 
 import { przewinCalaStrone } from "./crawl";
 
@@ -39,15 +39,26 @@ test("shows its style and an introduction, and no unfilled placeholder text", as
   await expect(article).not.toContainText("DO UZUPEŁNIENIA");
 });
 
+/**
+ * The stage's photographs: one per photograph of the event. The thumbnails
+ * below carry no alt of their own (their buttons are named instead), so they
+ * are not counted here.
+ */
+function stagePhotographs(page: Page) {
+  return page
+    .getByRole("region", { name: "Galeria" })
+    .locator("img[alt]:not([alt=''])");
+}
+
 test("shows every photograph of the event, each with its own description", async ({
   page,
 }) => {
-  // Each photograph is brought into view and waited for in turn.
+  // Each photograph is brought onto the stage and waited for in turn.
   test.slow();
 
   await page.goto(url);
 
-  const photographs = page.getByRole("main").getByRole("img");
+  const photographs = stagePhotographs(page);
   await expect(photographs).toHaveCount(PHOTO_COUNT);
 
   const alts = await photographs.evaluateAll((images) =>
@@ -61,22 +72,18 @@ test("shows every photograph of the event, each with its own description", async
   expect(new Set(alts).size).toBe(alts.length);
 
   /*
-   * Each photograph is waited for where a visitor meets it, in view, rather
-   * than by scrolling past the whole gallery and then asking whether
-   * everything arrived.
-   *
-   * A browser gives an image that has scrolled
-   * out of sight the lowest priority it has, and will leave the request
-   * unfinished indefinitely rather than spend a connection on something nobody
-   * is looking at. Traces of three CI runs show that, taken when this
-   * gallery still held seven photographs: the first, sixth, seventh and eighth
-   * served in under 60 ms, and the three left far above the fold by the scroll
-   * never delivered at all. A fast machine hides it by finishing them before
-   * the scroll ends.
+   * Each photograph is waited for where a visitor meets it, on the stage,
+   * rather than asking whether everything arrived. A browser gives an image
+   * nobody is looking at the lowest priority it has and may leave it
+   * unfinished indefinitely.
    */
+  const thumbnails = page
+    .getByRole("region", { name: "Galeria" })
+    .getByRole("listitem")
+    .getByRole("button");
   for (let index = 0; index < PHOTO_COUNT; index += 1) {
+    await thumbnails.nth(index).click();
     const photograph = photographs.nth(index);
-    await photograph.scrollIntoViewIfNeeded();
 
     await expect
       .poll(
@@ -122,64 +129,23 @@ test("holds its layout still while the photographs load", async ({ page }) => {
   expect(shift).toBeLessThan(0.1);
 });
 
-/**
- * Where each photograph sits on the page, in document coordinates rather than
- * viewport ones, so the measurements survive the scrolling above.
- */
-async function photographBoxes(page: import("@playwright/test").Page) {
-  return page
-    .getByRole("main")
-    .getByRole("img")
-    .evaluateAll((images) =>
-      images.map((image) => {
-        const rect = image.getBoundingClientRect();
-        return {
-          top: rect.top + window.scrollY,
-          bottom: rect.bottom + window.scrollY,
-          width: rect.width,
-        };
-      }),
-    );
-}
-
-test("sets its photographs one after another rather than in a grid", async ({
-  page,
-}) => {
-  await page.goto(url);
-  await przewinCalaStrone(page);
-
-  const boxes = await photographBoxes(page);
-  expect(boxes.length).toBeGreaterThan(1);
-
-  // No two photographs share a row. This is what lets the page hold up at
-  // five: a grid's final row would be left with orphans, a sequence has no
-  // final row to strand them in.
-  for (let i = 1; i < boxes.length; i += 1) {
-    expect(boxes[i].top).toBeGreaterThanOrEqual(boxes[i - 1].bottom - 1);
-  }
-});
-
 // Whether the page fits a phone at all is `responsive.spec.ts`'s question,
-// asked of every page at once; this is only about how big the photographs are.
-test("shows its photographs large on a phone, one below another", async ({
-  page,
-}) => {
+// asked of every page at once; this is only about how big the stage is.
+test("shows its stage large on a phone", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(url);
-  await przewinCalaStrone(page);
 
-  const { innerWidth, scrollHeight, innerHeight } = await page.evaluate(() => ({
-    innerWidth: window.innerWidth,
-    scrollHeight: document.documentElement.scrollHeight,
-    innerHeight: window.innerHeight,
-  }));
+  const stage = page
+    .getByRole("region", { name: "Galeria" })
+    .getByRole("button")
+    .first();
+  const box = await stage.boundingBox();
+  const innerWidth = await page.evaluate(function szerokosc() {
+    return window.innerWidth;
+  });
 
-  expect(scrollHeight).toBeGreaterThan(innerHeight);
-
-  // Large photographs, not thumbnails: each one fills the column it is given.
-  for (const box of await photographBoxes(page)) {
-    expect(box.width).toBeGreaterThan(innerWidth * 0.8);
-  }
+  expect(box).not.toBeNull();
+  expect(box!.width).toBeGreaterThan(innerWidth * 0.8);
 });
 
 test("previews with its own title, description and image when the link is shared", async ({

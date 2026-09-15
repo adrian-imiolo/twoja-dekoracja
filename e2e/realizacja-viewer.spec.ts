@@ -1,7 +1,7 @@
 import { expect, test, type Locator, type Page } from "./test";
 
 /**
- * The viewer that opens over a realization's column of photographs.
+ * The full-screen viewer that opens from a realization's stage.
  *
  * Against the realization with the largest set as authored today, so there is
  * room to move in both directions and to reach the end. Like
@@ -16,8 +16,22 @@ function viewer(page: Page): Locator {
   return page.getByRole("dialog");
 }
 
-function columnButton(page: Page, index: number): Locator {
-  return page.getByRole("main").getByRole("button").nth(index);
+function stage(page: Page): Locator {
+  return page
+    .getByRole("region", { name: "Galeria" })
+    .getByRole("button")
+    .first();
+}
+
+/** Brings a photograph onto the stage with its thumbnail, then opens it. */
+async function openAt(page: Page, index: number) {
+  await page
+    .getByRole("region", { name: "Galeria" })
+    .getByRole("listitem")
+    .getByRole("button")
+    .nth(index)
+    .click();
+  await stage(page).click();
 }
 
 /**
@@ -50,7 +64,7 @@ test("opens at the photograph clicked and moves one photograph at a time, withou
 
   await expect(viewer(page)).toHaveCount(0);
 
-  await columnButton(page, 1).click();
+  await openAt(page, 1);
   await expect(viewer(page)).toBeVisible();
   await expect(viewer(page)).toContainText(`2 / ${PHOTO_COUNT}`);
 
@@ -71,7 +85,7 @@ test("shows one photograph at a time, whole within the screen", async ({
   page,
 }) => {
   await page.goto(url);
-  await columnButton(page, 1).click();
+  await openAt(page, 1);
 
   const shown = viewer(page).getByRole("img").locator("visible=true");
   await expect(shown).toHaveCount(1);
@@ -124,7 +138,7 @@ test("a sideways swipe moves to the next photograph, and a short one does not", 
   page,
 }) => {
   await page.goto(url);
-  await columnButton(page, 1).click();
+  await openAt(page, 1);
   await expect(viewer(page)).toContainText(`2 / ${PHOTO_COUNT}`);
 
   await swipe(page, -30, 0);
@@ -144,7 +158,7 @@ test("a swipe down closes it and stays on the realization", async ({
 }) => {
   await page.goto(url);
   const address = page.url();
-  await columnButton(page, 1).click();
+  await openAt(page, 1);
   await expect(viewer(page)).toBeVisible();
   await letViewerImagesFinish(page);
 
@@ -158,7 +172,7 @@ test("a swipe down closes it and stays on the realization", async ({
 
 test("a click beside the photograph closes it", async ({ page }) => {
   await page.goto(url);
-  await columnButton(page, 1).click();
+  await openAt(page, 1);
   await expect(viewer(page)).toBeVisible();
   await letViewerImagesFinish(page);
 
@@ -172,13 +186,13 @@ test("Escape closes it, hands focus back to the photograph and leaves the addres
   await page.goto(url);
   const address = page.url();
 
-  await columnButton(page, 1).click();
+  await openAt(page, 1);
   await expect(viewer(page)).toBeVisible();
   await letViewerImagesFinish(page);
 
   await page.keyboard.press("Escape");
   await expect(viewer(page)).toHaveCount(0);
-  await expect(columnButton(page, 1)).toBeFocused();
+  await expect(stage(page)).toBeFocused();
   expect(page.url()).toBe(address);
 });
 
@@ -188,7 +202,7 @@ test("the back button closes it and stays on the realization", async ({
   await page.goto(url);
   const address = page.url();
 
-  await columnButton(page, 1).click();
+  await openAt(page, 1);
   await expect(viewer(page)).toBeVisible();
   await letViewerImagesFinish(page);
 
