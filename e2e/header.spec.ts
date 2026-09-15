@@ -20,8 +20,8 @@ import { site } from "../src/lib/site";
  */
 
 const TELEFONY = [
-  { width: 320, height: 568, rozmiarZnaku: 16 },
-  { width: 390, height: 844, rozmiarZnaku: 19.5 },
+  { width: 320, height: 568, rozmiarZnaku: 13.5 },
+  { width: 390, height: 844, rozmiarZnaku: 18.75 },
 ] as const;
 
 /**
@@ -69,7 +69,9 @@ for (const { width, height, rozmiarZnaku } of TELEFONY) {
       await page.goto("/polityka-prywatnosci");
     });
 
-    test("is one row: the wordmark and the menu button", async ({ page }) => {
+    test("is one row: the badge, the wordmark and the menu button", async ({
+      page,
+    }) => {
       const naglowek = page.getByRole("banner");
       const odnosnikDomowy = naglowek.getByRole("link", {
         name: site.wordmark,
@@ -104,17 +106,27 @@ for (const { width, height, rozmiarZnaku } of TELEFONY) {
         przyciskBox!.x,
       );
 
+      // No taller than before the badge joined the row (#62).
+      expect(naglowekBox!.height).toBeLessThanOrEqual(109);
+
       // Nothing laid out between the row and the page.
       expect(Math.round(mainBox!.y)).toBe(
         Math.round(naglowekBox!.y + naglowekBox!.height),
       );
     });
 
-    test("shows the wordmark without the badge, at its phone size", async ({
+    test("shows the badge beside the wordmark, both at their phone size", async ({
       page,
     }) => {
       const naglowek = page.getByRole("banner");
-      await expect(naglowek.locator("img")).toBeHidden();
+      const odznaka = naglowek
+        .getByRole("link", { name: site.wordmark, exact: true })
+        .locator("img");
+      await expect(odznaka).toBeVisible();
+      await expect(odznaka).toHaveAttribute("alt", "");
+      const odznakaBox = await odznaka.boundingBox();
+      expect(odznakaBox!.width).toBe(32);
+      expect(odznakaBox!.height).toBe(32);
 
       const znak = naglowek.getByText(site.wordmark, { exact: true });
       await expect(znak).toHaveCSS("font-size", `${rozmiarZnaku}px`);
