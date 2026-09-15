@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from "./test";
+import { themeColour } from "./theme-colour";
 
 /**
  * The stage and thumbnails a realization's photographs are shown on.
@@ -98,6 +99,37 @@ test("starts on the first photograph, with a thumbnail for every one", async ({
   await expect(
     gallery(page).getByRole("button", { name: "Poprzednie zdjęcie" }),
   ).toBeDisabled();
+
+  await letImagesFinish(page);
+});
+
+test("the stage, its arrows and a thumbnail show the brand focus ring to a keyboard", async ({
+  page,
+}) => {
+  await page.goto(url);
+  const blush = await themeColour(page, "--color-blush-300");
+
+  // Onto the second photograph, so neither arrow is disabled and skipped.
+  await thumbnails(page).nth(1).click();
+  await stage(page).focus();
+
+  const order = [
+    gallery(page).getByRole("button", { name: "Poprzednie zdjęcie" }),
+    gallery(page).getByRole("button", { name: "Następne zdjęcie" }),
+    thumbnails(page).first(),
+  ];
+  for (const control of order) {
+    await page.keyboard.press("Tab");
+    await expect(control).toBeFocused();
+    await expect(control).toHaveCSS("outline-style", "solid");
+    await expect(control).toHaveCSS("outline-color", blush);
+  }
+
+  for (let step = 0; step < order.length; step += 1) {
+    await page.keyboard.press("Shift+Tab");
+  }
+  await expect(stage(page)).toBeFocused();
+  await expect(stage(page)).toHaveCSS("outline-style", "solid");
 
   await letImagesFinish(page);
 });

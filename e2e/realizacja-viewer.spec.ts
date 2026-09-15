@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from "./test";
+import { themeColour } from "./theme-colour";
 
 /**
  * The full-screen viewer that opens from a realization's stage.
@@ -97,6 +98,62 @@ test("shows one photograph at a time, whole within the screen", async ({
   expect(box!.y).toBeGreaterThanOrEqual(0);
   expect(box!.x + box!.width).toBeLessThanOrEqual(size.width);
   expect(box!.y + box!.height).toBeLessThanOrEqual(size.height);
+
+  await letViewerImagesFinish(page);
+});
+
+test("the close button sits inset from the corner, on the counter's row", async ({
+  page,
+}) => {
+  await page.goto(url);
+  await openAt(page, 1);
+
+  const close = viewer(page).getByRole("button", { name: "Zamknij" });
+  const counter = viewer(page).getByText(`2 / ${PHOTO_COUNT}`);
+  const [closeBox, counterBox] = await Promise.all([
+    close.boundingBox(),
+    counter.boundingBox(),
+  ]);
+  const size = page.viewportSize()!;
+
+  expect(closeBox!.width).toBeGreaterThanOrEqual(44);
+  expect(closeBox!.height).toBeGreaterThanOrEqual(44);
+  expect(closeBox!.y).toBeGreaterThanOrEqual(8);
+  expect(size.width - (closeBox!.x + closeBox!.width)).toBeGreaterThanOrEqual(
+    8,
+  );
+  expect(counterBox!.y + counterBox!.height / 2).toBeCloseTo(
+    closeBox!.y + closeBox!.height / 2,
+    0,
+  );
+
+  await letViewerImagesFinish(page);
+});
+
+test("its buttons show the brand focus ring to a keyboard, not to a tap", async ({
+  page,
+}) => {
+  await page.goto(url);
+  const blush = await themeColour(page, "--color-blush-300");
+
+  await openAt(page, 1);
+  const close = viewer(page).getByRole("button", { name: "Zamknij" });
+  await expect(close).toBeFocused();
+  await expect(close).toHaveCSS("outline-style", "none");
+
+  const tabs = [
+    ["Tab", "Poprzednie zdjęcie"],
+    ["Tab", "Następne zdjęcie"],
+    ["Shift+Tab", "Poprzednie zdjęcie"],
+    ["Shift+Tab", "Zamknij"],
+  ] as const;
+  for (const [key, name] of tabs) {
+    const button = viewer(page).getByRole("button", { name });
+    await page.keyboard.press(key);
+    await expect(button).toBeFocused();
+    await expect(button).toHaveCSS("outline-style", "solid");
+    await expect(button).toHaveCSS("outline-color", blush);
+  }
 
   await letViewerImagesFinish(page);
 });
