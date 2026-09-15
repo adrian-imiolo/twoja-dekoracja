@@ -110,7 +110,7 @@ export function RealizationGallery({
               ref={scena}
               type="button"
               onClick={otworz}
-              className="group relative block aspect-4/5 w-full cursor-zoom-in outline-none focus-visible:outline-2 focus-visible:outline-blush-300 sm:aspect-3/2"
+              className="group relative block aspect-4/5 w-full cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-blush-300 sm:aspect-3/2"
             >
               <div
                 style={{
@@ -146,7 +146,7 @@ export function RealizationGallery({
                 })}
               </div>
               {/*
-               * A phone has no hover and no zoom cursor, so without a mark
+               * A phone has no hover and no cursor, so without a mark
                * nothing says the stage opens. Decoration only: the current
                * photograph's alt already names the button.
                */}
