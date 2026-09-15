@@ -410,19 +410,23 @@ roughly twenty realizations.
 
 ## Further Notes
 
-### Outstanding client input
+### Client input
 
-None of these block implementation. All of them block launch.
+Settled with the client on 2026-09-15 (#12). Nothing here blocks launch any
+more, and none of it is agent work.
 
-- The owner's name as it should appear publicly, phone number, email address,
-  and Instagram handle
-- Real copy for the about page and answers for the FAQ
-- Privacy policy details, replacing placeholder text
-- Venue and date for each of the seven launch realizations. Photographs and the
-  rest of the metadata are in; only `place` and `date` remain
-  `[DO UZUPEŁNIENIA]`
-- Confirmation that Vercel Web Analytics is what the client means by
-  "analytics", rather than Google Analytics
+- The owners' names, phone numbers, email address, Instagram and Facebook are
+  real and live in `src/lib/site.ts`. The privacy policy carries the
+  controller's real details.
+- The seven realizations are the launch set, in their current display order.
+- Venue and date stay `[DO UZUPEŁNIENIA]` at launch, by decision rather than by
+  omission. `miejsceITermin` hides a pending value, so nothing visible is
+  missing. They arrive later as content changes, if at all.
+- Analytics means Vercel Web Analytics only. No Google Analytics.
+- The about-page copy and FAQ answers are being confirmed with the owner
+  directly. Changes they ask for become new issues.
+- Linking the website from the Instagram profile is done by hand once the site
+  is live.
 
 ### Risks
 
