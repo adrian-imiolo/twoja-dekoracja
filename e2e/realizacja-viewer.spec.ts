@@ -253,6 +253,58 @@ test("Escape closes it, hands focus back to the photograph and leaves the addres
   expect(page.url()).toBe(address);
 });
 
+/*
+ * Chrome rings a scripted focus after any key press, so the ring on the
+ * returned focus follows how the viewer was opened, not how it was used.
+ */
+function ringed(locator: Locator): Promise<boolean> {
+  return locator.evaluate((element) => element.matches(":focus-visible"));
+}
+
+test("opened with a click, it hands focus back without a ring even after the arrow keys", async ({
+  page,
+}) => {
+  await page.goto(url);
+  await openAt(page, 1);
+  await expect(viewer(page)).toBeVisible();
+  await page.keyboard.press("ArrowRight");
+  await letViewerImagesFinish(page);
+
+  await viewer(page).getByRole("button", { name: "Zamknij" }).click();
+  await expect(viewer(page)).toHaveCount(0);
+  await expect(stage(page)).toBeFocused();
+  expect(await ringed(stage(page))).toBe(false);
+});
+
+test("opened with a click and closed with Escape, it hands focus back without a ring", async ({
+  page,
+}) => {
+  await page.goto(url);
+  await openAt(page, 1);
+  await expect(viewer(page)).toBeVisible();
+  await letViewerImagesFinish(page);
+
+  await page.keyboard.press("Escape");
+  await expect(viewer(page)).toHaveCount(0);
+  await expect(stage(page)).toBeFocused();
+  expect(await ringed(stage(page))).toBe(false);
+});
+
+test("opened from the keyboard, it hands focus back with a ring", async ({
+  page,
+}) => {
+  await page.goto(url);
+  await stage(page).focus();
+  await page.keyboard.press("Enter");
+  await expect(viewer(page)).toBeVisible();
+  await letViewerImagesFinish(page);
+
+  await page.keyboard.press("Escape");
+  await expect(viewer(page)).toHaveCount(0);
+  await expect(stage(page)).toBeFocused();
+  expect(await ringed(stage(page))).toBe(true);
+});
+
 test("the back button closes it and stays on the realization", async ({
   page,
 }) => {
