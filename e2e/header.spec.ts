@@ -6,7 +6,7 @@ import { site } from "../src/lib/site";
 /**
  * The header's menu on a phone.
  *
- * Below the `sm` breakpoint the site's four pages sit behind a "Menu" button
+ * Below the `sm` breakpoint the site's four pages sit behind a menu button
  * instead of wrapping into two rows under the wordmark. What that menu does
  * is the header's own question, so it is asked here, at the two phone widths
  * the responsive pass also measures. Whether the closed header fits those
@@ -78,7 +78,9 @@ for (const { width, height, rozmiarZnaku } of TELEFONY) {
       const przycisk = przyciskMenu(page);
 
       await expect(przycisk).toBeVisible();
-      await expect(przycisk).toHaveText("Menu");
+      await expect(przycisk).toHaveAccessibleName("Menu");
+      await expect(przycisk).toHaveText("");
+      await expect(przycisk.locator("svg")).toBeVisible();
       await expect(przycisk).toHaveAttribute("aria-expanded", "false");
 
       const [domowyBox, przyciskBox, naglowekBox, mainBox] = await Promise.all([
@@ -139,7 +141,7 @@ for (const { width, height, rozmiarZnaku } of TELEFONY) {
       page,
     }) => {
       await otworzMenu(page);
-      await expect(przyciskMenu(page)).toHaveText("Menu");
+      await expect(przyciskMenu(page)).toHaveAccessibleName("Menu");
       await expect(przyciskMenu(page)).toHaveAttribute(
         "aria-controls",
         (await nawigacja(page).getAttribute("id"))!,
@@ -257,7 +259,7 @@ for (const { width, height, rozmiarZnaku } of TELEFONY) {
         "aria-expanded",
         "false",
       );
-      await expect(przyciskMenu(page)).toHaveText("Menu");
+      await expect(przyciskMenu(page)).toHaveAccessibleName("Menu");
       await expect(przyciskMenu(page)).toBeFocused();
       for (const odnosnik of odnosnikiStron(page)) {
         await expect(odnosnik).toBeHidden();

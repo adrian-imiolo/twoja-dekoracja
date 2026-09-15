@@ -3,8 +3,10 @@
 import { usePathname } from "next/navigation";
 import { useId, useRef, useState } from "react";
 
+import { Glif } from "@/components/ui/channel-icons";
+
 /**
- * The header's navigation, disclosed by a "Menu" button below `sm` and laid
+ * The header's navigation, disclosed by a menu button below `sm` and laid
  * out as a plain row from `sm` up.
  *
  * One `nav` for both layouts rather than a phone copy and a desktop copy, and
@@ -85,9 +87,19 @@ export function HeaderMenu({
         aria-controls={idPanelu}
         onClick={przelacz}
         onKeyDown={zamknijKlawiszemEscape}
-        className="min-h-11 min-w-11 text-sm tracking-[0.25em] text-blush-300 uppercase transition-colors hover:text-blush-100 sm:hidden"
+        aria-label="Menu"
+        className="grid min-h-11 min-w-11 place-items-center text-2xl text-blush-300 transition-colors hover:text-blush-100 sm:hidden"
       >
-        Menu
+        {/* The name stays "Menu" either way: `aria-expanded` already says which. */}
+        <Glif>
+          <path
+            d={otwarte ? "M6 6l12 12M18 6 6 18" : "M4 7h16M4 12h16M4 17h16"}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+          />
+        </Glif>
       </button>
       <nav
         id={idPanelu}
