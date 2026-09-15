@@ -9,10 +9,10 @@ import { themeColour } from "./theme-colour";
  * frame that followed each photograph's shape would show. Like
  * `realizacja-nav.spec.ts`, this couples to authored content on purpose.
  */
-const SLUG = "chrzest-i-roczek";
-const PHOTO_COUNT = 5;
+const REALIZACJA = "chrzest-i-roczek";
+const LICZBA_ZDJEC = 5;
 
-const url = `/realizacje/${SLUG}`;
+const url = `/realizacje/${REALIZACJA}`;
 
 function gallery(page: Page): Locator {
   return page.getByRole("region", { name: "Galeria" });
@@ -94,7 +94,7 @@ test("starts on the first photograph, with a thumbnail for every one", async ({
 }) => {
   await page.goto(url);
 
-  await expect(thumbnails(page)).toHaveCount(PHOTO_COUNT);
+  await expect(thumbnails(page)).toHaveCount(LICZBA_ZDJEC);
   await expectCurrent(page, 0);
   await expect(
     gallery(page).getByRole("button", { name: "Poprzednie zdjęcie" }),
@@ -186,7 +186,7 @@ test("keeps the same height whatever the shape of the photograph", async ({
   await page.goto(url);
 
   const heights = new Set<number>();
-  for (let index = 0; index < PHOTO_COUNT; index += 1) {
+  for (let index = 0; index < LICZBA_ZDJEC; index += 1) {
     await thumbnails(page).nth(index).click();
     await expectCurrent(page, index);
     const box = await stage(page).boundingBox();
@@ -228,11 +228,11 @@ test("the viewer opens on the stage's photograph and closing leaves the stage wh
   await stage(page).click();
 
   const viewer = page.getByRole("dialog");
-  await expect(viewer).toContainText(`2 / ${PHOTO_COUNT}`);
+  await expect(viewer).toContainText(`2 / ${LICZBA_ZDJEC}`);
 
   await page.keyboard.press("ArrowRight");
   await page.keyboard.press("ArrowRight");
-  await expect(viewer).toContainText(`4 / ${PHOTO_COUNT}`);
+  await expect(viewer).toContainText(`4 / ${LICZBA_ZDJEC}`);
   await letImagesFinish(page);
 
   await viewer.getByRole("button", { name: "Zamknij" }).click();

@@ -8,13 +8,13 @@ import { przewinCalaStrone } from "./crawl";
  * intended: it fails loudly rather than quietly passing against a page that
  * no longer exists.
  */
-const SLUG = "wesele";
-const TITLE = "Wesele w ogrodzie";
-const STYLE =
+const REALIZACJA = "wesele";
+const TYTUL = "Wesele w ogrodzie";
+const STYL =
   "Okrągła ścianka z balonów w butelkowej zieleni, srebrze i bieli, z tropikalnymi liśćmi - w plenerze ogrodu";
-const PHOTO_COUNT = 3;
+const LICZBA_ZDJEC = 3;
 
-const url = `/realizacje/${SLUG}`;
+const url = `/realizacje/${REALIZACJA}`;
 
 /** Scroll the whole page so lazily loaded photographs are requested. */
 test("shows its style and an introduction, and no unfilled placeholder text", async ({
@@ -22,10 +22,10 @@ test("shows its style and an introduction, and no unfilled placeholder text", as
 }) => {
   await page.goto(url);
 
-  await expect(page.getByRole("heading", { level: 1 })).toContainText(TITLE);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(TYTUL);
 
   const article = page.getByRole("main");
-  await expect(article).toContainText(STYLE);
+  await expect(article).toContainText(STYL);
   // A distinctive fragment of the two-sentence introduction.
   await expect(article).toContainText("na trawniku w ogrodzie");
 
@@ -59,7 +59,7 @@ test("shows every photograph of the event, each with its own description", async
   await page.goto(url);
 
   const photographs = stagePhotographs(page);
-  await expect(photographs).toHaveCount(PHOTO_COUNT);
+  await expect(photographs).toHaveCount(LICZBA_ZDJEC);
 
   const alts = await photographs.evaluateAll((images) =>
     images.map((image) => (image as HTMLImageElement).alt),
@@ -81,7 +81,7 @@ test("shows every photograph of the event, each with its own description", async
     .getByRole("region", { name: "Galeria" })
     .getByRole("listitem")
     .getByRole("button");
-  for (let index = 0; index < PHOTO_COUNT; index += 1) {
+  for (let index = 0; index < LICZBA_ZDJEC; index += 1) {
     await thumbnails.nth(index).click();
     const photograph = photographs.nth(index);
 
@@ -154,13 +154,13 @@ test("previews with its own title, description and image when the link is shared
 }) => {
   await page.goto(url);
 
-  await expect(page).toHaveTitle(new RegExp(TITLE));
+  await expect(page).toHaveTitle(new RegExp(TYTUL));
 
   const metaContent = async (selector: string) =>
     page.locator(selector).first().getAttribute("content");
 
   expect(await metaContent('meta[name="description"]')).toBeTruthy();
-  expect(await metaContent('meta[property="og:title"]')).toContain(TITLE);
+  expect(await metaContent('meta[property="og:title"]')).toContain(TYTUL);
   expect(await metaContent('meta[property="og:description"]')).toBeTruthy();
 
   const image = await metaContent('meta[property="og:image"]');

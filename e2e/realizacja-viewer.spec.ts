@@ -8,10 +8,10 @@ import { themeColour } from "./theme-colour";
  * room to move in both directions and to reach the end. Like
  * `realizacja-nav.spec.ts`, this couples to authored content on purpose.
  */
-const SLUG = "chrzest-i-roczek";
-const PHOTO_COUNT = 5;
+const REALIZACJA = "chrzest-i-roczek";
+const LICZBA_ZDJEC = 5;
 
-const url = `/realizacje/${SLUG}`;
+const url = `/realizacje/${REALIZACJA}`;
 
 function viewer(page: Page): Locator {
   return page.getByRole("dialog");
@@ -67,15 +67,15 @@ test("opens at the photograph clicked and moves one photograph at a time, withou
 
   await openAt(page, 1);
   await expect(viewer(page)).toBeVisible();
-  await expect(viewer(page)).toContainText(`2 / ${PHOTO_COUNT}`);
+  await expect(viewer(page)).toContainText(`2 / ${LICZBA_ZDJEC}`);
 
   await page.keyboard.press("ArrowRight");
-  await expect(viewer(page)).toContainText(`3 / ${PHOTO_COUNT}`);
+  await expect(viewer(page)).toContainText(`3 / ${LICZBA_ZDJEC}`);
 
   const next = viewer(page).getByRole("button", { name: "Następne zdjęcie" });
-  for (let index = 4; index <= PHOTO_COUNT; index += 1) {
+  for (let index = 4; index <= LICZBA_ZDJEC; index += 1) {
     await next.click();
-    await expect(viewer(page)).toContainText(`${index} / ${PHOTO_COUNT}`);
+    await expect(viewer(page)).toContainText(`${index} / ${LICZBA_ZDJEC}`);
   }
   await expect(next).toBeDisabled();
 
@@ -109,7 +109,7 @@ test("the close button sits inset from the corner, on the counter's row", async 
   await openAt(page, 1);
 
   const close = viewer(page).getByRole("button", { name: "Zamknij" });
-  const counter = viewer(page).getByText(`2 / ${PHOTO_COUNT}`);
+  const counter = viewer(page).getByText(`2 / ${LICZBA_ZDJEC}`);
   const [closeBox, counterBox] = await Promise.all([
     close.boundingBox(),
     counter.boundingBox(),
@@ -196,16 +196,16 @@ test("a sideways swipe moves to the next photograph, and a short one does not", 
 }) => {
   await page.goto(url);
   await openAt(page, 1);
-  await expect(viewer(page)).toContainText(`2 / ${PHOTO_COUNT}`);
+  await expect(viewer(page)).toContainText(`2 / ${LICZBA_ZDJEC}`);
 
   await swipe(page, -30, 0);
-  await expect(viewer(page)).toContainText(`2 / ${PHOTO_COUNT}`);
+  await expect(viewer(page)).toContainText(`2 / ${LICZBA_ZDJEC}`);
 
   await swipe(page, -200, 0);
-  await expect(viewer(page)).toContainText(`3 / ${PHOTO_COUNT}`);
+  await expect(viewer(page)).toContainText(`3 / ${LICZBA_ZDJEC}`);
 
   await swipe(page, 200, 0);
-  await expect(viewer(page)).toContainText(`2 / ${PHOTO_COUNT}`);
+  await expect(viewer(page)).toContainText(`2 / ${LICZBA_ZDJEC}`);
 
   await letViewerImagesFinish(page);
 });
