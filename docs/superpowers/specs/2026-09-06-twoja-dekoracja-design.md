@@ -71,6 +71,35 @@ direction is drifting from "elegant" to "cocktail bar."
 Both loaded through `next/font/google` with `display: swap`, subset to
 `latin-ext` so Polish diacritics render correctly.
 
+### Controls
+
+Three control styles, chosen by what sits behind the control:
+
+- **Bordered CTA**: a `blush-300` border with `blush-200` text that fills
+  `blush-300` on hover (`PrimaryCta`, the back-to-top button), for calls to
+  action and standalone buttons wherever a bordered control fits. The
+  back-to-top button scrolls over photographs but isn't anchored to one; its
+  solid ground and border already keep it legible.
+- **Plain `text-blush-300` glyphs**: no border, no ground, for small icon
+  controls that sit directly on the plum page ground, where the ground is
+  known to be dark (the header's menu button).
+- **Translucent plum squares**: for any control anchored to a photograph. A
+  44px (`size-11`) square on `bg-plum-950/60` with a `text-blush-300` glyph
+  that lightens to `blush-100` on hover and drops to 30% opacity when
+  disabled, as the arrows are at either end of a set. Photographs run light as
+  well as dark, and a plain blush glyph disappears against a white tablecloth
+  or a pale balloon wall; the translucent ground keeps it legible on both. The
+  focus ring is keyboard-only: a 2px `blush-300` outline drawn inside the
+  square, because the arrows touch the screen's edge. The photo viewer's close
+  and arrow buttons and the photo stage's arrows share this style through the
+  `PRZYCISK` constant beside `RealizationViewer`, whose comment explains the
+  outline reset.
+
+The photo stage's "expand to full screen" badge is the same style in a smaller,
+non-interactive form: a 40px (`size-10`) square with a smaller glyph and no
+focus ring of its own. It is a hint inside the larger stage button, which
+carries the focus, not a control in its own right.
+
 ## Architecture
 
 ### Stack
