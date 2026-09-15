@@ -41,7 +41,7 @@ export function RealizationGallery({
   const [aktualne, setAktualne] = useState(0);
   const podglad = useViewerHistory();
   const scena = useRef<HTMLButtonElement>(null);
-  const bylaOtwarta = useRef(false);
+  const otwartaZ = useRef<"klawiatura" | "wskaznik" | null>(null);
 
   const jestWiele = photos.length > 1;
 
@@ -57,19 +57,33 @@ export function RealizationGallery({
     justDragged: wlasniePrzeciagniety,
   } = useSwipe({ index: aktualne, count: photos.length, onStep: przejdzO });
 
-  function otworz() {
+  function otworz(zdarzenie: React.MouseEvent) {
     if (wlasniePrzeciagniety()) return;
-    bylaOtwarta.current = true;
+    // Enter and Space fire a click with no click count.
+    otwartaZ.current = zdarzenie.detail === 0 ? "klawiatura" : "wskaznik";
     podglad.open();
   }
 
-  // Focus goes back once the viewer is gone; while it is open the page is
-  // inert and the stage would refuse it.
+  /*
+   * Focus goes back once the viewer is gone; while it is open the page is
+   * inert and the stage would refuse it. The ring follows how the viewer was
+   * opened, not the browser's guess: Chrome rings a scripted focus after any
+   * key press, so arrowing through the photographs and closing with the mouse
+   * would leave the stage outlined.
+   *
+   * The dialog's `close()` has already handed focus back with Chrome's ring,
+   * and focusing an element that has focus changes nothing, hence the blur.
+   */
   useEffect(
     function oddajFocus() {
-      if (podglad.isOpen || !bylaOtwarta.current) return;
-      scena.current?.focus();
-      bylaOtwarta.current = false;
+      if (podglad.isOpen || otwartaZ.current === null) return;
+      // `focusVisible` is not in TypeScript's DOM types yet.
+      const opcje: FocusOptions & { focusVisible: boolean } = {
+        focusVisible: otwartaZ.current === "klawiatura",
+      };
+      scena.current?.blur();
+      scena.current?.focus(opcje);
+      otwartaZ.current = null;
     },
     [podglad.isOpen],
   );
