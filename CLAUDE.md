@@ -35,6 +35,12 @@ Playwright `evaluate`/`evaluateAll`/`poll` callback or as any array iteratee.
 trace, and naming every short iteratee is noise. Multi-line callbacks and event
 handlers get names.
 
+## Polish copy
+
+Separate clauses with a plain hyphen surrounded by spaces (` - `). Never an en
+or em dash. Every user-facing string on the site follows this; one typographic
+dash would be the only one in the repo.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know
