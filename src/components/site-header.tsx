@@ -4,7 +4,7 @@ import Link from "next/link";
 import znak from "@/app/icon.png";
 import { HEADER_HOME_LINK_ID } from "@/components/back-to-top";
 import { HeaderMenu } from "@/components/header-menu";
-import { QuietLink } from "@/components/ui/quiet-link";
+import { NavLink } from "@/components/ui/nav-link";
 import { Wordmark } from "@/components/ui/wordmark";
 import { STRONY } from "@/lib/nawigacja";
 
@@ -75,13 +75,13 @@ export function SiteHeader() {
          */}
         <HeaderMenu className="flex flex-wrap items-center gap-x-6 gap-y-5 sm:gap-x-8">
           {STRONY.map((strona) => (
-            <QuietLink
+            <NavLink
               key={strona.sciezka}
               href={strona.sciezka}
               className="max-sm:my-0 max-sm:block max-sm:py-3"
             >
               {strona.nazwa}
-            </QuietLink>
+            </NavLink>
           ))}
         </HeaderMenu>
       </div>
