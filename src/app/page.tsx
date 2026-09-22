@@ -105,8 +105,9 @@ export default function HomePage() {
             {site.tagline} w {site.cityLocative}
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-cream-50/85">
-            Projektujemy i budujemy oprawę wesel, urodzin i przyjęć rodzinnych -
-            od bramy ceremonii po ostatnią świecę na stole.
+            Projektujemy i budujemy oprawę wesel, urodzin i przyjęć rodzinnych.
+            Ścianki, kwiaty, światło, stoły – montaż i demontaż po naszej
+            stronie.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-4">
