@@ -14,8 +14,11 @@ export function QuietLink({
   href,
   className,
   children,
+  "aria-current": ariaCurrent,
 }: {
   href: React.ComponentProps<typeof Link>["href"];
+  /* Set by `NavLink` when the link leads to the page already open. */
+  "aria-current"?: React.AriaAttributes["aria-current"];
   /*
    * Layout only: how the link sits, never how it reads. The header lays these
    * in a row and the footer stacks them with room to tap, and the colour and
@@ -25,7 +28,11 @@ export function QuietLink({
   children: React.ReactNode;
 }) {
   return (
-    <Link href={href} className={className ? `${STYLES} ${className}` : STYLES}>
+    <Link
+      href={href}
+      aria-current={ariaCurrent}
+      className={className ? `${STYLES} ${className}` : STYLES}
+    >
       {children}
     </Link>
   );
