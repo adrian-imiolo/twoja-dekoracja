@@ -128,23 +128,18 @@ export default function HomePage() {
             Kim jesteśmy
           </p>
           {/*
-           * PLACEHOLDER COPY. Describes the service in the terms the design
-           * spec assumes, and says nothing about the person behind it, because
-           * the site does not know their name yet. Rewritten with the client
-           * before launch, alongside `/o-nas`, which this section now hands
-           * off to rather than trying to be.
+           * PLACEHOLDER COPY, not reviewed by the client yet. It says who the
+           * two of them are and leaves what they do to the hero: the previous
+           * version restated the hero's service, its product list and the city,
+           * so the section headed "Kim jesteśmy" never said who anyone was.
+           * `/o-nas` takes it from here.
            */}
           <h2 className="mt-6 font-display text-3xl leading-tight text-cream-50 sm:text-4xl">
-            Pracownia dekoracji okolicznościowych
+            {site.name}
           </h2>
           <p className="mt-6 text-lg leading-relaxed text-cream-50/80">
-            Dekorujemy wesela i przyjęcia w {site.cityLocative} i okolicach.
-            Przyjeżdżamy na salę, budujemy dekorację od zera i zabieramy ją po
-            przyjęciu - tak, żeby jedyną rzeczą, o której trzeba pamiętać, było
-            to, kogo posadzić przy którym stole.
-          </p>
-          <p className="mt-8 text-sm tracking-[0.2em] text-blush-300 uppercase">
-            {site.city} i okolice
+            Jesteśmy dwuosobową pracownią dekoracji. Obie skończyłyśmy studia
+            architektoniczne, a każdą salę traktujemy jak osobny projekt.
           </p>
           <p className="mt-8">
             <QuietLink href="/o-nas">Poznaj nas</QuietLink>
